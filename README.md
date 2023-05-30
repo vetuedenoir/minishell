@@ -1,0 +1,2 @@
+# minishell
+first dual project
