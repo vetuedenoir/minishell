@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 15:03:05 by kscordel          #+#    #+#             */
-/*   Updated: 2023/05/30 16:18:18 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/02 13:35:57 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,11 @@
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	(void)argv; (void)envp; (void)argc;
-	t_lexer lex;
-	//if (argc != 1)
-		// sortir du programme avec un msg d erreur
+	if (argc != 1 || argv[1] != NULL)
+		return (ft_printf("Erreur : Ce programme ne prend pas d argument\n"), 0);
 	while (1)
-	{	
-		lex.str = readline(PROMPT);
+	{
+		ft_lexer(envp);
 	}
 	return (0);
 }

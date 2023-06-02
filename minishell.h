@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:08:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/05/30 16:29:53 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/02 13:36:20 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ typedef struct	s_cmds
 	struct s_cmds	*next;
 	struct s_cmds	*prev;
 }		t_cmds;
+
+
 
 #endif
 
