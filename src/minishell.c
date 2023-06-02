@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 15:03:05 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/02 13:35:57 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/02 17:41:59 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	main(int argc, char *argv[], char *envp[])
 		return (ft_printf("Erreur : Ce programme ne prend pas d argument\n"), 0);
 	while (1)
 	{
-		ft_lexer(envp);
+		ft_lexer();
 	}
 	return (0);
 }

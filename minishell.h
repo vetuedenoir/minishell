@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:08:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/02 13:36:20 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/02 17:42:10 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,10 @@
 # include <limits.h>
 # include <sys/wait.h>
 
-# define PROMPT "minishell$"
+# define PROMPT		"\033[38;2;0;128;255mminishell🌊\x1b[0m"
+# define COULEUR	"\033[38;2;0;128;255m"
+# define RESET		"\x1b[0m"
+
 
 typedef enum	s_token
 {
@@ -40,7 +43,7 @@ typedef enum	s_token
 
 typedef struct	s_lexer
 {
-	char			*str;   // la chaine lu dans le terminal par readline
+	char			*str;
 	t_token			token;
 	int				i;
 	struct s_lexer	*next;
@@ -58,7 +61,7 @@ typedef struct	s_cmds
 	struct s_cmds	*prev;
 }		t_cmds;
 
-
+t_lexer *ft_lexer();
 
 #endif
 
