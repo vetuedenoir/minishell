@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 15:03:05 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/02 17:41:59 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/13 14:53:18 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	t_lexer lex;
+	t_lexer *lex;
+	(void)envp;
 
 	lex = NULL;
 	if (argc != 1 || argv[1] != NULL)
@@ -24,8 +25,9 @@ int	main(int argc, char *argv[], char *envp[])
 		lex = ft_lexer();
 		if (lex != NULL)
 		{
-			parser(lex, envp);
-
+			//parser(lex, envp);
+			printf("all good");
+			ft_lstclearl(&lex);
 		}
 	}
 	return (0);

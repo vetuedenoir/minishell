@@ -6,11 +6,11 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 16:54:21 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/02 17:41:30 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/13 17:59:30 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell"
+#include "../minishell.h"
 
 t_lexer	*ft_lstnewl(char *str)
 {
@@ -21,6 +21,7 @@ t_lexer	*ft_lstnewl(char *str)
 		return (NULL);
 	new->str = str;
 	new->next = NULL;
+	new->prev = NULL;
 	return (new);
 }
 
@@ -28,7 +29,7 @@ void    ft_add_back_lexer(t_lexer **lst, t_lexer *new)
 {
     t_lexer    *temp;
 
-    if (!lst || !new)
+    if (!new)
         return ;
     temp = *lst;
     if (lst && (*lst))
@@ -36,6 +37,7 @@ void    ft_add_back_lexer(t_lexer **lst, t_lexer *new)
         while (temp->next != NULL)
             temp = temp->next;
         temp->next = new;
+		new->prev = temp;
     }
     else
     *lst = new;
@@ -63,7 +65,8 @@ void	ft_lstclearl(t_lexer **lst)
 	while (*lst)
 	{
 		tmp = (*lst)->next;
-		free((*lst)->str);
+		if ((*lst)->str != NULL)
+			free((*lst)->str);
 		free(*lst);
 		*lst = tmp;
 	}

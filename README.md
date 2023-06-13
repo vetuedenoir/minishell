@@ -1,2 +1,2 @@
-# minishell
-first dual project
+
+salut

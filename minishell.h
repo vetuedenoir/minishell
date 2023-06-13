@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:08:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/02 17:42:10 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/13 18:21:25 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ typedef struct	s_cmds
 {
 	char			**str;
 	void			*f;		// un pointeur sur fonction builtin
-	int				num_redirection;
+	int				num_redirections;
 	char			*file_name;
 	t_lexer			*redirection;
 	struct s_cmds	*next;
@@ -62,6 +62,15 @@ typedef struct	s_cmds
 }		t_cmds;
 
 t_lexer *ft_lexer();
+
+//utils
+t_lexer	*ft_lstnewl(char *str);
+void    ft_add_back_lexer(t_lexer **lst, t_lexer *new);
+void	cleartb(char **tb);
+void	cleartb(char **tb);
+void	ft_lstclearl(t_lexer **lst);
+
+
 
 #endif
 
