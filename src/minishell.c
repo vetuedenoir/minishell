@@ -14,11 +14,19 @@
 
 int	main(int argc, char *argv[], char *envp[])
 {
+	t_lexer lex;
+
+	lex = NULL;
 	if (argc != 1 || argv[1] != NULL)
 		return (ft_printf("Erreur : Ce programme ne prend pas d argument\n"), 0);
 	while (1)
 	{
-		ft_lexer();
+		lex = ft_lexer();
+		if (lex != NULL)
+		{
+			parser(lex, envp);
+
+		}
 	}
 	return (0);
 }

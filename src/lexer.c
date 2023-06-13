@@ -43,12 +43,13 @@ t_lexer *ft_lexer(void)
 	tab = ft_split(readline(PROMPT), " ");
 	if (tab = NULL)
 		return (NULL);
+	i = 0;
 	while (tab[i])
 	{
 		new = check_word(tab[i++]);
 		if (!new)
 		{
-			ft_clearl(lex);
+			ft_lstclearl(lex);
 			return (cleartb(tab), NULL);
 		}
 		ft_add_back_lexer(lex, new);   

@@ -54,3 +54,18 @@ void	cleartb(char **tb)
 	free(tb);
 }
 
+void	ft_lstclearl(t_lexer **lst)
+{
+	t_lexer	*tmp;
+
+	if (!lst)
+		return ;
+	while (*lst)
+	{
+		tmp = (*lst)->next;
+		free((*lst)->str);
+		free(*lst);
+		*lst = tmp;
+	}
+}
+
