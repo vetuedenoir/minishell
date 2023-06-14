@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 16:54:21 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/13 17:59:30 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/14 17:21:14 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void    ft_add_back_lexer(t_lexer **lst, t_lexer *new)
 		new->prev = temp;
     }
     else
-    *lst = new;
+    	*lst = new;
 }
 
 void	cleartb(char **tb)

@@ -1,34 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/30 15:03:05 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/14 18:36:06 by kscordel         ###   ########.fr       */
+/*   Created: 2023/06/14 17:15:09 by kscordel          #+#    #+#             */
+/*   Updated: 2023/06/14 18:39:39 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	main(int argc, char *argv[], char *envp[])
+void	add_back_cmds(t_cmds **lst, t_cmds *new)
 {
-	t_lexer *lex;
-	(void)envp;
+	t_cmds	*tmp;
 
-	lex = NULL;
-	if (argc != 1 || argv[1] != NULL)
-		return (ft_printf("Erreur : Ce programme ne prend pas d argument\n"), 0);
-	while (1)
+	if (!new)
+		return ;
+	tmp = *lst;
+	if (lst && (*lst))
 	{
-		lex = ft_lexer();
-		if (lex != NULL)
-		{
-			parser(lex, envp);
-			printf("all good\n");
-			ft_lstclearl(&lex);
-		}
+		while (tmp->next != NULL)
+			tmp = tmp->next;
+		tmp->next = new;
+		new->prev = tmp;
 	}
-	return (0);
+	else
+		*lst = new;
+
 }
+
+

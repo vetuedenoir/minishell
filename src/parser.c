@@ -1,7 +1,7 @@
 
 #include "../minishell.h"
 
-void	extracte_node(t_lexer **lex, *t_cmds **cmd)
+int	extracte_node(t_lexer **lex, t_cmds **cmd)
 {
 	t_lexer	*tmp;
 	t_lexer *node;
@@ -11,18 +11,18 @@ void	extracte_node(t_lexer **lex, *t_cmds **cmd)
 	if ((*lex)->next == NULL)
 	{
 		printf("minishell: parse error near '\n'");
-
+		return (0);
 	}
 	if ((*lex)->next->token != 0)
 	{
 		printf("minishell: parse error near %s\n", (*lex)->next->str);
-
+		return (0);
 	}
 	// on ajoute le token et son fichier dans la structure cmds
-	ft_add_back_lexer((*cmd)->&redirections, (*lex));
+	ft_add_back_lexer(&(*cmd)->redirection, (*lex));
 	//(*cmd)->redirections = (*lex);
 	(*lex) = (*lex)->next;
-	// on suprime les 2 node ajoute a cmds du lexer
+	// on suprime les 2 nodes ajouter a cmds du lexer
 	if ((*lex)->next != NULL)
 	{
 		node = (*lex);
@@ -31,7 +31,8 @@ void	extracte_node(t_lexer **lex, *t_cmds **cmd)
 		(*lex)->prev = tmp;
 	}
 	if (tmp != NULL)
-		tmp->next = (*lex)
+		tmp->next = (*lex);
+	return (1);
 }
 
 t_cmds	*incertion(t_lexer *lex, t_cmds *cmd)
@@ -39,42 +40,70 @@ t_cmds	*incertion(t_lexer *lex, t_cmds *cmd)
 	t_lexer	*repere;
 	int		i;
 
-	repere = lex
-	while (lex->token != 5 && lex != NULL)
+	repere = lex;
+	while (lex != NULL && lex->token != Pipe)
 	{
 		if (lex->token != 0)
 		{
-			extracte_node(&lex, &cmd);
+			if (!extracte_node(&lex, &cmd))
+				return (NULL);
 		}
-	lex = lex->next;
+		lex = lex->next;
 	}
 	lex = repere;
-	// reste a compter le nombre de noueud jusqu au pipe
-	cmds->str = malloc(sizeof(char *));
-	if (cmds->str == NULL)
-	{
-		
-	}
 	i = 0;
-	while (lex != NULL)
+	while (lex != NULL && lex->token != Pipe)
 	{
-		cmds->str[i++] = lex->str;
+		lex = lex->next;
+		i++;
+	}
+	cmd->str = malloc(sizeof(char *) * i);
+	if (cmd->str == NULL)
+	{
+		printf("malloc error");
+	}
+	lex = repere;
+	i = 0;
+	while (lex != NULL && lex->token != Pipe)
+	{
+		cmd->str[i++] = lex->str;
 		lex = lex->next;
 	}
 	return (cmd);
+	// peut etre suprime les nodes dont je n ai plus besoins
 }
 
 t_cmds	*parser(t_lexer *lex, char **envp)
 {
+	t_cmds	*commande_node;
 	t_cmds	*commande;
-	t_lexer	*repere;
 
+	(void)envp;
+	commande = NULL;
+	if (lex->token == Pipe)
+	{
+		printf("minishell: parse error near '\n'");
+		return (NULL); // faire fonction garbage
+	}
 	while (lex != NULL)
 	{
-		commande = ft_calloc(1, sizeof(t_cmds));
-		repere = lex;
-		incertion(lex, commande);
+		commande_node = ft_calloc(1, sizeof(t_cmds));
+		if (commande_node == NULL)
+		{
 
+		}
+		commande_node = incertion(lex, commande_node);
+		// peut etre envoyer un ** pour actualiser la liste
+		
+		if (commande_node == NULL)
+			printf("erreur");
+		add_back_cmds(&commande, commande_node);
+		lex = lex->next;
 	}
-
+	if (lex->prev->token == Pipe)
+	{
+		printf("minishell: parse error near '\n'");
+		return (NULL);
+	}
+	return (commande);
 }
