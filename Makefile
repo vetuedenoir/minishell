@@ -17,7 +17,7 @@ RM = rm -f
 SRC_DIR = src/
 OBJ_DIR = obj/
 
-SRC = $(SRC_DIR)minishell.c $(SRC_DIR)lexer.c  $(SRC_DIR)utils.c
+SRC = $(SRC_DIR)minishell.c $(SRC_DIR)lexer.c  $(SRC_DIR)utils.c $(SRC_DIR)utils2.c $(SRC_DIR)parser.c
 
 OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 

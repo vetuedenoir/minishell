@@ -69,6 +69,10 @@ void    ft_add_back_lexer(t_lexer **lst, t_lexer *new);
 void	cleartb(char **tb);
 void	cleartb(char **tb);
 void	ft_lstclearl(t_lexer **lst);
+void	clear_lex(t_lexer **lst, int nb);
+
+//parsing
+t_cmds *parser(t_lexer *lex, char **envp);
 
 
 

@@ -35,13 +35,15 @@ int	extracte_node(t_lexer **lex, t_cmds **cmd)
 	return (1);
 }
 
-t_cmds	*incertion(t_lexer *lex, t_cmds *cmd)
+t_cmds	*incertion(t_lexer **lex, t_cmds *cmd)
 {
 	t_lexer	*repere;
 	int		i;
 
-	repere = lex;
-	while (lex != NULL && lex->token != Pipe)
+	repere = (*lex);
+	// Des que l on rencontre un token on extrait le token et le fichier du lexer
+	// pour les mettre dans la redirection de cmd
+	while (*lex != NULL && (*lex)->token != Pipe)
 	{
 		if (lex->token != 0)
 		{
@@ -51,6 +53,7 @@ t_cmds	*incertion(t_lexer *lex, t_cmds *cmd)
 		lex = lex->next;
 	}
 	lex = repere;
+	// calcule la taille de la liste actualiser jusqu au pipe
 	i = 0;
 	while (lex != NULL && lex->token != Pipe)
 	{
@@ -63,15 +66,19 @@ t_cmds	*incertion(t_lexer *lex, t_cmds *cmd)
 		printf("malloc error");
 	}
 	lex = repere;
+	// on copy les maillons restant qui sont la commande et ses argument
+	// pour les mettre dans **str de cmd
 	i = 0;
 	while (lex != NULL && lex->token != Pipe)
 	{
 		cmd->str[i++] = lex->str;
 		lex = lex->next;
 	}
+	clear_lex(lex, i);
 	return (cmd);
 	// peut etre suprime les nodes dont je n ai plus besoins
 }
+
 
 t_cmds	*parser(t_lexer *lex, char **envp)
 {
@@ -92,12 +99,14 @@ t_cmds	*parser(t_lexer *lex, char **envp)
 		{
 
 		}
-		commande_node = incertion(lex, commande_node);
+		commande_node = incertion(&lex, commande_node);
 		// peut etre envoyer un ** pour actualiser la liste
 		
 		if (commande_node == NULL)
 			printf("erreur");
 		add_back_cmds(&commande, commande_node);
+		if (lex == NULL)
+			break ;
 		lex = lex->next;
 	}
 	if (lex->prev->token == Pipe)

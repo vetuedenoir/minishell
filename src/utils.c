@@ -72,3 +72,17 @@ void	ft_lstclearl(t_lexer **lst)
 	}
 }
 
+void	clear_lex(t_lexer **lst, int nb)
+{
+	t_lexer *tmp;
+	if (!lst)
+		return ;
+	while (*lst && nb--)
+	{
+		tmp = (*lst)->next;
+		if ((*lst)->str != NULL)
+			free((*lst)->str);
+		free(*lst);
+		*lst = tmp;
+	}
+}
