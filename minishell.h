@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:08:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/13 18:21:25 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/17 17:56:43 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 # include <limits.h>
 # include <sys/wait.h>
 
-# define PROMPT		"\033[38;2;0;128;255mminishell🌊\x1b[0m"
+# define PROMPT		"\033[38;2;0;128;255mminishell 🌊 \x1b[0m"
 # define COULEUR	"\033[38;2;0;128;255m"
 # define RESET		"\x1b[0m"
 
@@ -70,6 +70,14 @@ void	cleartb(char **tb);
 void	cleartb(char **tb);
 void	ft_lstclearl(t_lexer **lst);
 void	clear_lex(t_lexer **lst, int nb);
+
+//utils2
+void	add_back_cmds(t_cmds **lst, t_cmds *new);
+void	printlex(t_lexer *lex);
+void	print_cmd(t_cmds *cmd);
+void	clear_cmd(t_cmds **cmd);
+void	erreur_bin(t_cmds **cmd, t_lexer **lex, char *str);
+
 
 //parsing
 t_cmds *parser(t_lexer *lex, char **envp);

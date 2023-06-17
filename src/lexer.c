@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 13:39:08 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/13 15:14:02 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/16 15:25:50 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ t_lexer *check_word(char *str)
     new = ft_lstnewl(str);
 	if (new == NULL)
 		return (NULL);
+	new->token = 0;
     if (str[0] == '|' && !str[1])
         new->token = Pipe;
     else if (str[0] == '>' && !str[1])

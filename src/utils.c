@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 16:54:21 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/14 17:21:14 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/17 16:21:13 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ void	cleartb(char **tb)
 	int	i;
 
 	i = 0;
+	if (!tb)
+		return ;
 	while (tb[i] != NULL)
 	{
 		free(tb[i]);
@@ -86,3 +88,5 @@ void	clear_lex(t_lexer **lst, int nb)
 		*lst = tmp;
 	}
 }
+
+

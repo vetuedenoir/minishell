@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 15:03:05 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/14 18:36:06 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/17 20:04:11 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_lexer *lex;
+	t_cmds	*cmd;
 	(void)envp;
 
 	lex = NULL;
@@ -25,9 +26,10 @@ int	main(int argc, char *argv[], char *envp[])
 		lex = ft_lexer();
 		if (lex != NULL)
 		{
-			parser(lex, envp);
-			printf("all good\n");
-			ft_lstclearl(&lex);
+			printlex(lex);
+			cmd = parser(lex, envp); // reste a verifier le chemin dans le path
+			print_cmd(cmd); // pour voir ce que c a sort
+		//	clear_cmd(&cmd);
 		}
 	}
 	return (0);

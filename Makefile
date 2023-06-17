@@ -6,12 +6,12 @@
 #    By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/30 14:07:50 by kscordel          #+#    #+#              #
-#    Updated: 2023/06/02 17:07:22 by kscordel         ###   ########.fr        #
+#    Updated: 2023/06/16 14:01:49 by kscordel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g3
 RM = rm -f
 
 SRC_DIR = src/

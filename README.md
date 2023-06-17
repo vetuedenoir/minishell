@@ -1,1 +1,1 @@
-First Dual project
+First Dual Project
