@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 13:39:08 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/16 15:25:50 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/19 17:51:52 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,14 @@ t_lexer *ft_lexer(void)
 {
 	char    **tab;
 	int     i;
+	char	*arg;
 	t_lexer *lex;
 	t_lexer	*new;
     
 	lex = NULL;
-	tab = ft_split(readline(PROMPT), ' ');
+	arg = readline(PROMPT);
+	tab = ft_split(arg, ' ');
+	free(arg);
 	if (tab == NULL)
 		return (NULL);
 	i = 0;

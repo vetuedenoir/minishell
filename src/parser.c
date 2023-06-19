@@ -31,8 +31,46 @@ void	cut_lex(t_lexer **lex, t_cmds **cmd)
 	ft_add_back_lexer(&(*cmd)->redirection, token_node);
 }
 
+t_lexer	*cut(t_lexer **lex)
+{
+	t_lexer *new;
+	t_lexer *tmp1;
+	t_lexer	*tmp2;
+
+	new = ft_lstnewl((*lex)->str);
+	if (!new)
+		return (NULL);
+	new->token = (*lex)->token;
+	tmp1 = (*lex)->next;
+	if ((*lex)->prev)
+	{
+		(*lex) = (*lex)->prev;
+		free((*lex)->next);
+		(*lex)->next = tmp1;
+		if (tmp1)
+		{
+			tmp2 = (*lex);
+			(*lex) = (*lex)->next;
+			(*lex)->prev = tmp2;
+		}
+	}
+	else
+	{
+		free(*lex);
+		if (tmp1)
+		{
+			(*lex) = tmp1;
+			(*lex)->prev = NULL;
+		}
+		else
+			*lex = NULL;
+	}
+	return (new);
+}
+
 int	extracte_node(t_lexer **lex, t_cmds **cmd)
 {
+	t_lexer	*new;
 	// erreur si il n y a pas de fichier apres un token ou qu il y a un autre token
 	if ((*lex)->next == NULL)
 		return (erreur_bin(cmd, lex, "minishell: parse error near '\\n'"), 0);
@@ -43,7 +81,15 @@ int	extracte_node(t_lexer **lex, t_cmds **cmd)
 		return (erreur_bin(cmd, NULL, NULL), 0);
 	}
 	// on ajoute le token et son fichier dans la structure cmds
-	cut_lex(lex, cmd);
+	//cut_lex(lex, cmd);
+	new = cut(lex);
+	if (!new)
+		return (clear_cmd(cmd), 0);
+	ft_add_back_lexer(&(*cmd)->redirection, new);
+	new = cut(lex);
+	if (!new)
+		return (clear_cmd(cmd), 0);
+	ft_add_back_lexer(&(*cmd)->redirection, new);
 	return (1);
 }
 
@@ -125,8 +171,12 @@ t_cmds	*parser(t_lexer *lex, char **envp)
 		if (lex == NULL)
 			return (erreur_bin(&commande, &lex, "minishell: parse error near '\\n'"), NULL);
 		if (lex->token == Pipe)
-			return (clear_cmd(&commande),  NULL);
-
+		{
+			printf("minishell: parse error near '%s'\n", lex->str);
+			//return (erreur_bin(&commande, &lex, "erreur malloc"), NULL);
+			return (clear_cmd(&commande), NULL);
+			//ft_lstclearl(&lex->prev)
+		}
 	}
 	return (commande);
 }
