@@ -70,7 +70,7 @@ t_lexer	*cut(t_lexer **lex)
 
 int	extracte_node(t_lexer **lex, t_cmds **cmd)
 {
-	t_lexer	*new;
+	//t_lexer	*new;
 	// erreur si il n y a pas de fichier apres un token ou qu il y a un autre token
 	if ((*lex)->next == NULL)
 		return (erreur_bin(cmd, lex, "minishell: parse error near '\\n'"), 0);
@@ -81,15 +81,15 @@ int	extracte_node(t_lexer **lex, t_cmds **cmd)
 		return (erreur_bin(cmd, NULL, NULL), 0);
 	}
 	// on ajoute le token et son fichier dans la structure cmds
-	//cut_lex(lex, cmd);
-	new = cut(lex);
+	cut_lex(lex, cmd);
+	/*new = cut(lex);
 	if (!new)
 		return (clear_cmd(cmd), 0);
 	ft_add_back_lexer(&(*cmd)->redirection, new);
 	new = cut(lex);
 	if (!new)
 		return (clear_cmd(cmd), 0);
-	ft_add_back_lexer(&(*cmd)->redirection, new);
+	ft_add_back_lexer(&(*cmd)->redirection, new);*/
 	return (1);
 }
 
@@ -112,10 +112,12 @@ t_cmds	*incertion(t_lexer **lex, t_cmds *cmd)
 		if (node->token != 0)
 		{
 			if (!extracte_node(&node, &cmd))
-				return (NULL);
+				return (ft_lstclearl(&tmp), NULL);
 			cmd->num_redirections += 1;
 		}
-		if (tmp == NULL && node->token == 0)
+		if (!node)
+			break ;
+		if (tmp == NULL && (node->token == 5 || node->token == 0))
 			tmp = node;
 		if (node->token == 0)
 		{
@@ -136,7 +138,6 @@ t_cmds	*incertion(t_lexer **lex, t_cmds *cmd)
 		cmd->str[i] = ft_strdup((*lex)->str);
 		if (!cmd->str[i])
 			return (erreur_bin(&cmd, lex, "malloc error"), NULL);
-		printf("\nvalgrind ------- cmd->str[%d] = %s\n", i, cmd->str[i]);
 		*lex = (*lex)->next;
 		i++;
 	}
@@ -153,17 +154,24 @@ t_cmds	*parser(t_lexer *lex, char **envp)
 {
 	t_cmds	*commande_node;
 	t_cmds	*commande;
-
+	int		x = 0;
 	(void)envp;
 	commande = NULL;
 	while (lex != NULL)
 	{
 		commande_node = ft_calloc(1, sizeof(t_cmds));
-		if (commande_node == NULL)
-			return (erreur_bin(&commande, &lex, "erreur malloc"), NULL);
+		if (commande_node == NULL || x == 10)
+		{
+			free(commande_node);
+			return (erreur_bin(&commande, &lex, "erreur malloc"), NULL); // juste free
+		}
 		commande_node = incertion(&lex, commande_node);
 		if (commande_node == NULL)
+		{
+			//return (erreur_bin(&commande, &lex, NULL), NULL);
+			//print_cmd(commande);
 			return (clear_cmd(&commande), NULL);
+		}
 		add_back_cmds(&commande, commande_node);
 		if (lex == NULL)
 			break ;
@@ -173,10 +181,12 @@ t_cmds	*parser(t_lexer *lex, char **envp)
 		if (lex->token == Pipe)
 		{
 			printf("minishell: parse error near '%s'\n", lex->str);
-			//return (erreur_bin(&commande, &lex, "erreur malloc"), NULL);
-			return (clear_cmd(&commande), NULL);
-			//ft_lstclearl(&lex->prev)
+			return (erreur_bin(&commande, &lex, "erreur malloc"), NULL);
+			//ft_lstclearl(&lex->prev);
+			//return (clear_cmd(&commande), NULL);
 		}
+		x++;
 	}
+	check_path(commande, envp);
 	return (commande);
 }

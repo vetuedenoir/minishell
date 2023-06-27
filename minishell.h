@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:08:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/17 17:56:43 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/27 16:30:25 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ typedef struct	s_cmds
 	void			*f;		// un pointeur sur fonction builtin
 	int				num_redirections;
 	char			*file_name;
+	char			builtin;	// si y a un bultin = b sinon = 0
 	t_lexer			*redirection;
 	struct s_cmds	*next;
 	struct s_cmds	*prev;
@@ -81,6 +82,11 @@ void	erreur_bin(t_cmds **cmd, t_lexer **lex, char *str);
 
 //parsing
 t_cmds *parser(t_lexer *lex, char **envp);
+
+//garbage_collector
+void	*ft_malloc(size_t size);
+void	*memory_add(void *pointeur);
+void	free_garbage(void);
 
 
 

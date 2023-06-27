@@ -6,11 +6,13 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 15:03:05 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/17 20:04:11 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/27 14:57:35 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+t_list	g_garbage_collector = NULL;
 
 int	main(int argc, char *argv[], char *envp[])
 {
@@ -29,7 +31,10 @@ int	main(int argc, char *argv[], char *envp[])
 			printlex(lex);
 			cmd = parser(lex, envp); // reste a verifier le chemin dans le path
 			print_cmd(cmd); // pour voir ce que c a sort
-		//	clear_cmd(&cmd);
+			//clear_cmd(&cmd);
+			//ft_lstclearl(&cmd->redirection);
+			erreur_bin(&cmd, NULL, NULL);
+			
 		}
 	}
 	return (0);

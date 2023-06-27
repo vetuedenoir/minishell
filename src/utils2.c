@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:15:09 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/19 16:57:12 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/20 18:48:16 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ void	printlex(t_lexer *lex)
 void	print_cmd(t_cmds *cmd)
 {
 	int	i;
+	t_lexer	*tmp;
+	
 	while (cmd)
 	{
 		i = -1;
@@ -51,8 +53,12 @@ void	print_cmd(t_cmds *cmd)
 		printf("num_redirections = %d\n", cmd->num_redirections);
 		while (cmd->redirection)
 		{
+			tmp = cmd->redirection->next;
 			printf("redirection : %s token = %d \n", cmd->redirection->str, cmd->redirection->token);
-				cmd->redirection = cmd->redirection->next;
+			if (cmd->redirection->str)
+				free(cmd->redirection->str);
+			free(cmd->redirection);
+			cmd->redirection = tmp;
 		}
 		printf(" \n\n");
 		if (cmd->next)
@@ -64,14 +70,26 @@ void	print_cmd(t_cmds *cmd)
 void	clear_cmd(t_cmds **cmd)
 {
 	t_cmds	*tmp;
+	t_lexer	*t;
 
 	if (!cmd)
 		return ;
+	printf("\nclear_cmd\n");
 	while (*cmd)
 	{
 		tmp = (*cmd)->next;
 		cleartb((*cmd)->str);
-		ft_lstclearl(&(*cmd)->redirection);
+		while ((*cmd)->redirection)
+		{
+			printf("cmd->redirection = %s\n", (*cmd)->redirection->str);
+			t = (*cmd)->redirection->next;
+			if ((*cmd)->redirection->str)
+				free((*cmd)->redirection->str);
+			free((*cmd)->redirection);
+			(*cmd)->redirection = t;
+		}
+		//ft_lstclearl(&(*cmd)->redirection);
+		printf("freecmd\n");
 		free(*cmd);
 		*cmd = tmp;
 	}
@@ -80,27 +98,31 @@ void	clear_cmd(t_cmds **cmd)
 void	erreur_bin(t_cmds **cmd, t_lexer **lex, char *str)
 {
 	t_lexer	*lex_prev;
-	t_cmds	*cmd_prev;
+	//t_cmds	*cmd_prev;
 
+	printf("\nerreur_bin\n");
 	if (lex && *lex)
 	{
 		lex_prev = (*lex)->prev;
 		ft_lstclearl(lex);
-		*lex = lex_prev;
+		(*lex) = lex_prev;
 		while (*lex)
 		{
 			lex_prev = (*lex)->prev;
 			if ((*lex)->str)
+			{
+				printf("	bin lex->str = %s\n", (*lex)->str);
 				free((*lex)->str);
+			}
 			free(*lex);
 			*lex = lex_prev;
 		}
 	}
 	if (cmd && *cmd)
 	{
-		cmd_prev = (*cmd)->prev;
+		//cmd_prev = (*cmd)->prev;
 		clear_cmd(cmd);
-		*cmd = cmd_prev;
+		/*cmd = cmd_prev;
 		while (*cmd)
 		{
 			cmd_prev = (*cmd)->prev;
@@ -108,7 +130,7 @@ void	erreur_bin(t_cmds **cmd, t_lexer **lex, char *str)
 			ft_lstclearl(&(*cmd)->redirection);
 			free(*cmd);
 			*cmd = cmd_prev;
-		}
+		}*/
 	}
 	if (str)
 		printf("%s\n", str);
