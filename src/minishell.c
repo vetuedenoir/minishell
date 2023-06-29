@@ -27,13 +27,10 @@ int	main(int argc, char *argv[], char *envp[])
 		if (lex != NULL)
 		{
 			printlex(lex);
-			cmd = parser(lex, envp); // reste a verifier le chemin dans le path
+			cmd = parser(lex, envp);
 			check_path(&cmd, envp);
 			print_cmd(cmd); // pour voir ce que c a sort
-			//clear_cmd(&cmd);
-			//ft_lstclearl(&cmd->redirection);
-			//erreur_bin(&cmd, NULL, NULL);
-			
+			free_garbage();	
 		}
 	}
 	return (0);

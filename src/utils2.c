@@ -56,9 +56,6 @@ void	print_cmd(t_cmds *cmd)
 		{
 			tmp = cmd->redirection->next;
 			printf("redirection : %s token = %d \n", cmd->redirection->str, cmd->redirection->token);
-			if (cmd->redirection->str)
-				free(cmd->redirection->str);
-			free(cmd->redirection);
 			cmd->redirection = tmp;
 		}
 		printf(" \n\n");

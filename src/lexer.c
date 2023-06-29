@@ -42,22 +42,21 @@ t_lexer *ft_lexer(void)
 	t_lexer	*new;
     
 	lex = NULL;
-	arg = readline(PROMPT);
-	tab = ft_split(arg, ' ');
-	free(arg);
+	tab = NULL;
+	if (ft_verif_quote(arg = readline(PROMPT)) == -1)
+		return (free(arg), NULL);
+	//tab = ft_split(arg, ' ');
+	tab = ft_decoup(arg, tab, ' ');
 	if (tab == NULL)
 		return (NULL);
+	free(arg);
 	i = 0;
 	while (tab[i])
 	{
 		new = check_word(tab[i++]);
 		if (!new)
-		{
-			ft_lstclearl(&lex);
-			return (free(tab), NULL);
-		}
+			return (free_garbage(), NULL);
 		ft_add_back_lexer(&lex, new);   
 	}
-	free(tab);
 	return (lex);
 }

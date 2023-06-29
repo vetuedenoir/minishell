@@ -85,16 +85,9 @@ void	clear_lex(t_lexer **lst, int nb)//inutile
 	t_lexer *tmp;
 	if (!lst)
 		return ;
-	printf("\nclear_lex\n");
 	while (*lst && nb--)
 	{
 		tmp = (*lst)->next;
-		if ((*lst)->str != NULL)
-		{
-			printf("	lex->str = %s\n", (*lst)->str);
-			free((*lst)->str);
-		}
-		free(*lst);
 		*lst = tmp;
 	}
 	if (*lst)

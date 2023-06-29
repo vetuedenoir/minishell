@@ -29,7 +29,7 @@ static int	lents(const char *str, char c)
 	return (t);
 }
 
-static int    ft_verif_quote(char *str)
+int    ft_verif_quote(char *str)
 {
     int    i;
     int    s;
@@ -61,12 +61,12 @@ static char	*ft_cop(const char *s, int index, char c)
 
 	i = index;
 	t = 0;
-	while (s[i] != c && s[i])
+	while (s[i] != c && s[i]) // ne s arrette que si il rencontre ' ' mais pas "
 	{
-		t++;
+		t++;	//utiliser un set
 		i++;
 	}
-	str = malloc(sizeof(char) * (t + 1));
+	str = ft_malloc(sizeof(char) * (t + 1));
 	if (str == NULL)
 		return (NULL);
 	i = 0;
@@ -80,31 +80,32 @@ static char	*ft_cop(const char *s, int index, char c)
 	return (str);
 }
 
-char	**ft_decoup(char c)
+char	**ft_decoup(char *arg, char **tab, char c)
 {
-	char 	*arg;
-	char	**tab;
 	int	i = -1;
 	int	j = 0;
 
-	if (ft_verif_quote(arg = readline(PROMPT)) == -1)
-		return (free(arg), NULL);
-	if (!(tab = malloc(sizeof(char *) * lents(arg, c) + 1)))
+	if (!(tab = ft_malloc(sizeof(char *) * lents(arg, c) + 1)))
 		return (free(arg), NULL);
 	while(i++ < (int)ft_strlen(arg))
 	{
-		if (arg[i] == 34 || arg[i] == 39)
+		while ((arg[i] == 34 || arg[i] == 39) && arg[i])
 		{
 			tab[j] = ft_cop(arg, i + 1, arg[i]);
+			if (!tab[j])
+				return (free_garbage(), NULL);
 			i = i + ft_strlen(tab[j]) + 2;
 			j++;
 		}
 		if (arg[i] != c && arg[i])
 		{
-			tab[j] = ft_cop(arg, i, c);
+			tab[j] = ft_cop(arg, i, c); // petite erreur avec c
+			if (!tab[j])
+				return (free_garbage(), NULL);
 			i = i + ft_strlen(tab[j]);
 			j++;
 		}
 	}
-	return (tab[j] = 0, tab);
+	tab[j] = NULL;
+	return ( tab);
 }

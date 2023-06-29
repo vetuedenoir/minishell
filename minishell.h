@@ -64,7 +64,9 @@ typedef struct	s_cmds
 
 extern t_list	*g_garbage_collector;
 
-t_lexer *ft_lexer();
+t_lexer	*ft_lexer();
+char	**ft_decoup(char *arg, char **tab, char c);
+int	ft_verif_quote(char *str);
 
 //utils
 t_lexer	*ft_lstnewl(char *str);

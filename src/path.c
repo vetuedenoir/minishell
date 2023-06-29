@@ -12,17 +12,17 @@
 
 #include "../minishell.h"
 
-char	*verif_path(char *path, char *str)
+char	*verif_path(char **path, char *str)
 {
 	char	*s;
 
-	s = ft_strjoin(path, str);
-		free(path);
-		if (!s)
-			return (0);
-		if (access(s, X_OK))
-			return (NULL);
-		memory_add(s);
+	s = ft_strjoin(*path, str);
+	free(*path);
+	if (!s)
+		return (NULL);
+	if (access(s, X_OK))
+		return (NULL);
+	memory_add(s);
 		return (s);
 }
 
@@ -43,22 +43,22 @@ char	*get_path(char *str, char **envp)
 	}
 	tb = ft_split(&envp[i][5], ':'); // utiliser un split qui utilise ft_calloc
 	if (!tb)
-		free_garbage();
+		return (free_garbage(), NULL);
 	i = 0;
 	while (tb[i])
 	{
 		path = ft_strjoin(tb[i], "/");
 		if (!path)
-			return (NULL);
-		s = verif_path(path, str);
+			return (cleartb(tb), free_garbage(), NULL);
+		s = verif_path(&path, str);
 		if (s)
-			return (s);
+			return (cleartb(tb), s);
 		i++;
 	}
-	return (printf("la commande %s n existe pas \n", str), NULL);
+	return (printf("la commande %s n existe pas \n", str),cleartb(tb), NULL);
 }
 
-void	check_path(t_cmds **commande, char	**env)
+void	check_path(t_cmds **commande, char **env)
 {
 	char	*s;
 	t_cmds	*node;
@@ -71,16 +71,16 @@ void	check_path(t_cmds **commande, char	**env)
 			s = (*commande)->str[0];
 			if (!ft_strncmp(s, "echo", 5) || !ft_strncmp(s, "cd", 3) ||
 				!ft_strncmp(s, "pwd", 4) || !ft_strncmp(s, "export", 7) 
-					|| !ft_strncmp(s, "unset", 6) || !ft_strncmp(s, "env", 4) || 
-						!ft_strncmp(s, "exit", 5))
+				|| !ft_strncmp(s, "unset", 6) || !ft_strncmp(s, "env", 4) || 
+				!ft_strncmp(s, "exit", 5))
 				(*commande)->builtin = 'b';
 			else
 			{
 				(*commande)->builtin = 0;
 				(*commande)->str[0] = get_path((*commande)->str[0], env);
 			}
-        }
+		}
 		(*commande) = (*commande)->next;
-    }
-    *commande = node;
+	}
+	*commande = node;
 }

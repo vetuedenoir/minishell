@@ -39,7 +39,7 @@ int	extracte_node(t_lexer **lex, t_cmds **cmd)
 	if ((*lex)->next == NULL)
 	{
 		free_garbage();
-		return (printf("minishell: parse error near '\\n'"), 0);
+		return (printf("minishell: parse error near '\\n'\n"), 0);
 	}
 	if ((*lex)->next->token != 0)
 	{
@@ -48,14 +48,6 @@ int	extracte_node(t_lexer **lex, t_cmds **cmd)
 	}
 	// on ajoute le token et son fichier dans la structure cmds
 	cut_lex(lex, cmd);
-	/*new = cut(lex);
-	if (!new)
-		return (clear_cmd(cmd), 0);
-	ft_add_back_lexer(&(*cmd)->redirection, new);
-	new = cut(lex);
-	if (!new)
-		return (clear_cmd(cmd), 0);
-	ft_add_back_lexer(&(*cmd)->redirection, new);*/
 	return (1);
 }
 
@@ -107,12 +99,7 @@ t_cmds	*incertion(t_lexer **lex, t_cmds *cmd)
 	i = 0;
 	while (*lex != NULL && (*lex)->token != Pipe)
 	{
-		cmd->str[i] = ft_strdup((*lex)->str);  // peut etre pas besoins de strdup;
-		if (!cmd->str[i])
-		{
-			printf("malloc error");
-			return (free_garbage(), NULL);
-		}
+		cmd->str[i] = (*lex)->str;
 		*lex = (*lex)->next;
 		i++;
 	}
@@ -130,6 +117,7 @@ t_cmds	*parser(t_lexer *lex, char **envp)
 	t_cmds	*commande_node;
 	t_cmds	*commande;
 
+	(void)envp;
 	commande = NULL;
 	while (lex != NULL)
 	{
@@ -145,7 +133,7 @@ t_cmds	*parser(t_lexer *lex, char **envp)
 		lex = lex->next;
 		if (lex == NULL)
 		{
-			printf("minishell: parse error near '\\n'");
+			printf("minishell: parse error near '\\n'\n");
 			return (free_garbage(), NULL);
 		}
 		if (lex->token == Pipe)
