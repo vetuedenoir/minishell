@@ -6,7 +6,7 @@
 #    By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/30 14:07:50 by kscordel          #+#    #+#              #
-#    Updated: 2023/06/16 14:01:49 by kscordel         ###   ########.fr        #
+#    Updated: 2023/06/29 11:23:13 by kscordel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,8 +17,8 @@ RM = rm -f
 SRC_DIR = src/
 OBJ_DIR = obj/
 
-SRC = $(SRC_DIR)minishell.c $(SRC_DIR)lexer.c  $(SRC_DIR)utils.c $(SRC_DIR)utils2.c $(SRC_DIR)parser.c
-
+SRC = $(SRC_DIR)minishell.c $(SRC_DIR)lexer.c  $(SRC_DIR)utils.c $(SRC_DIR)utils2.c \
+		$(SRC_DIR)parser.c $(SRC_DIR)path.c $(SRC_DIR)garbage_collector.c
 OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 
 NAME = minishell

@@ -31,54 +31,20 @@ void	cut_lex(t_lexer **lex, t_cmds **cmd)
 	ft_add_back_lexer(&(*cmd)->redirection, token_node);
 }
 
-t_lexer	*cut(t_lexer **lex)
-{
-	t_lexer *new;
-	t_lexer *tmp1;
-	t_lexer	*tmp2;
-
-	new = ft_lstnewl((*lex)->str);
-	if (!new)
-		return (NULL);
-	new->token = (*lex)->token;
-	tmp1 = (*lex)->next;
-	if ((*lex)->prev)
-	{
-		(*lex) = (*lex)->prev;
-		free((*lex)->next);
-		(*lex)->next = tmp1;
-		if (tmp1)
-		{
-			tmp2 = (*lex);
-			(*lex) = (*lex)->next;
-			(*lex)->prev = tmp2;
-		}
-	}
-	else
-	{
-		free(*lex);
-		if (tmp1)
-		{
-			(*lex) = tmp1;
-			(*lex)->prev = NULL;
-		}
-		else
-			*lex = NULL;
-	}
-	return (new);
-}
 
 int	extracte_node(t_lexer **lex, t_cmds **cmd)
 {
 	//t_lexer	*new;
 	// erreur si il n y a pas de fichier apres un token ou qu il y a un autre token
 	if ((*lex)->next == NULL)
-		return (erreur_bin(cmd, lex, "minishell: parse error near '\\n'"), 0);
-	
+	{
+		free_garbage();
+		return (printf("minishell: parse error near '\\n'"), 0);
+	}
 	if ((*lex)->next->token != 0)
 	{
 		printf("minishell: parse error near %s\n", (*lex)->next->str);
-		return (erreur_bin(cmd, NULL, NULL), 0);
+		return (free_garbage(), 0);
 	}
 	// on ajoute le token et son fichier dans la structure cmds
 	cut_lex(lex, cmd);
@@ -106,13 +72,16 @@ t_cmds	*incertion(t_lexer **lex, t_cmds *cmd)
 	node = (*lex);
 	i = 0;
 	if ((*lex)->token == Pipe)
-		return (erreur_bin(&cmd, NULL, "minishell: parse error near '\\n'"), NULL);
+	{
+		printf( "minishell: parse error near '\\n'");
+		return (free_garbage(), NULL);
+	}
 	while (node != NULL && node->token != Pipe)
 	{
 		if (node->token != 0)
 		{
 			if (!extracte_node(&node, &cmd))
-				return (ft_lstclearl(&tmp), NULL);
+				return (free_garbage(), NULL);
 			cmd->num_redirections += 1;
 		}
 		if (!node)
@@ -126,24 +95,30 @@ t_cmds	*incertion(t_lexer **lex, t_cmds *cmd)
 		}
 	}
 	// calcule la taille de la liste actualiser jusqu au pipe
-	cmd->str = malloc(sizeof(char *) * (i + 1));
+	cmd->str = ft_malloc(sizeof(char *) * (i + 1));
 	if (cmd->str == NULL)
-		return (erreur_bin(&cmd, lex, "malloc error"), NULL);
+	{
+		printf("malloc error");
+		return (free_garbage(), NULL);
+	}
 	(*lex) = tmp;
 	// on copy les maillons restant qui sont la commande et ses argument
 	// pour les mettre dans **str de cmd
 	i = 0;
 	while (*lex != NULL && (*lex)->token != Pipe)
 	{
-		cmd->str[i] = ft_strdup((*lex)->str);
+		cmd->str[i] = ft_strdup((*lex)->str);  // peut etre pas besoins de strdup;
 		if (!cmd->str[i])
-			return (erreur_bin(&cmd, lex, "malloc error"), NULL);
+		{
+			printf("malloc error");
+			return (free_garbage(), NULL);
+		}
 		*lex = (*lex)->next;
 		i++;
 	}
 	cmd->str[i] = NULL;
 	(*lex) = tmp;
-	clear_lex(lex, (i));
+	clear_lex(lex, (i));  // changer la fonction pour qu elle ne free pas
 	return (cmd);
 }
 
@@ -154,39 +129,30 @@ t_cmds	*parser(t_lexer *lex, char **envp)
 {
 	t_cmds	*commande_node;
 	t_cmds	*commande;
-	int		x = 0;
-	(void)envp;
+
 	commande = NULL;
 	while (lex != NULL)
 	{
 		commande_node = ft_calloc(1, sizeof(t_cmds));
-		if (commande_node == NULL || x == 10)
-		{
-			free(commande_node);
-			return (erreur_bin(&commande, &lex, "erreur malloc"), NULL); // juste free
-		}
+		if (commande_node == NULL)
+			return (free_garbage(), NULL); // juste free
 		commande_node = incertion(&lex, commande_node);
 		if (commande_node == NULL)
-		{
-			//return (erreur_bin(&commande, &lex, NULL), NULL);
-			//print_cmd(commande);
-			return (clear_cmd(&commande), NULL);
-		}
+			return (free_garbage(), NULL);
 		add_back_cmds(&commande, commande_node);
 		if (lex == NULL)
 			break ;
 		lex = lex->next;
 		if (lex == NULL)
-			return (erreur_bin(&commande, &lex, "minishell: parse error near '\\n'"), NULL);
+		{
+			printf("minishell: parse error near '\\n'");
+			return (free_garbage(), NULL);
+		}
 		if (lex->token == Pipe)
 		{
 			printf("minishell: parse error near '%s'\n", lex->str);
-			return (erreur_bin(&commande, &lex, "erreur malloc"), NULL);
-			//ft_lstclearl(&lex->prev);
-			//return (clear_cmd(&commande), NULL);
+			return (free_garbage(), NULL);
 		}
-		x++;
 	}
-	check_path(commande, envp);
 	return (commande);
 }

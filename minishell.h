@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:08:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/27 16:30:25 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/29 14:45:24 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ typedef struct	s_cmds
 	struct s_cmds	*prev;
 }		t_cmds;
 
+extern t_list	*g_garbage_collector;
+
 t_lexer *ft_lexer();
 
 //utils
@@ -82,6 +84,9 @@ void	erreur_bin(t_cmds **cmd, t_lexer **lex, char *str);
 
 //parsing
 t_cmds *parser(t_lexer *lex, char **envp);
+
+//path
+void	check_path(t_cmds **commande, char	**env);
 
 //garbage_collector
 void	*ft_malloc(size_t size);

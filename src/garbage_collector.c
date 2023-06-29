@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:46:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/27 15:11:34 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/29 14:45:16 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	*memory_add(void *pointeur)
 	t_list	*node;
 	t_list	*tmp;
 
-	node = malloc(sizeof(t_list))
+	node = malloc(sizeof(t_list));
 	if (!node)
 		return (NULL);
 	node->content = pointeur;

@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:28:45 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/27 18:20:51 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/06/29 13:07:18 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*verif_path(char *path, char *str)
 		if (!s)
 			return (0);
 		if (access(s, X_OK))
-			return (printf("la commande %s n existe pas \n", s),NULL);
+			return (NULL);
 		memory_add(s);
 		return (s);
 }
@@ -32,54 +32,55 @@ char	*get_path(char *str, char **envp)
 	int		i;
 	char	**tb;
 	char	*path;
+	char	*s;
 	
 	i = 0;
 	while (envp[i])
 	{
-		if (!strncmp(env[i], "PATH", 4))
+		if (!strncmp(envp[i], "PATH", 4))
 			break ;
 		i++;
 	}
-	tb = ft_split(&env[i][5], ':'); // utiliser un split qui utilise ft_calloc
+	tb = ft_split(&envp[i][5], ':'); // utiliser un split qui utilise ft_calloc
 	if (!tb)
-		//free_garbage();
+		free_garbage();
 	i = 0;
 	while (tb[i])
 	{
 		path = ft_strjoin(tb[i], "/");
 		if (!path)
 			return (NULL);
-		str = verif_path(path, str);
-		if (str)
-			break ;
+		s = verif_path(path, str);
+		if (s)
+			return (s);
+		i++;
 	}
-	return (str);
+	return (printf("la commande %s n existe pas \n", str), NULL);
 }
 
-void	check_path(t_cmds *commande, char	**env)
+void	check_path(t_cmds **commande, char	**env)
 {
-	t_cmds	*node;
 	char	*s;
+	t_cmds	*node;
 
 	node = *commande;
-	while (node)
+	while (*commande != NULL)
 	{
-		if (node->redirection)
+		if ((*commande)->str && (*commande)->str[0])
 		{
-			s = node->redirection->str;
-			ft_strncmp
+			s = (*commande)->str[0];
 			if (!ft_strncmp(s, "echo", 5) || !ft_strncmp(s, "cd", 3) ||
 				!ft_strncmp(s, "pwd", 4) || !ft_strncmp(s, "export", 7) 
-					|| !ft_strncmp(s, "unset", 6), || !ft_strncmp(s, "env", 4) || 
+					|| !ft_strncmp(s, "unset", 6) || !ft_strncmp(s, "env", 4) || 
 						!ft_strncmp(s, "exit", 5))
-				node->builtin = b;
+				(*commande)->builtin = 'b';
 			else
 			{
-				node->builtin = 0;
-				node->redirection->str = get_path(node->redirections->str, env);
+				(*commande)->builtin = 0;
+				(*commande)->str[0] = get_path((*commande)->str[0], env);
 			}
         }
-		node = node->next;
+		(*commande) = (*commande)->next;
     }
-    
+    *commande = node;
 }
