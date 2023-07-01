@@ -42,7 +42,7 @@ char	*ft_strdup_g(const char *s)
 	new[i] = '\0';
 	return (new);
 }
-
+/*
 static int	lents(const char *str, char c)
 {
 	int	i;
@@ -113,4 +113,4 @@ char	**ft_split_g(char const *s, char c)
 	}
 	ts[x] = 0;
 	return (ts);
-}
+}*/

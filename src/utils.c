@@ -50,10 +50,8 @@ void	cleartb(char **tb) //inutile
 	i = 0;
 	if (!tb)
 		return ;
-	printf("\ncleartb\n");
 	while (tb[i] != NULL)
 	{
-		printf("	tb[%d] = %s\n", i, tb[i]);
 		free(tb[i]);
 		i++;
 	}

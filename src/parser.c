@@ -121,7 +121,7 @@ t_cmds	*parser(t_lexer *lex, char **envp)
 	commande = NULL;
 	while (lex != NULL)
 	{
-		commande_node = ft_calloc(1, sizeof(t_cmds));
+		commande_node = ft_calloc_g(1, sizeof(t_cmds));
 		if (commande_node == NULL)
 			return (free_garbage(), NULL); // juste free
 		commande_node = incertion(&lex, commande_node);

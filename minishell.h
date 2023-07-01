@@ -62,10 +62,20 @@ typedef struct	s_cmds
 	struct s_cmds	*prev;
 }		t_cmds;
 
+typedef struct s_tool
+{
+	char	*str;
+	t_cmds	*cmds;
+	char	**envp;
+	char	*pwd;
+	char	*old_pwd;
+
+}	t_tool;	
+
 extern t_list	*g_garbage_collector;
 
 t_lexer	*ft_lexer();
-char	**ft_decoup(char *arg, char **tab, char c);
+char	**ft_decoup(char **arg, char **tab, char c);
 int	ft_verif_quote(char *str);
 
 //utils
@@ -94,6 +104,7 @@ void	check_path(t_cmds **commande, char	**env);
 void	*ft_malloc(size_t size);
 void	*memory_add(void *pointeur);
 void	free_garbage(void);
+void	*ft_calloc_g(size_t nmemb, size_t size);
 
 
 

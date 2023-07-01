@@ -21,7 +21,7 @@ char	*verif_path(char **path, char *str)
 	if (!s)
 		return (NULL);
 	if (access(s, X_OK))
-		return (NULL);
+		return (free(s), NULL);
 	memory_add(s);
 		return (s);
 }

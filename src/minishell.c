@@ -17,19 +17,19 @@ t_list	*g_garbage_collector = NULL;
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_lexer *lex;
-	t_cmds	*cmd;
+	t_tool	data;
 
 	if (argc != 1 || argv[1] != NULL)
 		return (ft_printf("Erreur : Ce programme ne prend pas d argument\n"), 0);
 	while (1)
 	{
-		lex = ft_lexer();
+		lex = ft_lexer(&data);
 		if (lex != NULL)
 		{
 			printlex(lex);
-			cmd = parser(lex, envp);
-			check_path(&cmd, envp);
-			print_cmd(cmd); // pour voir ce que c a sort
+			data.cmds = parser(lex, envp);
+			check_path(&data.cmds, envp);
+			print_cmd(data.cmds); // pour voir ce que c a sort
 			free_garbage();	
 		}
 	}
