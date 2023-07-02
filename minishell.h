@@ -16,6 +16,7 @@
 # include "libft/libft.h"
 # include <stdlib.h>
 # include <stdio.h>
+# include <termios.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
@@ -64,9 +65,9 @@ typedef struct	s_cmds
 
 typedef struct s_tool
 {
-	char	*str;
+	char	*line;
 	t_cmds	*cmds;
-	char	**envp;
+	t_list	*var_env;
 	char	*pwd;
 	char	*old_pwd;
 
@@ -75,14 +76,14 @@ typedef struct s_tool
 extern t_list	*g_garbage_collector;
 
 t_lexer	*ft_lexer();
-char	**ft_decoup(char **arg, char **tab, char c);
-int	ft_verif_quote(char *str);
+char	**ft_decoup(char *arg, char **tab, char c);
+int	ft_verif_quote(char *s);
 
 //utils
 t_lexer	*ft_lstnewl(char *str);
 void    ft_add_back_lexer(t_lexer **lst, t_lexer *new);
 void	cleartb(char **tb);
-void	cleartb(char **tb);
+char	**dup_tab(char **tb);
 void	ft_lstclearl(t_lexer **lst);
 void	clear_lex(t_lexer **lst, int nb);
 
@@ -95,10 +96,13 @@ void	erreur_bin(t_cmds **cmd, t_lexer **lex, char *str);
 
 
 //parsing
-t_cmds *parser(t_lexer *lex, char **envp);
+t_cmds *parser(t_lexer *lex);
 
 //path
 void	check_path(t_cmds **commande, char	**env);
+
+// expand
+void	expand(t_tool *data);
 
 //garbage_collector
 void	*ft_malloc(size_t size);

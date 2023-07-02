@@ -58,24 +58,31 @@ void	cleartb(char **tb) //inutile
 	free(tb);
 }
 
-void	ft_lstclearl(t_lexer **lst) //inutile
+char	**dup_tab(char **tb)
 {
-	t_lexer	*tmp;
-
-	if (!lst)
-		return ;
-	printf("\nft_lstclearl\n");
-	while (*lst)
+	int	i;
+	int	t;
+	char	**dup;
+	
+	if (!tb)
+		return (NULL);
+	i = 0;
+	t = 0;
+	while (tb[i++])
+		t++;
+	dup = malloc(sizeof(char *) * (t + 1));
+	if (!dup)
+		return (NULL);
+	i = 0;
+	while (tb[i])
 	{
-		tmp = (*lst)->next;
-		if ((*lst)->str != NULL)
-		{
-			printf("	lex->str = %s\n", (*lst)->str);
-			free((*lst)->str);
-		}
-		free(*lst);
-		*lst = tmp;
+		dup[i] = ft_strdup(tb[i]);
+		if (!dup[i])
+			return (cleartb(dup), NULL);
+		i++;
 	}
+	dup[i] = NULL;
+	return (dup);
 }
 
 void	clear_lex(t_lexer **lst, int nb)//inutile

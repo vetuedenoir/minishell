@@ -26,32 +26,29 @@ static int	lents(const char *str, char c)
 	return (t);
 }
 
-int    ft_verif_quote(char *str)
+int    ft_verif_quote(char *s)
 {
 	int	i;
 
-	i = 0;
-	if (!str)
-		return (-1);
-	while (str[i] != '\0')
+	i = -1;
+	while (s[++i] != '\0')
 	{
-		if (str[i] == 34)
+		if (s[i] == 34)
 		{
 			i++;
-			while(str[i] != 34 && str[i] != 0)
+			while(s[i] != 34 && s[i] != 0)
 				i++;
-			if (str[i] == 0)
-				return (-1);
+			if (s[i] == 0)
+				return (0);
 		}
-		else if (str[i] == 39)
+		else if (s[i] == 39)
 		{
 			i++;
-			while(str[i] != 39 && str[i] != 0)
+			while(s[i] != 39 && s[i] != 0)
 				i++;
-			if (str[i] == 0)
-				return (-1);
+			if (s[i] == 0)
+				return (0);
 		}
-		i++;
 	}
 	return (1);
 }
@@ -106,30 +103,28 @@ static char	*cpy_tsx(const char *s, int index, char c)
 	return (str);
 }
 
-char	**ft_decoup(char **arg, char **tab, char c)
+char	**ft_decoup(char *arg, char **tab, char c)
 {
 	int	i;
 	int	x;
 	int	t;
-	char	*s;
 
 	i = -1;
 	x = 0;
-	s = *arg;
-	if (!(tab = ft_malloc(sizeof(char *) * (lents(s, c) + 1))))
-		return (free(*arg), NULL);
-	t = (int)ft_strlen(s);
+	if (!(tab = ft_malloc(sizeof(char *) * (lents(arg, c) + 1))))
+		return (NULL);
+	t = (int)ft_strlen(arg);
 	while(i++ < t)
 	{
-		if (s[i] != c && s[i])
+		if (arg[i] != c && arg[i])
 		{
-			tab[x] = cpy_tsx(s, i, c);
+			tab[x] = cpy_tsx(arg, i, c);
 			if (tab[x] == NULL)
-				return (free_garbage(),free(*arg), NULL);
+				return (free_garbage(), NULL);
 			i += ft_strlen(tab[x]);
 			x++;
 		}
 	}
 	tab[x] = NULL;
-	return (free(*arg), tab);
+	return (tab);
 }

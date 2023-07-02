@@ -85,10 +85,12 @@ char	*add_space(char *str)
 	char	*s;
 	int	t;
 
+	if (str[0] == '\0')
+		return (NULL);
 	t = new_size(str);
 	if (!t || t == -1)
 		return (str);
-	s = malloc(sizeof(char) * (ft_strlen(str) + t + 1));
+	s = ft_malloc(sizeof(char) * (ft_strlen(str) + t + 1));
 	if (!s)
 		return (NULL);
 	s = copy_with_space(str, s);
@@ -126,12 +128,13 @@ t_lexer *ft_lexer(t_tool *data)
     
 	lex = NULL;
 	tab = NULL;
-	if (ft_verif_quote(data->str = readline(PROMPT)) == -1)
-		return (free(data->str), NULL);
-	memory_add(data->str);
-	arg = add_space(data->str);
+	if (!ft_verif_quote(data->line))
+		return (NULL);
+	arg = add_space(data->line);
+	if (!arg)
+		return (NULL);
 	printf("arg = %s\n", arg);
-	tab = ft_decoup(&arg, tab, ' ');
+	tab = ft_decoup(arg, tab, ' ');
 	if (tab == NULL)
 		return (NULL);
 	i = 0;
