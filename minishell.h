@@ -67,6 +67,7 @@ typedef struct s_tool
 {
 	char	*line;
 	t_cmds	*cmds;
+	t_list	*env;
 	t_list	*var_env;
 	char	*pwd;
 	char	*old_pwd;

@@ -65,6 +65,26 @@ void	print_cmd(t_cmds *cmd)
 	}
 }
 
+char	**lst_to_tab(t_list *lst)
+{
+	int	t;
+	int	i;
+	char	**tab;
+	
+	t = ft_lstsize(lst);
+	tab = ft_malloc(sizeof(char *) * (t + 1));
+	if (!tab)
+		return (NULL);
+	i = 0;
+	while (i < t && lst)
+	{
+		tab[i] = (char*)lst->content;
+		i++;
+		lst = lst->next;
+	}
+	tab[i] = NULL;
+	return (tab);
+}
 
 
 

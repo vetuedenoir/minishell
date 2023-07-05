@@ -82,7 +82,7 @@ int	main(int argc, char *argv[], char *envp[])
 		data.cmds = parser(lex);
 		if (data.cmds == NULL)
 			continue ;
-		expand(&data);
+		//expand(&data);
 		check_path(&data.cmds, envp);
 		print_cmd(data.cmds); // pour voir ce que c a sort
 	}
