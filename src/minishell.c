@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 15:03:05 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/29 14:03:40 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/17 19:35:45 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	main(int argc, char *argv[], char *envp[])
 		data.cmds = parser(lex);
 		if (data.cmds == NULL)
 			continue ;
-		//expand(&data);
+		expand(&data);
 		check_path(&data.cmds, envp);
 		print_cmd(data.cmds); // pour voir ce que c a sort
 	}

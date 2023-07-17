@@ -6,7 +6,7 @@
 #    By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/30 14:07:50 by kscordel          #+#    #+#              #
-#    Updated: 2023/06/29 11:23:13 by kscordel         ###   ########.fr        #
+#    Updated: 2023/07/17 18:27:44 by kscordel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,8 @@ OBJ_DIR = obj/
 
 SRC = $(SRC_DIR)minishell.c $(SRC_DIR)lexer.c  $(SRC_DIR)utils.c $(SRC_DIR)utils2.c \
 		$(SRC_DIR)parser.c $(SRC_DIR)path.c $(SRC_DIR)garbage_collector.c \
-		$(SRC_DIR)decoup.c $(SRC_DIR)utils_m.c $(SRC_DIR)expand.c\
+		$(SRC_DIR)decoup.c $(SRC_DIR)utils_m.c $(SRC_DIR)expand.c \
+		$(SRC_DIR)handle_quote.c \
 
 OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 
