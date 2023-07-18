@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 18:45:38 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/17 20:34:39 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/18 18:52:46 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,9 @@ int	ft_dollarsize(char *str, int *index, t_tool data)
 	char	*content;
 
 	i = 1;
-	while (str[i] && str[i] != 34 && str[i] != 39  && str[i] != '$')
+	if (str[i] == ' ' || str[i] == 0)
+		return (i);
+	while (str[i] && str[i] != 34 && str[i] != 39  && str[i] != '$' && str[i] != ' ')
 		i++;
 	*index = *index + i - 1;
 	var = malloc(sizeof(char) * (i + 1));
@@ -107,15 +109,17 @@ char	**handle_dollar(char *str, t_tool data)
 			i += handle_singlequote(&str[i], &s, &y);
 		if (str[i] == 34)
 			i += handle_doublequote(&str[i], &s, &y, data);
-		if (str[i] == '$')
+		if (str[i] == '$' && str[i + 1] != ' ' && str[i + 1] != 0)
 		{
 			i += ft_copy_var(&str[i], &s, &y, &data); //recupere la taille de la chaine variable et on soustrait $var
 			/*while (str[i] != 39 && str[i] != 34 && str[i] != '$' && str[i])
 				i++;*/
 		}		
-		if (str[i] && str[i] != 39 && str[i] != 34 && str[i] != '$')
+		if ((str[i] && str[i] != 39 && str[i] != 34 && str[i] != '$') ||\
+		 (str[i] == '$' && (str[i + 1] == ' ' || str[i + 1] == 0)))
 			s[y++] = str[i++];
 	}
+	s[y] = 0;
 	printf("i = %d\n", i);
 	return (divide(&s, data.flag));
 }
@@ -138,6 +142,7 @@ char	**handle_arg(char **arg, t_tool data)
 		new_arg = handle_dollar(arg[i], data);
 		while (new_arg[y])
 		{
+			printf("new_arg[%d] > %s\n", y, new_arg[y]);
 			new = ft_lstnew(new_arg[y++]);
 			if (!new)
 				return (ft_lstclear(&tmp, free), NULL);
@@ -147,7 +152,7 @@ char	**handle_arg(char **arg, t_tool data)
 		i++;
 	}
 	new_arg = lst_to_tab(tmp);
-	ft_lstclear(&tmp, free);
+	ft_lstclear(&tmp, NULL);
 	return (new_arg);
 }
 
@@ -162,11 +167,14 @@ void	expand(t_tool *data)
 			i++;
 
 		data->cmds->str = handle_arg(data->cmds->str, *data);
-
+		printf("expand > str %s\n", data->cmds->str[0]);
+		printf("expand > str %s\n", data->cmds->str[1]);
+	
 		//handle_redirection(&data->cmds->redirection);
 
 		//handle_var(data->cmds->str, i); // atention a export
 		// atention a l ordre
 		data->cmds = data->cmds->next;	
 	}
+	print_cmd(data->cmds);
 }
