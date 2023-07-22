@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 13:42:25 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/18 18:49:04 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/22 16:25:38 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	*return_var(char *str, int *index, t_tool data)
 	if (!var)
 		return (0);
 	ft_strlcpy(var, &str[1], i);
-	content = get_var(var, data.env, data.var_env);
+	content = get_var(var, data.var_env);
 	return (free(var), content);
 }
 
@@ -54,8 +54,8 @@ int	handle_doublequote(char *str, char **s, int *y, t_tool data)
 	int		x;
 	char	*var;
 
-	i = 1;
-	while (str[i] && str[i] != 34)
+	i = 0;
+	while (str[++i] && str[i] != 34)
 	{
 		if (str[i] == '$' && str[i + 1] != 0 && str[i + 1] != ' ')
 		{	
@@ -78,7 +78,6 @@ int	handle_doublequote(char *str, char **s, int *y, t_tool data)
 			s[0][*y] = str[i];
 			*y = *y + 1;
 		}
-		i++;
 	}
 	return (i + 1);
 }
@@ -97,7 +96,7 @@ int	ft_copy_var(char *str, char **s, int *y, t_tool *data)
 	if (!var)
 		return (i + 1);
 	ft_strlcpy(var, &str[1], i);
-	content = get_var(var, data->env, data->var_env);
+	content = get_var(var, data->var_env);
 	if (!content)
 		return (free(var), i);
 	t = -1;

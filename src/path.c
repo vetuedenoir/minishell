@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:28:45 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/29 13:07:18 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/22 15:01:30 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,23 @@ char	*verif_path(char **path, char *str)
 		return (s);
 }
 
+char	*true_path(char *str)
+{
+	if (ft_strchr(str, '/'))
+	{
+		if (access(str, X_OK))
+		{
+			printf("la commande %s est introuvable\n", str);
+			return (NULL);
+		}
+		else
+			return (str);
+	}
+	printf("la commande %s est introuvable\n", str);
+	return (NULL);
+}
 
-char	*get_path(char *str, char **envp)
+char	*get_path(char *str, char *line)
 {
 	int		i;
 	char	**tb;
@@ -35,13 +50,9 @@ char	*get_path(char *str, char **envp)
 	char	*s;
 	
 	i = 0;
-	while (envp[i])
-	{
-		if (!strncmp(envp[i], "PATH", 4))
-			break ;
-		i++;
-	}
-	tb = ft_split(&envp[i][5], ':'); // utiliser un split qui utilise ft_calloc
+	if (line == NULL || ft_strchr(str, '/'))
+		return (true_path(str));
+	tb = ft_split(line, ':'); // utiliser un split qui utilise ft_calloc
 	if (!tb)
 		return (free_garbage(), NULL);
 	i = 0;
@@ -55,15 +66,28 @@ char	*get_path(char *str, char **envp)
 			return (cleartb(tb), s);
 		i++;
 	}
-	return (printf("la commande %s n existe pas \n", str),cleartb(tb), NULL);
+	return (printf("la commande %s est introuvable\n", str),cleartb(tb), NULL);
 }
 
-void	check_path(t_cmds **commande, char **env)
+char	*get_line(t_list *env)
+{
+	while (env)
+	{
+		if (!strncmp((char *)env->content, "PATH", 4))
+			return ((char *)env->content);
+		env = env->next;
+	}
+	return (NULL);
+}
+
+void	check_path(t_cmds **commande, t_list *env)
 {
 	char	*s;
+	char	*path;
 	t_cmds	*node;
 
 	node = *commande;
+	path = get_line(env);
 	while (*commande != NULL)
 	{
 		if ((*commande)->str && (*commande)->str[0])
@@ -77,7 +101,8 @@ void	check_path(t_cmds **commande, char **env)
 			else
 			{
 				(*commande)->builtin = 0;
-				(*commande)->str[0] = get_path((*commande)->str[0], env);
+				printf("get path > %s\n", get_path(s, path));
+				(*commande)->str[0] = get_path(s, path);
 			}
 		}
 		(*commande) = (*commande)->next;

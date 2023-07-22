@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 15:03:05 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/17 19:35:45 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/22 16:52:28 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ int	main(int argc, char *argv[], char *envp[])
 		if (!data.line)
 			break ;
 		memory_add(data.line);
+		add_history(data.line);
 		lex = ft_lexer(&data);
 		if (lex == NULL)
 			continue ;
@@ -83,9 +84,10 @@ int	main(int argc, char *argv[], char *envp[])
 		if (data.cmds == NULL)
 			continue ;
 		expand(&data);
-		check_path(&data.cmds, envp);
+		check_path(&data.cmds, data.var_env);
 		print_cmd(data.cmds); // pour voir ce que c a sort
 	}
 	ft_lstclear(&data.var_env, free);
+	rl_clear_history();
 	return (0);
 }

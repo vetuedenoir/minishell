@@ -6,19 +6,18 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 18:45:38 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/18 18:52:46 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/22 16:21:35 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*get_var(char *dvar, t_list *env, t_list *var_env)
+char	*get_var(char *dvar, t_list *var_env)
 {
 	char	*str;
 	char	*s;
 	int		t;
-	
-	// reverifier les tailles
+
 	t = ft_strlen(dvar);
 	while (var_env)
 	{
@@ -32,19 +31,6 @@ char	*get_var(char *dvar, t_list *env, t_list *var_env)
 			return (str);
 		}
 		var_env = var_env->next;
-	}
-	while (env)
-	{
-		s = (char *)env->content;
-		if (!ft_strncmp(s, dvar, t) && s[t] == '=')
-		{
-			str = malloc(sizeof(char) * ft_strlen(&s[t]));
-			if (!str)
-				return (NULL);
-			ft_strlcpy(str, &s[t + 1], ft_strlen(&s[t]));
-			return (str);
-		}
-		env = env->next;
 	}
 	return (NULL);
 }
@@ -66,19 +52,17 @@ int	ft_dollarsize(char *str, int *index, t_tool data)
 	if (!var)
 		return (0);
 	ft_strlcpy(var, &str[1], i);
-	content = get_var(var, data.env, data.var_env);
+	content = get_var(var, data.var_env);
 	if (!content)
 		return (free(var), (i * -1));
 	size = ft_strlen(content);
-	// reverifier le calcule
 	size -= i;
 	free(content);
 	free(var);
 	return (size);
 }
 
-
-char	**handle_dollar(char *str, t_tool data)
+char	*resize_arg(char *str, t_tool data)
 {
 	int	i;
 	int	y;
@@ -98,6 +82,16 @@ char	**handle_dollar(char *str, t_tool data)
 			y += ft_dollarsize(&str[i], &i, data); //recupere la taille de la chaine variable et on soustrait $var
 	}
 	s = ft_malloc(sizeof(char) * (y + i + 1));
+	return (s);
+}
+
+char	**handle_dollar(char *str, t_tool data)
+{
+	int	i;
+	int	y;
+	char	*s;
+	
+	s = resize_arg(str, data);
 	if (!s)
 		return (NULL);
 	i = 0;
@@ -110,11 +104,7 @@ char	**handle_dollar(char *str, t_tool data)
 		if (str[i] == 34)
 			i += handle_doublequote(&str[i], &s, &y, data);
 		if (str[i] == '$' && str[i + 1] != ' ' && str[i + 1] != 0)
-		{
-			i += ft_copy_var(&str[i], &s, &y, &data); //recupere la taille de la chaine variable et on soustrait $var
-			/*while (str[i] != 39 && str[i] != 34 && str[i] != '$' && str[i])
-				i++;*/
-		}		
+			i += ft_copy_var(&str[i], &s, &y, &data);	
 		if ((str[i] && str[i] != 39 && str[i] != 34 && str[i] != '$') ||\
 		 (str[i] == '$' && (str[i + 1] == ' ' || str[i + 1] == 0)))
 			s[y++] = str[i++];
@@ -133,7 +123,6 @@ char	**handle_arg(char **arg, t_tool data)
 	char	**new_arg;
 	
 	i = 0;
-	// simplifier cette fonction en apelant juste dollar_check;
 	tmp = NULL;
 	while (arg[i])
 	{
@@ -141,7 +130,6 @@ char	**handle_arg(char **arg, t_tool data)
 		new_arg = handle_dollar(arg[i], data);
 		while (new_arg[y])
 		{
-			printf("new_arg[%d] > %s\n", y, new_arg[y]);
 			new = ft_lstnew(new_arg[y++]);
 			if (!new)
 				return (ft_lstclear(&tmp, NULL), NULL);
@@ -156,24 +144,16 @@ char	**handle_arg(char **arg, t_tool data)
 
 void	expand(t_tool *data)
 {
-	int	i;
-	
-	i = 0;
+	t_cmds *tmp;
+
+	tmp = data->cmds;
 	while (data->cmds)
 	{
-		if (data->cmds->next)
-			i++;
-
-		data->cmds->str = handle_arg(data->cmds->str, *data);
-		//printf("expand > str %s\n", data->cmds->str[0]);
-		//printf("expand > str %s\n", data->cmds->str[1]);
-		
+		if (data->cmds->str)
+			data->cmds->str = handle_arg(data->cmds->str, *data);
 		if (data->cmds->redirection)
 			data->cmds->redirection = handle_redirection(data->cmds->redirection, *data);
-
-		//handle_var(data->cmds->str, i); // atention a export
-		// atention a l ordre
 		data->cmds = data->cmds->next;	
 	}
-	print_cmd(data->cmds);
+	data->cmds = tmp;
 }

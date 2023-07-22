@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 18:59:11 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/18 19:16:26 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/22 16:22:12 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,7 @@ char	*handle_dl(char	*str, t_tool data)
 	int	y;
 	char	*s;
 
-	i = -1;
-	y = 0;
-	while(str[i++])
-	{
-		if (str[i] == 39)
-		{
-			while (str[++i] != 39)
-				;
-			y = -2;
-		}
-		else if (str[i] == '$')
-			y += ft_dollarsize(&str[i], &i, data);
-	}
-	s = ft_malloc(sizeof(char) * (y + i + 1));
+	s = resize_arg(str, data);
 	if (!s)
 		return (NULL);
 	i = 0;

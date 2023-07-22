@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:08:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/17 19:33:55 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/22 16:23:03 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ typedef struct s_tool
 {
 	char	*line;
 	t_cmds	*cmds;
-	t_list	*env;
 	t_list	*var_env;
 	char	*pwd;
 	char	*old_pwd;
@@ -100,12 +99,13 @@ char	**lst_to_tab(t_list *lst);
 t_cmds *parser(t_lexer *lex);
 
 //path
-void	check_path(t_cmds **commande, char	**env);
+void	check_path(t_cmds **commande, t_list *env);
 
 // expand
 void	expand(t_tool *data);
-char	*get_var(char *dvar, t_list *env, t_list *var_env);
+char	*get_var(char *dvar, t_list *var_env);
 int	ft_dollarsize(char *str, int *index, t_tool data);
+char	*resize_arg(char *str, t_tool data);
 
 // handle_quote
 int	ft_copy_var(char *str, char **s, int *y, t_tool *data);
