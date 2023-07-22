@@ -105,12 +105,17 @@ void	check_path(t_cmds **commande, char	**env);
 // expand
 void	expand(t_tool *data);
 char	*get_var(char *dvar, t_list *env, t_list *var_env);
+int	ft_dollarsize(char *str, int *index, t_tool data);
 
 // handle_quote
 int	ft_copy_var(char *str, char **s, int *y, t_tool *data);
 int	handle_doublequote(char *str, char **s, int *y, t_tool data);
 int	handle_singlequote(char *str, char **s, int *y);
 char	**divide(char **s, int flag);
+
+//handle_redirection
+t_lexer *handle_redirection(t_lexer *redirection, t_tool data);
+char	*handle_dl(char *str, t_tool data);
 
 //garbage_collector
 void	*ft_malloc(size_t size);

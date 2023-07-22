@@ -20,7 +20,7 @@ OBJ_DIR = obj/
 SRC = $(SRC_DIR)minishell.c $(SRC_DIR)lexer.c  $(SRC_DIR)utils.c $(SRC_DIR)utils2.c \
 		$(SRC_DIR)parser.c $(SRC_DIR)path.c $(SRC_DIR)garbage_collector.c \
 		$(SRC_DIR)decoup.c $(SRC_DIR)utils_m.c $(SRC_DIR)expand.c \
-		$(SRC_DIR)handle_quote.c \
+		$(SRC_DIR)handle_quote.c $(SRC_DIR)handle_redirection.c\
 
 OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 

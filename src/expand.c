@@ -97,7 +97,7 @@ char	**handle_dollar(char *str, t_tool data)
 		else if (str[i] == '$')
 			y += ft_dollarsize(&str[i], &i, data); //recupere la taille de la chaine variable et on soustrait $var
 	}
-	s = malloc(sizeof(char) * (y + i + 1));
+	s = ft_malloc(sizeof(char) * (y + i + 1));
 	if (!s)
 		return (NULL);
 	i = 0;
@@ -120,7 +120,6 @@ char	**handle_dollar(char *str, t_tool data)
 			s[y++] = str[i++];
 	}
 	s[y] = 0;
-	printf("i = %d\n", i);
 	return (divide(&s, data.flag));
 }
 
@@ -145,10 +144,9 @@ char	**handle_arg(char **arg, t_tool data)
 			printf("new_arg[%d] > %s\n", y, new_arg[y]);
 			new = ft_lstnew(new_arg[y++]);
 			if (!new)
-				return (ft_lstclear(&tmp, free), NULL);
+				return (ft_lstclear(&tmp, NULL), NULL);
 			ft_lstadd_back(&tmp, new);
 		}
-		free(new_arg);
 		i++;
 	}
 	new_arg = lst_to_tab(tmp);
@@ -167,10 +165,11 @@ void	expand(t_tool *data)
 			i++;
 
 		data->cmds->str = handle_arg(data->cmds->str, *data);
-		printf("expand > str %s\n", data->cmds->str[0]);
-		printf("expand > str %s\n", data->cmds->str[1]);
-	
-		//handle_redirection(&data->cmds->redirection);
+		//printf("expand > str %s\n", data->cmds->str[0]);
+		//printf("expand > str %s\n", data->cmds->str[1]);
+		
+		if (data->cmds->redirection)
+			data->cmds->redirection = handle_redirection(data->cmds->redirection, *data);
 
 		//handle_var(data->cmds->str, i); // atention a export
 		// atention a l ordre

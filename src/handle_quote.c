@@ -108,7 +108,7 @@ int	ft_copy_var(char *str, char **s, int *y, t_tool *data)
 			data->flag = *y;
 		*y = *y + 1;
 	}
-	return (i);
+	return (free(var), free(content), i);
 }
 
 char	**divide(char **s, int flag)
@@ -120,21 +120,21 @@ char	**divide(char **s, int flag)
 	int		t;
 
 	str = *s;
-	tab = ft_calloc(sizeof(char *) , 3);
+	tab = ft_calloc_g(sizeof(char *) , 3);
 	if (!tab)
-		return (free(*s), NULL);
+		return (NULL);
 	if (!flag)
 		return (tab[0] = *s, tab[1] = NULL, tab);
 	t = ft_strlen(*s);
-	l1 = malloc(sizeof(char) * (flag + 1));
+	l1 = ft_malloc(sizeof(char) * (flag + 1));
 	if (!l1)
 		return (free(tab), free(*s), NULL);
-	l2 = malloc(sizeof(char) * (t - flag + 1));
+	l2 = ft_malloc(sizeof(char) * (t - flag + 1));
 	if (!l2)
-		return (free(tab), free(*s), free(l1), NULL);
+		return (free(tab), free(l1), NULL);
 	ft_strlcpy(l1, *s, flag + 1);
 	ft_strlcpy(l2, &str[flag], t - flag + 1);
 	tab[0] = l1;
 	tab[1] = l2;
-	return (free(*s), tab[2] = NULL, tab);
+	return (tab[2] = NULL, tab);
 }
