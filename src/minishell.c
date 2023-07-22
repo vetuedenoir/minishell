@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 15:03:05 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/22 16:52:28 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/22 19:22:16 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,5 @@ int	main(int argc, char *argv[], char *envp[])
 	}
 	ft_lstclear(&data.var_env, free);
 	rl_clear_history();
-	return (0);
+	exit(0);
 }
