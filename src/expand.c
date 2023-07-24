@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 18:45:38 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/22 16:21:35 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/24 15:30:20 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ int	ft_dollarsize(char *str, int *index, t_tool data)
 	i = 1;
 	if (str[i] == ' ' || str[i] == 0)
 		return (i);
-	while (str[i] && str[i] != 34 && str[i] != 39  && str[i] != '$' && str[i] != ' ')
+	while (str[i] && str[i] != 34 && str[i] != 39 && \
+		str[i] != '$' && str[i] != ' ')
 		i++;
 	*index = *index + i - 1;
 	var = malloc(sizeof(char) * (i + 1));
@@ -64,22 +65,22 @@ int	ft_dollarsize(char *str, int *index, t_tool data)
 
 char	*resize_arg(char *str, t_tool data)
 {
-	int	i;
-	int	y;
+	int		i;
+	int		y;
 	char	*s;
-	
+
 	i = -1;
 	y = 0;
 	while (str[++i])
 	{
-		if (str[i] == 39) // sigle quote
+		if (str[i] == 39) // single quote
 		{
 			while (str[++i] != 39)
 				;
 			y -= 2;
 		}
 		else if (str[i] == '$')
-			y += ft_dollarsize(&str[i], &i, data); //recupere la taille de la chaine variable et on soustrait $var
+			y += ft_dollarsize(&str[i], &i, data);//recupere la taille de la chaine variable et on soustrait $var
 	}
 	s = ft_malloc(sizeof(char) * (y + i + 1));
 	return (s);
@@ -87,10 +88,10 @@ char	*resize_arg(char *str, t_tool data)
 
 char	**handle_dollar(char *str, t_tool data)
 {
-	int	i;
-	int	y;
+	int		i;
+	int		y;
 	char	*s;
-	
+
 	s = resize_arg(str, data);
 	if (!s)
 		return (NULL);
@@ -104,24 +105,23 @@ char	**handle_dollar(char *str, t_tool data)
 		if (str[i] == 34)
 			i += handle_doublequote(&str[i], &s, &y, data);
 		if (str[i] == '$' && str[i + 1] != ' ' && str[i + 1] != 0)
-			i += ft_copy_var(&str[i], &s, &y, &data);	
-		if ((str[i] && str[i] != 39 && str[i] != 34 && str[i] != '$') ||\
-		 (str[i] == '$' && (str[i + 1] == ' ' || str[i + 1] == 0)))
+			i += ft_copy_var(&str[i], &s, &y, &data);
+		if ((str[i] && str[i] != 39 && str[i] != 34 && str[i] != '$') || \
+			(str[i] == '$' && (str[i + 1] == ' ' || str[i + 1] == 0)))
 			s[y++] = str[i++];
 	}
 	s[y] = 0;
 	return (divide(&s, data.flag));
 }
 
-
 char	**handle_arg(char **arg, t_tool data)
 {
-	int	i;
-	int	y;
+	int		i;
+	int		y;
 	t_list	*tmp;
 	t_list	*new;
 	char	**new_arg;
-	
+
 	i = 0;
 	tmp = NULL;
 	while (arg[i])
@@ -144,7 +144,7 @@ char	**handle_arg(char **arg, t_tool data)
 
 void	expand(t_tool *data)
 {
-	t_cmds *tmp;
+	t_cmds	*tmp;
 
 	tmp = data->cmds;
 	while (data->cmds)
@@ -152,8 +152,9 @@ void	expand(t_tool *data)
 		if (data->cmds->str)
 			data->cmds->str = handle_arg(data->cmds->str, *data);
 		if (data->cmds->redirection)
-			data->cmds->redirection = handle_redirection(data->cmds->redirection, *data);
-		data->cmds = data->cmds->next;	
+			data->cmds->redirection = \
+			handle_redirection(data->cmds->redirection, *data);
+		data->cmds = data->cmds->next;
 	}
 	data->cmds = tmp;
 }

@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 15:03:05 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/22 19:22:16 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/24 19:28:45 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ t_tool	*init_shell(char **envp, t_tool *data)
 {
 	t_list	*node;
 	char	**tab;
-	int	i;
-	
+	int		i;
+
 	i = 0;
 	ft_bzero(data, sizeof(t_tool));
 	if (!(*envp))
@@ -35,25 +35,30 @@ t_tool	*init_shell(char **envp, t_tool *data)
 		ft_lstadd_back(&data->var_env, node);
 		i++;
 	}
-	free(tab);		
+	free(tab);
 	return (data);
 }
 
 void	verif_set(int ac, char **av)
 {
 	//struct termios	term;
-	
+
 	if (ac != 1 || av[1] != NULL)
 	{
-		printf("Erreur : Ce programme ne prend pas d argument\n");
+		ft_putstr_fd("Erreur : Ce programme ne prend pas d argument\n", 2);
 		exit(1);
 	}
 	if (!isatty(STDIN_FILENO))
 	{
-		printf("erreur : stdin n est pas un terminal");
+		ft_putstr_fd("Erreur : stdin n est pas un terminal\n", 2);
 		exit(1);
 	}
- 	/*if (tcgetattr(STDIN_FILENO, &term) != 0)
+	if (!isatty(STDOUT_FILENO))
+	{
+		ft_putstr_fd("Erreur : stdout n est pas un terminal\n", 2);
+		exit(1);
+	}
+	/*if (tcgetattr(STDIN_FILENO, &term) != 0)
 		perror("tcgetattr() error");
 	term.c_iflag = INLCR;
 	if (tcsetattr(STDIN_FILENO, TCSANOW, &term) != 0)
@@ -62,7 +67,7 @@ void	verif_set(int ac, char **av)
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	t_lexer *lex;
+	t_lexer	*lex;
 	t_tool	data;
 
 	verif_set(argc, argv);
@@ -80,7 +85,7 @@ int	main(int argc, char *argv[], char *envp[])
 		if (lex == NULL)
 			continue ;
 		printlex(lex);
-		data.cmds = parser(lex);
+		data.cmds = parser(lex, data.cmds);
 		if (data.cmds == NULL)
 			continue ;
 		expand(&data);

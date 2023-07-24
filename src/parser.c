@@ -6,21 +6,18 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 18:46:15 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/05 18:53:03 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/24 19:32:09 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../minishell.h"
-
-
 
 t_lexer	*cut_lex(t_lexer **lex, t_cmds **cmd)
 {
-	t_lexer *first;
+	t_lexer	*first;
 	t_lexer	*token_node;
 	t_lexer	*last;
-	
+
 	first = (*lex)->prev;
 	token_node = (*lex);
 	last = (*lex)->next->next;
@@ -43,23 +40,49 @@ t_lexer	*cut_lex(t_lexer **lex, t_cmds **cmd)
 	return (last);
 }
 
-
 int	extracte_node(t_lexer **lex, t_cmds **cmd)
 {
 	// erreur si il n y a pas de fichier apres un token ou qu il y a un autre token
 	if ((*lex)->next == NULL)
-	{
-		free_garbage();
-		return (printf("minishell: parse error near '\\n'\n"), 0);
-	}
-	if ((*lex)->next->token != 0)
-	{
-		printf("minishell: parse error near %s\n", (*lex)->next->str);
-		return (free_garbage(), 0);
-	}
+		return (ft_putstr_fd("minishell: parse error near '\\n'\n", 2), 0);
+	if ((*lex)->next->token == 1)
+		return (ft_putstr_fd("minishell: parse error near >\n", 2), 0);
+	if ((*lex)->next->token == 2)
+		return (ft_putstr_fd("minishell: parse error near <\n", 2), 0);
+	if ((*lex)->next->token == 3)
+		return (ft_putstr_fd("minishell: parse error near >>\n", 2), 0);
+	if ((*lex)->next->token == 4)
+		return (ft_putstr_fd("minishell: parse error near <<\n", 2), 0);
+	if ((*lex)->next->token == 5)
+		return (ft_putstr_fd("minishell: parse error near |\n", 2), 0);
 	// on ajoute le token et son fichier dans la structure cmds
 	*lex = cut_lex(lex, cmd);
 	return (1);
+}
+
+t_lexer	*boucle(t_lexer **lex, t_cmds **cmd, t_lexer **tmp, int *i)
+{
+	*tmp = NULL;
+	*i = 0;
+	while (*lex != NULL && (*lex)->token != Pipe)
+	{
+		if ((*lex)->token != 0)
+		{
+			if (!extracte_node(lex, cmd))
+				return (NULL);
+			(*cmd)->num_redirections += 1;
+		}
+		if (!(*lex))
+			break ;
+		if (*tmp == NULL && ((*lex)->token == 5 || (*lex)->token == 0))
+			*tmp = *lex;
+		if ((*lex)->token == 0)
+		{
+			*i = *i + 1;
+			*lex = (*lex)->next;
+		}
+	}
+	return (*tmp);
 }
 
 t_cmds	*incertion(t_lexer **lex, t_cmds *cmd)
@@ -69,39 +92,15 @@ t_cmds	*incertion(t_lexer **lex, t_cmds *cmd)
 
 	// Des que l on rencontre un token on extrait le token et le fichier du lexer
 	// pour les mettre dans la redirection de cmd
-
-	tmp = NULL;
-	i = 0;
 	if ((*lex)->token == Pipe)
-	{
-		printf( "minishell: parse error near '\\n'");
-		return (free_garbage(), NULL);
-	}
-	while (*lex != NULL && (*lex)->token != Pipe)
-	{
-		if ((*lex)->token != 0)
-		{
-			if (!extracte_node(lex, &cmd))
-				return (free_garbage(), NULL);
-			cmd->num_redirections += 1;
-		}
-		if (!(*lex))
-			break ;
-		if (tmp == NULL && ((*lex)->token == 5 || (*lex)->token == 0))
-			tmp = *lex;
-		if ((*lex)->token == 0)
-		{
-			i++;
-			*lex = (*lex)->next;
-		}
-	}
+		return (ft_putstr_fd("minishell: parse error near '\\n'", 2), NULL);
+	*lex = boucle(lex, &cmd, &tmp, &i);
+	if (!(*lex))
+		return (NULL);
 	// calcule la taille de la liste actualiser jusqu au pipe
 	cmd->str = ft_malloc(sizeof(char *) * (i + 1));
 	if (cmd->str == NULL)
-	{
-		printf("malloc error");
-		return (free_garbage(), NULL);
-	}
+		return (ft_putstr_fd("malloc error", 2), NULL);
 	(*lex) = tmp;
 	// on copy les maillons restant qui sont la commande et ses argument
 	// pour les mettre dans **str de cmd
@@ -114,39 +113,31 @@ t_cmds	*incertion(t_lexer **lex, t_cmds *cmd)
 	}
 	cmd->str[i] = NULL;
 	(*lex) = tmp;
-	clear_lex(lex, (i));  // changer la fonction pour qu elle ne free pas
+	clear_lex(lex, (i)); //la fonction ne free pas
 	return (cmd);
 }
 
-/*Parsing grossier la fonction erreur bin ne marche pas tres bien
-bcp de leaks , peut etre revoir le decoupage ...*/
-
-t_cmds	*parser(t_lexer *lex)
+t_cmds	*parser(t_lexer *lex, t_cmds *commande)
 {
 	t_cmds	*commande_node;
-	t_cmds	*commande;
 
 	commande = NULL;
 	while (lex != NULL)
 	{
 		commande_node = ft_calloc_g(1, sizeof(t_cmds));
 		if (commande_node == NULL)
-			return (free_garbage(), NULL);
+			return (NULL);
 		commande_node = incertion(&lex, commande_node);
 		if (commande_node == NULL)
-			return (free_garbage(), NULL);
+			return (NULL);
 		add_back_cmds(&commande, commande_node);
 		if (lex == NULL)
 			break ;
 		lex = lex->next;
-		if (lex == NULL || lex->token == Pipe)
-		{
-			if (lex == NULL)
-				printf("minishell: parse error near '\\n'\n");
-			if (lex->token == Pipe)
-				printf("minishell: parse error near '%s'\n", lex->str);
-			return (free_garbage(), NULL);
-		}
+		if (lex == NULL)
+			return (ft_putstr_fd("minishell: parse error near '\\n'\n", 2), NULL);
+		if (lex->token == Pipe)
+			return (ft_putstr_fd("minishell: parse error near '|'\n", 2), NULL);
 	}
 	return (commande);
 }

@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 13:42:25 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/22 16:25:38 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/24 19:15:01 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	handle_singlequote(char *str, char **s, int *y)
 {
-	int i;
+	int		i;
 	char	*l;
 
 	l = *s;
@@ -36,44 +36,53 @@ char	*return_var(char *str, int *index, t_tool data)
 	char	*content;
 
 	i = 1;
-	
-	while (str[i] && str[i] != 34 && str[i] != 39  && str[i] != '$' && str[i] != ' ')
+	while (str[i] && str[i] != 34 && str[i] != 39 && \
+		str[i] != '$' && str[i] != ' ')
 		i++;
 	*index = *index + i;
 	var = malloc(sizeof(char) * (i + 1));
 	if (!var)
-		return (0);
+		return (NULL);
 	ft_strlcpy(var, &str[1], i);
 	content = get_var(var, data.var_env);
 	return (free(var), content);
 }
 
-int	handle_doublequote(char *str, char **s, int *y, t_tool data)
+int	zi(char *str, char **s, int *y, t_tool data)
 {
 	int		i;
 	int		x;
 	char	*var;
 
 	i = 0;
-	while (str[++i] && str[i] != 34)
+	var = return_var(&str[i], &i, data);
+	x = 0;
+	if (!var)
+		return (i);
+	while (var[x])
 	{
+		s[0][*y] = var[x++];
+		*y = *y + 1;
+	}
+	free(var);
+	return (i);
+}
+
+int	handle_doublequote(char *str, char **s, int *y, t_tool data)
+{
+	int		i;
+
+	i = 0;
+	while (str[++i] && str[i] != 34)
+	{		
 		if (str[i] == '$' && str[i + 1] != 0 && str[i + 1] != ' ')
-		{	
-			var = return_var(&str[i], &i, data);
-			x = 0;
-			if (!var)
-				continue ;
-			while (var[x])	
-			{
-				s[0][*y] = var[x++];
-				*y = *y + 1;
-			}
-			free(var);
-		if (str[i] == 34)
-			return (i + 1);
+		{
+			i += zi(&str[i], s, y, data);
+			if (str[i] == 34)
+				return (i + 1);
 		}
-		if ((str[i] != 34 && str[i] != '$') ||\
-		 (str[i] == '$' && (str[i + 1] == ' ' || str[i] == 0)))
+		if ((str[i] != 34 && str[i] != '$') || \
+			(str[i] == '$' && (str[i + 1] == ' ' || str[i] == 0)))
 		{
 			s[0][*y] = str[i];
 			*y = *y + 1;
@@ -90,7 +99,7 @@ int	ft_copy_var(char *str, char **s, int *y, t_tool *data)
 	char	*content;
 
 	i = 1;
-	while (str[i] && str[i] != 34 && str[i] != 39  && str[i] != '$')
+	while (str[i] && str[i] != 34 && str[i] != 39 && str[i] != '$')
 		i++;
 	var = malloc(sizeof(char) * (i + 1));
 	if (!var)
@@ -119,7 +128,7 @@ char	**divide(char **s, int flag)
 	int		t;
 
 	str = *s;
-	tab = ft_calloc_g(sizeof(char *) , 3);
+	tab = ft_calloc_g(sizeof(char *), 3);
 	if (!tab)
 		return (NULL);
 	if (!flag)

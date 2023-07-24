@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:08:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/22 16:23:03 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/24 13:36:21 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ char	**lst_to_tab(t_list *lst);
 
 
 //parsing
-t_cmds *parser(t_lexer *lex);
+t_cmds *parser(t_lexer *lex, t_cmds *commande);
 
 //path
 void	check_path(t_cmds **commande, t_list *env);

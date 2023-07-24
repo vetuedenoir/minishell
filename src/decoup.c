@@ -6,10 +6,9 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 18:45:46 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/05 18:45:47 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/24 13:26:39 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../minishell.h"
 
@@ -24,12 +23,12 @@ static int	lents(const char *str, char c)
 	{
 		if (str[i] == 34)
 		{
-			while(str[++i] != 34)
+			while (str[++i] != 34)
 				;
 		}
 		if (str[i] == 39)
 		{
-			while(str[++i] != 39)
+			while (str[++i] != 39)
 				;
 		}
 		if (str[i] != c && (str[i + 1] == c || str[i + 1] == '\0'))
@@ -38,7 +37,7 @@ static int	lents(const char *str, char c)
 	return (t);
 }
 
-int    ft_verif_quote(char *s)
+int	ft_verif_quote(char *s)
 {
 	int	i;
 
@@ -48,7 +47,7 @@ int    ft_verif_quote(char *s)
 		if (s[i] == 34)
 		{
 			i++;
-			while(s[i] != 34 && s[i] != 0)
+			while (s[i] != 34 && s[i] != 0)
 				i++;
 			if (s[i] == 0)
 				return (0);
@@ -56,7 +55,7 @@ int    ft_verif_quote(char *s)
 		else if (s[i] == 39)
 		{
 			i++;
-			while(s[i] != 39 && s[i] != 0)
+			while (s[i] != 39 && s[i] != 0)
 				i++;
 			if (s[i] == 0)
 				return (0);
@@ -65,11 +64,10 @@ int    ft_verif_quote(char *s)
 	return (1);
 }
 
-static char	*cpy_tsx(const char *s, int index, char c)
+int	line_lents(const char *s, int index, char c)
 {
-	int		i;
-	int		t;
-	char	*str;
+	int	t;
+	int	i;
 
 	i = index;
 	t = 0;
@@ -90,7 +88,15 @@ static char	*cpy_tsx(const char *s, int index, char c)
 		i++;
 		t++;
 	}
-	str = ft_malloc(sizeof(char) * (t + 1));
+	return (t);
+}
+
+static char	*cpy_tsx(const char *s, int index, char c)
+{
+	int		i;
+	char	*str;
+
+	str = ft_malloc(sizeof(char) * (line_lents(s, index, c) + 1));
 	if (str == NULL)
 		return (NULL);
 	i = 0;
@@ -111,8 +117,7 @@ static char	*cpy_tsx(const char *s, int index, char c)
 		if (s[index])
 			str[i++] = s[index++];
 	}
-	str[i] = '\0';
-	return (str);
+	return (str[i] = '\0', str);
 }
 
 char	**ft_decoup(char *arg, char **tab, char c)
@@ -123,10 +128,11 @@ char	**ft_decoup(char *arg, char **tab, char c)
 
 	i = -1;
 	x = 0;
-	if (!(tab = ft_malloc(sizeof(char *) * (lents(arg, c) + 1))))
+	tab = ft_malloc(sizeof(char *) * (lents(arg, c) + 1));
+	if (!tab)
 		return (NULL);
 	t = (int)ft_strlen(arg);
-	while(i++ < t)
+	while (i++ < t)
 	{
 		if (arg[i] != c && arg[i])
 		{

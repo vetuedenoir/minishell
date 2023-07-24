@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 13:39:08 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/19 17:51:52 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/24 16:05:42 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,9 @@ int	new_size(char *str)
 	int	i;
 	int	t;
 
-	i = 0;
+	i = -1;
 	t = 0;
-	if (!str)
-		return (-1);
-	while (str[i])
+	while (str[++i])
 	{
 		if (str[i] == 34)
 		{
@@ -39,9 +37,35 @@ int	new_size(char *str)
 				i++;
 			t += 2;
 		}
-		i++;
+	//	i++;
 	}
 	return (t);
+}
+
+int	quote_space(char *str, char **s, int *y)
+{
+	int		i;
+	int		yy;
+	char	*l;
+
+	l = *s;
+	yy = *y;
+	i = 0;
+	if (str[i] == 34)
+	{
+		while (str[++i] != 34)
+			l[yy++] = str[i - 1];
+		l[yy++] = str[i - 1];
+	}
+	if (str[i] == 39)
+	{
+		while (str[++i] != 39)
+			l[yy++] = str[i - 1];
+		l[yy++] = str[i - 1];
+	}
+	*y = yy;
+	*s = l;
+	return (i);
 }
 
 char	*copy_with_space(char *str, char *s)
@@ -53,18 +77,8 @@ char	*copy_with_space(char *str, char *s)
 	y = 0;
 	while (str[i])
 	{
-		if (str[i] == 34)
-		{
-			while (str[++i] != 34)
-				s[y++] = str[i - 1];
-			s[y++] = str[i - 1];
-		}
-		if (str[i] == 39)
-		{
-			while (str[++i] != 39)
-				s[y++] = str[i - 1];
-			s[y++] = str[i - 1];
-		}
+		if (str[i] == 34 || str[i] == 39)
+			i += quote_space(&str[i], &s, &y);
 		if (str[i] && ft_strchr("<>|", str[i]))
 		{
 			s[y++] = ' ';
@@ -83,12 +97,12 @@ char	*copy_with_space(char *str, char *s)
 char	*add_space(char *str)
 {
 	char	*s;
-	int	t;
+	int		t;
 
 	if (str[0] == '\0')
 		return (NULL);
 	t = new_size(str);
-	if (!t || t == -1)
+	if (!t)
 		return (str);
 	s = ft_malloc(sizeof(char) * (ft_strlen(str) + t + 1));
 	if (!s)
@@ -97,35 +111,35 @@ char	*add_space(char *str)
 	return (s);
 }
 
-t_lexer *check_word(char *str)
+t_lexer	*check_word(char *str)
 {
-    t_lexer *new;
-    
-    new = ft_lstnewl(str);
+	t_lexer	*new;
+
+	new = ft_lstnewl(str);
 	if (new == NULL)
 		return (NULL);
 	new->token = 0;
-    if (str[0] == '|' && !str[1])
-        new->token = Pipe;
-    else if (str[0] == '>' && !str[1])
-        new->token = fleched;
-    else if (str[0] == '<' && !str[1])
-        new->token = flecheg;
-    else if (str[0] == '>' && str[1] == '>' && !str[2])
-        new->token = fleched2;
-    else if (str[0] == '<' && str[1] == '<'  && !str[2])
-        new->token = flecheg2;
-    return (new);
+	if (str[0] == '|' && !str[1])
+		new->token = Pipe;
+	else if (str[0] == '>' && !str[1])
+		new->token = fleched;
+	else if (str[0] == '<' && !str[1])
+		new->token = flecheg;
+	else if (str[0] == '>' && str[1] == '>' && !str[2])
+		new->token = fleched2;
+	else if (str[0] == '<' && str[1] == '<' && !str[2])
+		new->token = flecheg2;
+	return (new);
 }
 
-t_lexer *ft_lexer(t_tool *data)
+t_lexer	*ft_lexer(t_tool *data)
 {
-	char		**tab;
-	char		*arg;
+	char	**tab;
+	char	*arg;
 	int		i;
 	t_lexer	*lex;
 	t_lexer	*new;
-    
+
 	lex = NULL;
 	tab = NULL;
 	if (!ft_verif_quote(data->line))
@@ -133,7 +147,6 @@ t_lexer *ft_lexer(t_tool *data)
 	arg = add_space(data->line);
 	if (!arg)
 		return (NULL);
-	printf("arg = %s\n", arg);
 	tab = ft_decoup(arg, tab, ' ');
 	if (tab == NULL)
 		return (NULL);
@@ -143,7 +156,7 @@ t_lexer *ft_lexer(t_tool *data)
 		new = check_word(tab[i++]);
 		if (!new)
 			return (free_garbage(), NULL);
-		ft_add_back_lexer(&lex, new);   
+		ft_add_back_lexer(&lex, new);
 	}
 	return (lex);
 }

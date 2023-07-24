@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:46:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/29 14:45:16 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/24 16:43:15 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	free_garbage(void)
 {
 	t_list	*tmp;
 	t_list	*node;
-	
+
 	node = g_garbage_collector;
 	while (node)
 	{

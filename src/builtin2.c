@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   buitin2.c                                          :+:      :+:    :+:   */
+/*   builtin2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 18:27:43 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/22 19:53:17 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/24 16:40:30 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	exit(t_list **env, char **arg)
 {
-	int i;
-	int code;
+	int	i;
+	int	code;
 
 	code = 0;
 	if (arg && arg[0])
@@ -38,4 +38,4 @@ void	exit(t_list **env, char **arg)
 	exit(code);
 }
 
-/*Pour cd utiliser opendir, readdir et closedir*/
+/*Pour cd utiliser opendir, readdir et closedir , chdir getcwd*/

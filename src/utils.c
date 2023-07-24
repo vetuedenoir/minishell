@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 16:54:21 by kscordel          #+#    #+#             */
-/*   Updated: 2023/06/27 15:16:03 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/24 13:38:26 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ char	**dup_tab(char **tb)
 	return (dup);
 }
 
-void	clear_lex(t_lexer **lst, int nb)//inutile
+void	clear_lex(t_lexer **lst, int nb)
 {
 	t_lexer *tmp;
 	if (!lst)

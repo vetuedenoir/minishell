@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:28:45 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/22 15:01:30 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/07/24 19:35:48 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ void	check_path(t_cmds **commande, t_list *env)
 			else
 			{
 				(*commande)->builtin = 0;
-				printf("get path > %s\n", get_path(s, path));
 				(*commande)->str[0] = get_path(s, path);
 			}
 		}
