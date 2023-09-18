@@ -6,13 +6,13 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 18:27:43 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/24 16:40:30 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/18 20:38:25 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	exit(t_list **env, char **arg)
+void	ft_exit(char **arg, t_list **env)
 {
 	int	i;
 	int	code;

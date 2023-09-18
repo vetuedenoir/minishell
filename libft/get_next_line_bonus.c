@@ -64,6 +64,16 @@ char	*get_next_line(int fd)
 	size_t		index;
 	size_t		t;
 
+	int i;
+	i = 0;
+	if (fd == -99)
+	{
+		while(stash[i])
+		{
+			free(stash[i]);
+			i++;
+		}
+	}
 	if (fd < 0 || fd >= 1024)
 		return (NULL);
 	index = 0;

@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:28:45 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/24 19:35:48 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/18 20:40:41 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,28 @@ char	*get_line(t_list *env)
 	return (NULL);
 }
 
+void	*set_builtin(char *s)
+{
+	if (!ft_strncmp(s, "echo", 5))
+		return (&echo);
+/*	if (!ft_strncmp(s, "cd", 3))
+		return (&cd);
+	if (!ft_strncmp(s, "pwd", 4))
+		return (&pwd);*/
+	if (!ft_strncmp(s, "export", 7))
+		return (&export);
+	if (!ft_strncmp(s, "unset", 6))
+		return (&unset);
+	if (!ft_strncmp(s, "env", 4))
+		return (&env);
+	if (!ft_strncmp(s, "exit", 5))
+		return (&ft_exit);
+	return (NULL);
+	
+}
+
 void	check_path(t_cmds **commande, t_list *env)
 {
-	char	*s;
 	char	*path;
 	t_cmds	*node;
 
@@ -92,17 +111,10 @@ void	check_path(t_cmds **commande, t_list *env)
 	{
 		if ((*commande)->str && (*commande)->str[0])
 		{
-			s = (*commande)->str[0];
-			if (!ft_strncmp(s, "echo", 5) || !ft_strncmp(s, "cd", 3) ||
-				!ft_strncmp(s, "pwd", 4) || !ft_strncmp(s, "export", 7) 
-				|| !ft_strncmp(s, "unset", 6) || !ft_strncmp(s, "env", 4) || 
-				!ft_strncmp(s, "exit", 5))
-				(*commande)->builtin = 'b';
-			else
-			{
-				(*commande)->builtin = 0;
-				(*commande)->str[0] = get_path(s, path);
-			}
+			(*commande)->builtin = set_builtin((*commande)->str[0]);
+			if (!(*commande)->builtin)
+				(*commande)->str[0] = get_path((*commande)->str[0],\
+				path);
 		}
 		(*commande) = (*commande)->next;
 	}

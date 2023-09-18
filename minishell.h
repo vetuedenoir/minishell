@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:08:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/24 13:36:21 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/18 20:38:32 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ typedef struct	s_cmds
 	void			*f;		// un pointeur sur fonction builtin
 	int				num_redirections;
 	char			*file_name;
-	char			builtin;	// si y a un bultin = b sinon = 0
+	void			*builtin;	// si y a un bultin = b sinon = 0
 	t_lexer			*redirection;
 	struct s_cmds	*next;
 	struct s_cmds	*prev;
@@ -71,6 +71,9 @@ typedef struct s_tool
 	char	*pwd;
 	char	*old_pwd;
 	int		flag;
+	pid_t		*pid;
+	//int		outfile;
+	//int		infile;
 }	t_tool;	
 
 extern t_list	*g_garbage_collector;
@@ -93,7 +96,6 @@ void	printlex(t_lexer *lex);
 void	print_cmd(t_cmds *cmd);
 void	clear_cmd(t_cmds **cmd);
 char	**lst_to_tab(t_list *lst);
-
 
 //parsing
 t_cmds *parser(t_lexer *lex, t_cmds *commande);
@@ -123,7 +125,18 @@ void	*memory_add(void *pointeur);
 void	free_garbage(void);
 void	*ft_calloc_g(size_t nmemb, size_t size);
 
+//exec
+void ft_exec(t_tool *data, char **envp);
+//heredoc
+void    check_heredoc(t_cmds *cmd);
+//redirection
+void     check_redir(t_cmds *cmd);
 
-
+//builtin
+void	export(char **arg, t_list **env);
+void	unset(char **arg, t_list **env);
+void	echo(char **arg, t_list **env);
+void	env(char **arg, t_list **env);
+void	ft_exit(char **arg, t_list **env);
 #endif
 

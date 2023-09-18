@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 15:03:05 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/24 19:28:45 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/18 19:41:45 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int	main(int argc, char *argv[], char *envp[])
 	while (1)
 	{	
 		free_garbage();
+		printf("biennnnnnnnnnnnn\n");
 		data.line = readline(PROMPT);
 		if (!data.line)
 			break ;
@@ -91,7 +92,10 @@ int	main(int argc, char *argv[], char *envp[])
 		expand(&data);
 		check_path(&data.cmds, data.var_env);
 		print_cmd(data.cmds); // pour voir ce que c a sort
+		ft_exec(&data, envp);
+	//	printf("pk tu sort du programme\n");
 	}
+	printf("sorti de la boucle main\n");
 	ft_lstclear(&data.var_env, free);
 	rl_clear_history();
 	exit(0);
