@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 13:42:25 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/24 19:15:01 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/19 17:55:26 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ char	**divide(char **s, int flag)
 	if (!l2)
 		return (free(tab), free(l1), NULL);
 	ft_strlcpy(l1, *s, flag + 1);
-	ft_strlcpy(l2, &str[flag], t - flag + 1);
+	ft_strlcpy(l2, &str[flag + 1], t - flag + 2);
 	tab[0] = l1;
 	tab[1] = l2;
 	return (tab[2] = NULL, tab);

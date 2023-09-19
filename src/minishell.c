@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 15:03:05 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/18 19:41:45 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/19 17:29:20 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	main(int argc, char *argv[], char *envp[])
 	while (1)
 	{	
 		free_garbage();
-		printf("biennnnnnnnnnnnn\n");
+	//	printf("biennnnnnnnnnnnn\n");
 		data.line = readline(PROMPT);
 		if (!data.line)
 			break ;

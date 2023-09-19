@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:28:45 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/18 20:40:41 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/19 19:56:50 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,10 @@ void	*set_builtin(char *s)
 {
 	if (!ft_strncmp(s, "echo", 5))
 		return (&echo);
-/*	if (!ft_strncmp(s, "cd", 3))
+	if (!ft_strncmp(s, "cd", 3))
 		return (&cd);
 	if (!ft_strncmp(s, "pwd", 4))
-		return (&pwd);*/
+		return (&pwd);
 	if (!ft_strncmp(s, "export", 7))
 		return (&export);
 	if (!ft_strncmp(s, "unset", 6))

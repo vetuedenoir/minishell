@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:08:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/18 20:38:32 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/19 19:54:54 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include <sys/wait.h>
 
 # define PROMPT		"\033[38;2;0;128;255mminishell 🌊 \x1b[0m"
+/*# define PROMPT		"minishell -> "*/
 # define COULEUR	"\033[38;2;0;128;255m"
 # define RESET		"\x1b[0m"
 
@@ -138,5 +139,7 @@ void	unset(char **arg, t_list **env);
 void	echo(char **arg, t_list **env);
 void	env(char **arg, t_list **env);
 void	ft_exit(char **arg, t_list **env);
+void	pwd(char **arg, t_list **env);
+void	cd(char **arg, t_list **env);
 #endif
 

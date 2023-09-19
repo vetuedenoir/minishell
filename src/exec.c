@@ -6,16 +6,16 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 19:33:53 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/18 21:12:28 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/19 18:24:00 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-/*
-void	exec_builtin(t_tool *data, t_cmds *cmd, char **envp)
-{
-	cmd->builtin(cmd->str[1], envp);	
-}*/
+
+void	exec_builtin(void (*builtin)(char **arg, t_list **env), t_cmds *cmd, t_list **envp)
+{   
+	builtin(&cmd->str[1], envp);	
+}
 
 void    exec_com(t_tool *data, t_cmds *cmd, char **envp)
 {
@@ -27,10 +27,12 @@ void    exec_com(t_tool *data, t_cmds *cmd, char **envp)
     (void)data;
     if (cmd->builtin)
     {
-       // exec_builtin(data, cmd, envp);
-        exit(1);
+       exec_builtin(cmd->builtin, cmd, &data->var_env);
+        //exit(1);
     }
-    else if (access(cmd->str[0], F_OK) != -1)
+    else if (cmd->str[0] == NULL)
+        return ;
+    else if (!access(cmd->str[0], X_OK))
 		execve(cmd->str[0], cmd->str, envp);
         
 }
@@ -40,6 +42,11 @@ void    simp_com(t_tool *data, t_cmds *cmd, char **envp)
     int status;
 
     check_heredoc(cmd);
+    if (cmd->builtin)
+    {
+        exec_builtin(cmd->builtin, cmd, &data->var_env);
+        return ;
+    }
 	pid = fork();
 	if (pid == 0)
 	{

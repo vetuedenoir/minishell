@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:15:09 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/22 13:41:20 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/19 13:06:07 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	print_cmd(t_cmds *cmd)
 		i = -1;
 		while (cmd->str[++i])
 			printf("\ncmd str[%d]  %s \n", i, cmd->str[i]);
-		printf("builtin = %c\n", cmd->builtin);
+		printf("builtin = %p\n", cmd->builtin);
 		printf("num_redirections = %d\n", cmd->num_redirections);
 		while (cmd->redirection)
 		{
