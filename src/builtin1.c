@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 16:38:28 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/19 17:21:53 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/21 13:48:08 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	ft_strchr_int(char *str, char c)
 
 char	*search_replace(char *var, t_list **env)
 {
-	t_list *first;
+	t_list	*first;
 	t_list	*node;
 	char	*s;
 	int		t;
@@ -39,7 +39,7 @@ char	*search_replace(char *var, t_list **env)
 	while (*env)
 	{
 		s = (char *)(*env)->content;
-		if (!ft_strncmp(s, var, t) && s[t] == '=')
+		if (!ft_strncmp(s, var, t) && s[t - 1] == '=')
 		{
 			free((*env)->content);
 			(*env)->content = ft_strdup(var);

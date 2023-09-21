@@ -17,9 +17,8 @@ void	exec_builtin(void (*builtin)(char **arg, t_list **env), t_cmds *cmd, t_list
 	builtin(&cmd->str[1], envp);	
 }
 
-void    exec_com(t_tool *data, t_cmds *cmd, char **envp)
+void    exec_com(t_tool *data, t_cmds *cmd)
 {
-    dprintf(2, "debut exec_com\n");
     if (cmd->num_redirections != 0)
     {
         check_redir(cmd);
@@ -33,10 +32,10 @@ void    exec_com(t_tool *data, t_cmds *cmd, char **envp)
     else if (cmd->str[0] == NULL)
         return ;
     else if (!access(cmd->str[0], X_OK))
-		execve(cmd->str[0], cmd->str, envp);
+		execve(cmd->str[0], cmd->str, lst_to_tab(data->var_env));
         
 }
-void    simp_com(t_tool *data, t_cmds *cmd, char **envp)
+void    simp_com(t_tool *data, t_cmds *cmd)
 {
     pid_t pid;
     int status;
@@ -50,11 +49,11 @@ void    simp_com(t_tool *data, t_cmds *cmd, char **envp)
 	pid = fork();
 	if (pid == 0)
 	{
-        exec_com(data, cmd, envp);
+        exec_com(data, cmd);
     }
     waitpid(pid, &status, 0);
 }
-void    ft_fork(t_tool *data, int fd[2], int infile, t_cmds *cmd, char **envp, int i)
+void    ft_fork(t_tool *data, int fd[2], int infile, t_cmds *cmd, int i)
 {
   
     data->pid[i] = fork();
@@ -68,11 +67,10 @@ void    ft_fork(t_tool *data, int fd[2], int infile, t_cmds *cmd, char **envp, i
 	    close(fd[1]);
 	    if (cmd->prev)
 		    close(infile);
-        exec_com(data, data->cmds, envp);
+        exec_com(data, data->cmds);
     }
     else
 	{
-        dprintf(2, "pas de pid == 0\n");
 		if (close(fd[1]) == -1 || dup2(fd[0], 0) == -1
 			|| close(fd[0]) == -1)
 			exit(1);
@@ -93,9 +91,9 @@ void    size_nb_com(t_tool *data)
     }
     data->pid = malloc(j * sizeof(pid_t));
     data->cmds = start;
-    printf("size malloc pid = %d\n", j);
+    // printf("size malloc pid = %d\n", j);
 }
-int    child(t_tool *data, t_cmds *cmds, char **envp, int i, int infile)
+int    child(t_tool *data, t_cmds *cmds, int i, int infile)
 {   
     int     fd[2];
 
@@ -103,9 +101,7 @@ int    child(t_tool *data, t_cmds *cmds, char **envp, int i, int infile)
     if (pipe(fd) == -1)
         exit(1);
     check_heredoc(cmds);
-    dprintf(2, " apres check_heredoc\n");
-    ft_fork(data, fd, infile, cmds, envp, i);
-    dprintf(2, "juste apres fork\n");
+    ft_fork(data, fd, infile, cmds, i);
     close(fd[1]);
     if (cmds->prev)
         close(infile);
@@ -120,22 +116,21 @@ int    child(t_tool *data, t_cmds *cmds, char **envp, int i, int infile)
     return (infile);
 }
 
-void    multi_com(t_tool *data, char **envp)
+void    multi_com(t_tool *data)
 {
-    //int     fd[2];
     int     infile;
-    t_cmds  *start;
+    //t_cmds  *start;
     t_cmds  *tmp;
     int i;
 
     i = 0;
-    start = data->cmds;
+    //start = data->cmds;
     tmp = data->cmds;
     infile = STDIN_FILENO;
     size_nb_com(data);
     while(data->cmds != NULL)
     {
-        infile = child(data, tmp, envp, i++, infile);
+        infile = child(data, tmp, i++, infile);
         tmp= tmp->next;
     }
     int j;
@@ -145,23 +140,21 @@ void    multi_com(t_tool *data, char **envp)
         waitpid(data->pid[j], NULL, 0);
         j++;
     }
-    data->cmds = start;
-    //free(data->pid);
-    printf("normalllllllll\n");
+    //data->cmds = start;
+    free(data->pid);
 }
-void    ft_exec(t_tool *data, char **envp)
+void    ft_exec(t_tool *data)
 {
     t_cmds *cmd;
 
     cmd = data->cmds;
-    printf("debut exec\n");
     if (cmd->next == NULL)
-        simp_com(data, cmd, envp);
+        simp_com(data, cmd);
     else
-        multi_com(data, envp);
+        multi_com(data);
     if (cmd->file_name)
     {
         unlink(cmd->file_name);
     }
-    dprintf(2, "normalement jsuis bien\n");
+    dprintf(2, "NORMALEMENT jsuis bien\n");
 }

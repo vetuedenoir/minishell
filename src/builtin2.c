@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 18:27:43 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/19 20:07:23 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/21 13:47:36 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,24 @@ void	pwd(char **arg, t_list **env)
 /* modifier la variable PWd et OLDPWD*/
 void	cd(char **arg, t_list **env)
 {
+	char	*pwd;
+	char	*str;
+	char	*old;
+	
 	(void)env;
 	if (chdir(arg[0]))
 	{
 		perror("cd");
 		return ;
 	}
-	
+	pwd = get_var("PWD", *env);
+	old = ft_strjoin("OLDPWD=", pwd);
+	free(pwd);
+	export(&old, env);
+	str = NULL;
+	str = getcwd(str, 0);
+	pwd = ft_strjoin("PWD=", str);
+	free(str);
+	export(&pwd, env);
+	free(pwd);
 }
