@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:08:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/19 19:54:54 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/22 15:14:00 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct s_tool
 	char	*pwd;
 	char	*old_pwd;
 	int		flag;
+	int		base_fd[2];
 	pid_t		*pid;
 	//int		outfile;
 	//int		infile;
@@ -127,11 +128,13 @@ void	free_garbage(void);
 void	*ft_calloc_g(size_t nmemb, size_t size);
 
 //exec
-void ft_exec(t_tool *data, char **envp);
+void	ft_exec(t_tool *data);
 //heredoc
-void    check_heredoc(t_cmds *cmd);
+void    check_heredoc(t_cmds *cmd, t_tool *data);
+char	*heredoc_expand(char *str, t_tool data);
 //redirection
-void     check_redir(t_cmds *cmd);
+void	check_redir(t_cmds *cmd);
+int		expand_token(char c);
 
 //builtin
 void	export(char **arg, t_list **env);

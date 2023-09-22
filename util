@@ -1,0 +1,10 @@
+libft
+Makefile
+minishell
+minishell.h
+obj
+README.md
+src
+test
+util
+valgrind_ignore_readline.txt

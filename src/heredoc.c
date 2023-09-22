@@ -1,13 +1,12 @@
 #include "../minishell.h"
 
-
-void	ft_heredoc(t_lexer *heredoc, char *file_name)
+void	ft_heredoc(t_lexer *heredoc, char *file_name, t_tool *data)
 {
-	char	*ret;
-    int fd;
+	int			fd;
+	char		*ret;
 
 	dprintf(2, "file = %s\n", file_name);
-    fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0644);
+	fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (fd < 0)
 		dprintf(2, "pas normal fd heredoc\n");
 	while (1)
@@ -19,10 +18,9 @@ void	ft_heredoc(t_lexer *heredoc, char *file_name)
 			get_next_line(-99);
 			free(ret);
 			close(fd);
-            return ;
-
+			return ;
 		}
-		ft_putstr_fd(ret, fd);
+		ft_putstr_fd(heredoc_expand(ret, *data), fd);
 		free(ret);
 	}
 }
@@ -38,22 +36,23 @@ char	*heredoc_filename(void)
 	free(num);
 	return (file_name);
 }
-void    check_heredoc(t_cmds *cmd)
-{
-    t_lexer *start;
 
-    start = cmd->redirection;
-    while(cmd->redirection)
-    {
-        if (cmd->redirection->token == 4)
-        {
-            dprintf(2, "OUI YA UN HEREDOC DETECTER\n");
-            if (cmd->file_name)
-                free(cmd->file_name);
-            cmd->file_name = heredoc_filename();
-            ft_heredoc(cmd->redirection->next, cmd->file_name);
-        }
-        cmd->redirection = cmd->redirection->next;
-    }
-    cmd->redirection = start;
+void	check_heredoc(t_cmds *cmd, t_tool *data)
+{
+	t_lexer	*start;
+
+	start = cmd->redirection;
+	while (cmd->redirection)
+	{
+		if (cmd->redirection->token == 4)
+		{
+			dprintf(2, "OUI YA UN HEREDOC DETECTER\n");
+			if (cmd->file_name)
+				free(cmd->file_name);
+			cmd->file_name = heredoc_filename();
+			ft_heredoc(cmd->redirection->next, cmd->file_name, data);
+		}
+		cmd->redirection = cmd->redirection->next;
+	}
+	cmd->redirection = start;
 }

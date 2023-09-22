@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 18:45:38 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/24 15:30:20 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/22 13:09:12 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,9 @@ int	ft_dollarsize(char *str, int *index, t_tool data)
 	char	*content;
 
 	i = 1;
-	if (str[i] == ' ' || str[i] == 0)
+	if (!expand_token(str[i]) || str[i] == 0)
 		return (i);
-	while (str[i] && str[i] != 34 && str[i] != 39 && \
-		str[i] != '$' && str[i] != ' ')
+	while (expand_token(str[i]))
 		i++;
 	*index = *index + i - 1;
 	var = malloc(sizeof(char) * (i + 1));

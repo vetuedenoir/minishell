@@ -69,17 +69,15 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	t_lexer	*lex;
 	t_tool	data;
-	int	base_fd[2];
 
-	base_fd[0] = dup(0);
-	base_fd[1] = dup(1);
 	verif_set(argc, argv);
 	if (!init_shell(envp, &data))
 		exit(1);
+	data.base_fd[0] = dup(0);
+	data.base_fd[1] = dup(1);
 	while (1)
 	{	
 		free_garbage();
-	//	printf("biennnnnnnnnnnnn\n");
 		data.line = readline(PROMPT);
 		if (!data.line)
 			break ;
@@ -94,14 +92,13 @@ int	main(int argc, char *argv[], char *envp[])
 			continue ;
 		expand(&data);
 		check_path(&data.cmds, data.var_env);
-		print_cmd(data.cmds); // pour voir ce que c a sort
-		ft_exec(&data, envp);
-		dup2(base_fd[0], 0);
-		dup2(base_fd[1], 1);
-	//	printf("pk tu sort du programme\n");
+		//print_cmd(data.cmds); // pour voir ce que c a sort
+		ft_exec(&data);
+		dup2(data.base_fd[0], 0);
+		dup2(data.base_fd[1], 1);
 	}
-	close(base_fd[0]);
-	close(base_fd[1]);
+	close(data.base_fd[0]);
+	close(data.base_fd[1]);
 	printf("sorti de la boucle main\n");
 	ft_lstclear(&data.var_env, free);
 	rl_clear_history();

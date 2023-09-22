@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 13:42:25 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/19 17:55:26 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/21 18:23:50 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*return_var(char *str, int *index, t_tool data)
 
 	i = 1;
 	while (str[i] && str[i] != 34 && str[i] != 39 && \
-		str[i] != '$' && str[i] != ' ')
+		str[i] != '$' && expand_token(str[i]))
 		i++;
 	*index = *index + i;
 	var = malloc(sizeof(char) * (i + 1));
@@ -56,6 +56,7 @@ int	zi(char *str, char **s, int *y, t_tool data)
 
 	i = 0;
 	var = return_var(&str[i], &i, data);
+	printf("var = %s \n", var);
 	x = 0;
 	if (!var)
 		return (i);
@@ -75,14 +76,14 @@ int	handle_doublequote(char *str, char **s, int *y, t_tool data)
 	i = 0;
 	while (str[++i] && str[i] != 34)
 	{		
-		if (str[i] == '$' && str[i + 1] != 0 && str[i + 1] != ' ')
+		if (str[i] == '$' && str[i + 1] != 0 && expand_token(str[i + 1]))
 		{
 			i += zi(&str[i], s, y, data);
 			if (str[i] == 34)
 				return (i + 1);
 		}
 		if ((str[i] != 34 && str[i] != '$') || \
-			(str[i] == '$' && (str[i + 1] == ' ' || str[i] == 0)))
+			(str[i] == '$' && (expand_token(str[i + 1]) || str[i] == 0)))
 		{
 			s[0][*y] = str[i];
 			*y = *y + 1;
@@ -99,7 +100,7 @@ int	ft_copy_var(char *str, char **s, int *y, t_tool *data)
 	char	*content;
 
 	i = 1;
-	while (str[i] && str[i] != 34 && str[i] != 39 && str[i] != '$')
+	while (str[i] && str[i] != 34 && str[i] != 39 && expand_token(str[i]))
 		i++;
 	var = malloc(sizeof(char) * (i + 1));
 	if (!var)
