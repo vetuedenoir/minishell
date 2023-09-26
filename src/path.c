@@ -6,13 +6,13 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:28:45 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/19 19:56:50 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/26 19:42:58 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*verif_path(char **path, char *str)
+char	*verif_path(char **path, char *str, t_tool *data)
 {
 	char	*s;
 
@@ -22,7 +22,7 @@ char	*verif_path(char **path, char *str)
 		return (NULL);
 	if (access(s, X_OK))
 		return (free(s), NULL);
-	memory_add(s);
+	memory_add(s, data);
 		return (s);
 }
 
@@ -32,17 +32,17 @@ char	*true_path(char *str)
 	{
 		if (access(str, X_OK))
 		{
-			printf("la commande %s est introuvable\n", str);
+			error("Minishell: la commande '", str, "' est introuvable");
 			return (NULL);
 		}
 		else
 			return (str);
 	}
-	printf("la commande %s est introuvable\n", str);
+	error("Minishell: la commande '", str, "' est introuvable");
 	return (NULL);
 }
 
-char	*get_path(char *str, char *line)
+char	*get_path(char *str, char *line, t_tool *data)
 {
 	int		i;
 	char	**tb;
@@ -54,19 +54,20 @@ char	*get_path(char *str, char *line)
 		return (true_path(str));
 	tb = ft_split(line, ':'); // utiliser un split qui utilise ft_calloc
 	if (!tb)
-		return (free_garbage(), NULL);
+		return (free_garbage(data), NULL);
 	i = 0;
 	while (tb[i])
 	{
 		path = ft_strjoin(tb[i], "/");
 		if (!path)
-			return (cleartb(tb), free_garbage(), NULL);
-		s = verif_path(&path, str);
+			return (cleartb(tb), free_garbage(data), NULL);
+		s = verif_path(&path, str, data);
 		if (s)
 			return (cleartb(tb), s);
 		i++;
 	}
-	return (printf("la commande %s est introuvable\n", str),cleartb(tb), NULL);
+	return (error("Minishell: la commande '", str, "' est introuvable"),
+		cleartb(tb), NULL);
 }
 
 char	*get_line(t_list *env)
@@ -100,7 +101,7 @@ void	*set_builtin(char *s)
 	
 }
 
-void	check_path(t_cmds **commande, t_list *env)
+void	check_path(t_cmds **commande, t_list *env, t_tool *data)
 {
 	char	*path;
 	t_cmds	*node;
@@ -114,8 +115,10 @@ void	check_path(t_cmds **commande, t_list *env)
 			(*commande)->builtin = set_builtin((*commande)->str[0]);
 			if (!(*commande)->builtin)
 				(*commande)->str[0] = get_path((*commande)->str[0],\
-				path);
+				path, data);
 		}
+		if (data->garbage_collector == NULL)
+			break ;
 		(*commande) = (*commande)->next;
 	}
 	*commande = node;

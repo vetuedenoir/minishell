@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 16:38:28 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/21 13:48:08 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/26 19:54:12 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,14 +61,26 @@ char	*search_replace(char *var, t_list **env)
 	return (NULL);
 }
 
-void	export(char **arg, t_list **env)
+int	export(char **arg, t_list **env, t_tool *data)
 {
 	t_list	*node;
 	char	*s;
+	int		i;
 
 	(void) arg;
+	(void)data;
+	i = 0;
 	if (!env || !arg || !arg[0])
-		return ;
+		return (1);
+	while (arg[0][i] != '\0' && arg[0][i] != '=')
+	{
+		if (!expand_token(arg[0][i]))
+		{
+			error("minishell: export: '", arg[0], "': invalide identifier\n");
+			return (1);
+		}
+		i++;
+	}
 	if (ft_strchr(arg[0], '='))
 	{
 		if (!search_replace(arg[0], env))
@@ -77,19 +89,23 @@ void	export(char **arg, t_list **env)
 			node = ft_lstnew(s);
 			if (node)
 				ft_lstadd_back(env, node);
+			else
+				return (1);
 		}
 	}
+	return (0);
 }
 
-void	unset(char **arg, t_list **env)
+int	unset(char **arg, t_list **env, t_tool *data)
 {
 	char	*s;
 	int		t; 
 	t_list *first;
 
 	(void)arg;
+	(void)data;
 	if (!env || !arg || !arg[0])
-		return ;
+		return (1);
 	t = ft_strlen(arg[0]);
 	first = *env;
 	while (*env)
@@ -103,33 +119,41 @@ void	unset(char **arg, t_list **env)
 		*env = (*env)->next;
 	}
 	*env = first;
+	return (0);
 }
 
-void	echo(char **arg, t_list **env)
+int	echo(char **arg, t_list **env, t_tool *data)
 {
 	int	opt;
 	int	i;
+	int	w;
 
 	opt = 0;
 	i = 0;
+	w = 0;
 	(void)env;
+	(void)data;
 	if (!arg || !arg[0])
-		return ;
+		return (1);
 	if (!ft_strncmp(arg[0], "-n", 3) && ft_strlen(arg[0]) == 2)
 	{
 		i = 1;
 		opt = 1;
 	}
 	while (arg[i] && arg[i + 1])
-		printf("%s ", arg[i++]);
-	printf("%s", arg[i]);
+		w += printf("%s ", arg[i++]);
+	w += printf("%s", arg[i]);
 	if (opt == 0)
-		printf("\n");
+		w += printf("\n");
+	if (w == -1)
+		return (perror("echo: "), 1);
+	return (0);
 }
 
-void	env(char **arg, t_list **env) // a revoir
+int	env(char **arg, t_list **env, t_tool *data) // a revoir
 {
 	(void) arg;
+	(void)data;
 	t_list *node;
 	char	*s;
 	
@@ -141,4 +165,5 @@ void	env(char **arg, t_list **env) // a revoir
 			printf("%s\n", (char *)node->content);
 		node = node->next;
 	}
+	return (1);
 }

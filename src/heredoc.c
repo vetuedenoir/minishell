@@ -11,7 +11,7 @@ void	ft_heredoc(t_lexer *heredoc, char *file_name, t_tool *data)
 		dprintf(2, "pas normal fd heredoc\n");
 	while (1)
 	{
-		ret = get_next_line(0);
+		ret = get_next_line(data->base_fd[0]);
 		if (ft_strncmp(ret, heredoc->str, ft_strlen(heredoc->str)) == 0
 			&& ft_strlen(heredoc->str) == strlen(ret) - 1)
 		{
@@ -20,7 +20,7 @@ void	ft_heredoc(t_lexer *heredoc, char *file_name, t_tool *data)
 			close(fd);
 			return ;
 		}
-		ft_putstr_fd(heredoc_expand(ret, *data), fd);
+		ft_putstr_fd(heredoc_expand(ret, data), fd);
 		free(ret);
 	}
 }

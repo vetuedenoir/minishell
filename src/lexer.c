@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 13:39:08 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/24 16:05:42 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/26 19:23:55 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ int	new_size(char *str)
 				i++;
 			t += 2;
 		}
-	//	i++;
 	}
 	return (t);
 }
@@ -94,7 +93,7 @@ char	*copy_with_space(char *str, char *s)
 	return (s);
 }
 
-char	*add_space(char *str)
+char	*add_space(char *str,t_tool *data)
 {
 	char	*s;
 	int		t;
@@ -104,18 +103,18 @@ char	*add_space(char *str)
 	t = new_size(str);
 	if (!t)
 		return (str);
-	s = ft_malloc(sizeof(char) * (ft_strlen(str) + t + 1));
+	s = ft_malloc(sizeof(char) * (ft_strlen(str) + t + 1), data);
 	if (!s)
 		return (NULL);
 	s = copy_with_space(str, s);
 	return (s);
 }
 
-t_lexer	*check_word(char *str)
+t_lexer	*check_word(char *str, t_tool *data)
 {
 	t_lexer	*new;
 
-	new = ft_lstnewl(str);
+	new = ft_lstnewl(str, data);
 	if (new == NULL)
 		return (NULL);
 	new->token = 0;
@@ -142,20 +141,20 @@ t_lexer	*ft_lexer(t_tool *data)
 
 	lex = NULL;
 	tab = NULL;
-	if (!ft_verif_quote(data->line))
-		return (NULL);
-	arg = add_space(data->line);
+	if (ft_verif_quote(data->line))
+		return (NULL);				// ajouter message d erreur
+	arg = add_space(data->line, data);
 	if (!arg)
 		return (NULL);
-	tab = ft_decoup(arg, tab, ' ');
+	tab = ft_decoup(arg, tab, ' ', data);
 	if (tab == NULL)
 		return (NULL);
 	i = 0;
 	while (tab[i])
 	{
-		new = check_word(tab[i++]);
+		new = check_word(tab[i++], data);
 		if (!new)
-			return (free_garbage(), NULL);
+			return (free_garbage(data), NULL);
 		ft_add_back_lexer(&lex, new);
 	}
 	return (lex);

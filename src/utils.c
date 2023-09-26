@@ -6,17 +6,17 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 16:54:21 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/24 13:38:26 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/26 14:11:08 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_lexer	*ft_lstnewl(char *str)
+t_lexer	*ft_lstnewl(char *str, t_tool *data)
 {
 	t_lexer	*new;
 
-	new = (t_lexer *)ft_malloc(sizeof(t_lexer));
+	new = (t_lexer *)ft_malloc(sizeof(t_lexer), data);
 	if (!new)
 		return (NULL);
 	new->str = str;

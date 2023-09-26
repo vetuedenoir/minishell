@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 18:45:38 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/22 13:09:12 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/26 15:42:57 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	ft_dollarsize(char *str, int *index, t_tool data)
 	return (size);
 }
 
-char	*resize_arg(char *str, t_tool data)
+char	*resize_arg(char *str, t_tool *data)
 {
 	int		i;
 	int		y;
@@ -79,13 +79,13 @@ char	*resize_arg(char *str, t_tool data)
 			y -= 2;
 		}
 		else if (str[i] == '$')
-			y += ft_dollarsize(&str[i], &i, data);//recupere la taille de la chaine variable et on soustrait $var
+			y += ft_dollarsize(&str[i], &i, *data);//recupere la taille de la chaine variable et on soustrait $var
 	}
-	s = ft_malloc(sizeof(char) * (y + i + 1));
+	s = ft_malloc(sizeof(char) * (y + i + 1), data);
 	return (s);
 }
 
-char	**handle_dollar(char *str, t_tool data)
+char	**handle_dollar(char *str, t_tool *data)
 {
 	int		i;
 	int		y;
@@ -96,24 +96,24 @@ char	**handle_dollar(char *str, t_tool data)
 		return (NULL);
 	i = 0;
 	y = 0;
-	data.flag = 0;
+	data->flag = 0;
 	while (str[i])
 	{
 		if (str[i] == 39)
 			i += handle_singlequote(&str[i], &s, &y);
 		if (str[i] == 34)
-			i += handle_doublequote(&str[i], &s, &y, data);
+			i += handle_doublequote(&str[i], &s, &y, *data);
 		if (str[i] == '$' && str[i + 1] != ' ' && str[i + 1] != 0)
-			i += ft_copy_var(&str[i], &s, &y, &data);
+			i += ft_copy_var(&str[i], &s, &y, data);
 		if ((str[i] && str[i] != 39 && str[i] != 34 && str[i] != '$') || \
 			(str[i] == '$' && (str[i + 1] == ' ' || str[i + 1] == 0)))
 			s[y++] = str[i++];
 	}
 	s[y] = 0;
-	return (divide(&s, data.flag));
+	return (divide(&s, data->flag, data));
 }
 
-char	**handle_arg(char **arg, t_tool data)
+char	**handle_arg(char **arg, t_tool *data)
 {
 	int		i;
 	int		y;
@@ -136,7 +136,7 @@ char	**handle_arg(char **arg, t_tool data)
 		}
 		i++;
 	}
-	new_arg = lst_to_tab(tmp);
+	new_arg = lst_to_tab(tmp, data);
 	ft_lstclear(&tmp, NULL);
 	return (new_arg);
 }
@@ -149,10 +149,10 @@ void	expand(t_tool *data)
 	while (data->cmds)
 	{
 		if (data->cmds->str)
-			data->cmds->str = handle_arg(data->cmds->str, *data);
+			data->cmds->str = handle_arg(data->cmds->str, data);
 		if (data->cmds->redirection)
 			data->cmds->redirection = \
-			handle_redirection(data->cmds->redirection, *data);
+			handle_redirection(data->cmds->redirection, data);
 		data->cmds = data->cmds->next;
 	}
 	data->cmds = tmp;

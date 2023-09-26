@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 13:42:25 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/21 18:23:50 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/26 14:41:54 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,9 @@ int	zi(char *str, char **s, int *y, t_tool data)
 
 	i = 0;
 	var = return_var(&str[i], &i, data);
-	printf("var = %s \n", var);
-	x = 0;
 	if (!var)
 		return (i);
+	x = 0;
 	while (var[x])
 	{
 		s[0][*y] = var[x++];
@@ -120,7 +119,7 @@ int	ft_copy_var(char *str, char **s, int *y, t_tool *data)
 	return (free(var), free(content), i);
 }
 
-char	**divide(char **s, int flag)
+char	**divide(char **s, int flag, t_tool *data)
 {
 	char	**tab;
 	char	*l1;
@@ -129,18 +128,18 @@ char	**divide(char **s, int flag)
 	int		t;
 
 	str = *s;
-	tab = ft_calloc_g(sizeof(char *), 3);
+	tab = ft_calloc_g(sizeof(char *), 3, data);
 	if (!tab)
 		return (NULL);
 	if (!flag)
 		return (tab[0] = *s, tab[1] = NULL, tab);
 	t = ft_strlen(*s);
-	l1 = ft_malloc(sizeof(char) * (flag + 1));
+	l1 = ft_malloc(sizeof(char) * (flag + 1), data);
 	if (!l1)
-		return (free(tab), free(*s), NULL);
-	l2 = ft_malloc(sizeof(char) * (t - flag + 1));
+		return (NULL);
+	l2 = ft_malloc(sizeof(char) * (t - flag + 1), data);
 	if (!l2)
-		return (free(tab), free(l1), NULL);
+		return (NULL);
 	ft_strlcpy(l1, *s, flag + 1);
 	ft_strlcpy(l2, &str[flag + 1], t - flag + 2);
 	tab[0] = l1;

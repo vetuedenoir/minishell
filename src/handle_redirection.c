@@ -6,13 +6,13 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 18:59:11 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/21 18:06:48 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/26 14:46:43 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*handle_dl(char	*str, t_tool data)
+char	*handle_dl(char	*str, t_tool *data)
 {
 	int		i;
 	int		y;
@@ -28,9 +28,9 @@ char	*handle_dl(char	*str, t_tool data)
 		if (str[i] == 39)
 			i += handle_singlequote(&str[i], &s, &y);
 		if (str[i] == 34)
-			i += handle_doublequote(&str[i], &s, &y, data);
+			i += handle_doublequote(&str[i], &s, &y, *data);
 		if (str[i] == '$' && str[i + 1] != ' ' && str[i + 1] != 0)
-			i += ft_copy_var(&str[i], &s, &y, &data);
+			i += ft_copy_var(&str[i], &s, &y, data);
 		if ((str[i] && str[i] != 39 && str[i] != 34 && str[i] != '$') || \
 			(str[i] == '$' && (str[i + 1] == ' ' || str[i + 1] == 0)))
 			s[y++] = str[i++];
@@ -39,7 +39,7 @@ char	*handle_dl(char	*str, t_tool data)
 	return (s);
 }
 
-t_lexer	*handle_redirection(t_lexer *redirection, t_tool data)
+t_lexer	*handle_redirection(t_lexer *redirection, t_tool *data)
 {
 	char		*new;
 	t_lexer		*lst;

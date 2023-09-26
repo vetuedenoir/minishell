@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:15:09 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/19 13:06:07 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/26 19:34:32 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,14 @@ void	print_cmd(t_cmds *cmd)
 	}
 }
 
-char	**lst_to_tab(t_list *lst)
+char	**lst_to_tab(t_list *lst, t_tool *data)
 {
 	int	t;
 	int	i;
 	char	**tab;
 	
 	t = ft_lstsize(lst);
-	tab = ft_malloc(sizeof(char *) * (t + 1));
+	tab = ft_malloc(sizeof(char *) * (t + 1), data);
 	if (!tab)
 		return (NULL);
 	i = 0;
@@ -86,6 +86,30 @@ char	**lst_to_tab(t_list *lst)
 	return (tab);
 }
 
-
+void	error(char *str, char *str2, char *str3)
+{
+	if (!str)
+		return ;
+	ft_putstr_fd("\x1b[31m", 2);
+	if (str && !str2)
+	{
+		ft_putstr_fd(str, 2);
+		write(2, "\n", 1);
+	}
+	else if (str && str2 && !str3)
+	{
+		ft_putstr_fd(str, 2);
+		ft_putstr_fd(str2, 2);
+		write(2, "\n", 1);
+	}
+	else if (str && str2 && str3)
+	{
+		ft_putstr_fd(str, 2);
+		ft_putstr_fd(str2, 2);
+		ft_putstr_fd(str3, 2);
+		write(2, "\n", 1);
+	}
+	ft_putstr_fd("\x1b[0m", 2);
+}
 
 

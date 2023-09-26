@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 18:45:46 by kscordel          #+#    #+#             */
-/*   Updated: 2023/07/24 13:26:39 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/26 19:23:49 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ int	ft_verif_quote(char *s)
 			while (s[i] != 34 && s[i] != 0)
 				i++;
 			if (s[i] == 0)
-				return (0);
+				return (error("Minishell: double quote doesn't guard",
+				NULL, NULL), 1);
 		}
 		else if (s[i] == 39)
 		{
@@ -58,10 +59,11 @@ int	ft_verif_quote(char *s)
 			while (s[i] != 39 && s[i] != 0)
 				i++;
 			if (s[i] == 0)
-				return (0);
+				return (error("Minishell: single quote doesn't guard",
+				NULL, NULL), 1);
 		}
 	}
-	return (1);
+	return (0);
 }
 
 int	line_lents(const char *s, int index, char c)
@@ -91,12 +93,12 @@ int	line_lents(const char *s, int index, char c)
 	return (t);
 }
 
-static char	*cpy_tsx(const char *s, int index, char c)
+static char	*cpy_tsx(const char *s, int index, char c, t_tool *data)
 {
 	int		i;
 	char	*str;
 
-	str = ft_malloc(sizeof(char) * (line_lents(s, index, c) + 1));
+	str = ft_malloc(sizeof(char) * (line_lents(s, index, c) + 1), data);
 	if (str == NULL)
 		return (NULL);
 	i = 0;
@@ -120,7 +122,7 @@ static char	*cpy_tsx(const char *s, int index, char c)
 	return (str[i] = '\0', str);
 }
 
-char	**ft_decoup(char *arg, char **tab, char c)
+char	**ft_decoup(char *arg, char **tab, char c, t_tool *data)
 {
 	int	i;
 	int	x;
@@ -128,7 +130,7 @@ char	**ft_decoup(char *arg, char **tab, char c)
 
 	i = -1;
 	x = 0;
-	tab = ft_malloc(sizeof(char *) * (lents(arg, c) + 1));
+	tab = ft_malloc(sizeof(char *) * (lents(arg, c) + 1), data);
 	if (!tab)
 		return (NULL);
 	t = (int)ft_strlen(arg);
@@ -136,9 +138,9 @@ char	**ft_decoup(char *arg, char **tab, char c)
 	{
 		if (arg[i] != c && arg[i])
 		{
-			tab[x] = cpy_tsx(arg, i, c);
+			tab[x] = cpy_tsx(arg, i, c, data);
 			if (tab[x] == NULL)
-				return (free_garbage(), NULL);
+				return (free_garbage(data), NULL);
 			i += ft_strlen(tab[x]);
 			x++;
 		}

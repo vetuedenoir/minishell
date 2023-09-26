@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 19:33:53 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/22 15:13:36 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/26 15:45:52 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	exec_com(t_tool *data, t_cmds *cmd)
 {
 	close(data->base_fd[0]);
 	close(data->base_fd[1]);
+	//dprintf(2, "EXEC_COM\n");
 	if (cmd->num_redirections != 0)
 	{
 		check_redir(cmd);
@@ -30,10 +31,12 @@ void	exec_com(t_tool *data, t_cmds *cmd)
 		exec_builtin(cmd->builtin, cmd, &data->var_env);
 	}
 	else if (cmd->str[0] == NULL)
-		return ;
+		exit(1);
 	else if (!access(cmd->str[0], X_OK))
-		execve(cmd->str[0], cmd->str, lst_to_tab(data->var_env));
+		execve(cmd->str[0], cmd->str, lst_to_tab(data->var_env, data));
+	
 }
+
 
 void	simp_com(t_tool *data, t_cmds *cmd)
 {
@@ -45,7 +48,7 @@ void	simp_com(t_tool *data, t_cmds *cmd)
 	{
 		if (!ft_strncmp(cmd->str[0], "exit", 4))
 		{
-			dprintf(2, "builin est egal a exit\n");
+			//dprintf(2, "builin est egal a exit\n");
 			close(data->base_fd[0]);
 			close(data->base_fd[1]);
 		}   
@@ -67,7 +70,7 @@ void    ft_fork(t_tool *data, int fd[2], int infile, t_cmds *cmd, int i)
 	{
 		close(data->base_fd[0]);
 		close(data->base_fd[1]);
-		if (cmd->prev && cmd->next && dup2(infile, STDIN_FILENO) == -1)
+		if (cmd->prev && dup2(infile, STDIN_FILENO) == -1)
 		   ft_putstr_fd("ERREUR fonction dup2 stin\n", 2);
 		close(fd[0]);
 		if (cmd->next && dup2(fd[1], STDOUT_FILENO) == -1)

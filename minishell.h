@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:08:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/22 15:14:00 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/26 19:20:46 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,23 +69,20 @@ typedef struct s_tool
 	char	*line;
 	t_cmds	*cmds;
 	t_list	*var_env;
-	char	*pwd;
-	char	*old_pwd;
+	t_list	*garbage_collector;
 	int		flag;
 	int		base_fd[2];
 	pid_t		*pid;
 	//int		outfile;
 	//int		infile;
-}	t_tool;	
+}	t_tool;
 
-extern t_list	*g_garbage_collector;
-
-t_lexer	*ft_lexer();
-char	**ft_decoup(char *arg, char **tab, char c);
-int	ft_verif_quote(char *s);
+t_lexer	*ft_lexer(t_tool *data);
+char	**ft_decoup(char *arg, char **tab, char c, t_tool *data);
+int		ft_verif_quote(char *s);
 
 //utils
-t_lexer	*ft_lstnewl(char *str);
+t_lexer	*ft_lstnewl(char *str, t_tool *data);
 void    ft_add_back_lexer(t_lexer **lst, t_lexer *new);
 void	cleartb(char **tb);
 char	**dup_tab(char **tb);
@@ -97,52 +94,53 @@ void	add_back_cmds(t_cmds **lst, t_cmds *new);
 void	printlex(t_lexer *lex);
 void	print_cmd(t_cmds *cmd);
 void	clear_cmd(t_cmds **cmd);
-char	**lst_to_tab(t_list *lst);
+char	**lst_to_tab(t_list *lst, t_tool *data);
+void	error(char *str, char *str2, char *str3);
 
 //parsing
-t_cmds *parser(t_lexer *lex, t_cmds *commande);
+t_cmds *parser(t_lexer *lex, t_cmds *commande, t_tool *data);
 
 //path
-void	check_path(t_cmds **commande, t_list *env);
+void	check_path(t_cmds **commande, t_list *env, t_tool *data);
 
 // expand
 void	expand(t_tool *data);
 char	*get_var(char *dvar, t_list *var_env);
-int	ft_dollarsize(char *str, int *index, t_tool data);
-char	*resize_arg(char *str, t_tool data);
+int		ft_dollarsize(char *str, int *index, t_tool data);
+char	*resize_arg(char *str, t_tool *data);
 
 // handle_quote
-int	ft_copy_var(char *str, char **s, int *y, t_tool *data);
-int	handle_doublequote(char *str, char **s, int *y, t_tool data);
-int	handle_singlequote(char *str, char **s, int *y);
-char	**divide(char **s, int flag);
+int		ft_copy_var(char *str, char **s, int *y, t_tool *data);
+int		handle_doublequote(char *str, char **s, int *y, t_tool data);
+int		handle_singlequote(char *str, char **s, int *y);
+char	**divide(char **s, int flag, t_tool *data);
 
 //handle_redirection
-t_lexer *handle_redirection(t_lexer *redirection, t_tool data);
-char	*handle_dl(char *str, t_tool data);
+t_lexer *handle_redirection(t_lexer *redirection, t_tool *data);
+char	*handle_dl(char *str, t_tool *data);
 
 //garbage_collector
-void	*ft_malloc(size_t size);
-void	*memory_add(void *pointeur);
-void	free_garbage(void);
-void	*ft_calloc_g(size_t nmemb, size_t size);
+void	*ft_malloc(size_t size, t_tool *data);
+void	*memory_add(void *pointeur, t_tool *data);
+void	free_garbage(t_tool *data);
+void	*ft_calloc_g(size_t nmemb, size_t size, t_tool *data);
 
 //exec
 void	ft_exec(t_tool *data);
 //heredoc
 void    check_heredoc(t_cmds *cmd, t_tool *data);
-char	*heredoc_expand(char *str, t_tool data);
+char	*heredoc_expand(char *str, t_tool *data);
 //redirection
 void	check_redir(t_cmds *cmd);
 int		expand_token(char c);
 
 //builtin
-void	export(char **arg, t_list **env);
-void	unset(char **arg, t_list **env);
-void	echo(char **arg, t_list **env);
-void	env(char **arg, t_list **env);
-void	ft_exit(char **arg, t_list **env);
-void	pwd(char **arg, t_list **env);
-void	cd(char **arg, t_list **env);
+int	export(char **arg, t_list **env, t_tool *data);
+int	unset(char **arg, t_list **env, t_tool *data);
+int	echo(char **arg, t_list **env, t_tool *data);
+int	env(char **arg, t_list **env, t_tool *data);
+int	ft_exit(char **arg, t_list **env, t_tool *data);
+int	pwd(char **arg, t_list **env, t_tool *data);
+int	cd(char **arg, t_list **env, t_tool *data);
 #endif
 
