@@ -6,15 +6,15 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 19:33:53 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/26 15:45:52 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/29 13:29:16 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	exec_builtin(void (*builtin)(char **arg, t_list **env), t_cmds *cmd, t_list **envp)
+void	exec_builtin(void (*builtin)(char **arg, t_list **env, t_tool *data), t_cmds *cmd, t_tool *data)
 {   
-	builtin(&cmd->str[1], envp);	
+	builtin(&cmd->str[1], &data->var_env, data);	
 }
 
 void	exec_com(t_tool *data, t_cmds *cmd)
@@ -28,9 +28,9 @@ void	exec_com(t_tool *data, t_cmds *cmd)
 	}
 	if (cmd->builtin)
 	{
-		exec_builtin(cmd->builtin, cmd, &data->var_env);
+		exec_builtin(cmd->builtin, cmd, data);
 	}
-	else if (cmd->str[0] == NULL)
+	else if (!cmd->str || cmd->str[0] == NULL)
 		exit(1);
 	else if (!access(cmd->str[0], X_OK))
 		execve(cmd->str[0], cmd->str, lst_to_tab(data->var_env, data));
@@ -52,7 +52,7 @@ void	simp_com(t_tool *data, t_cmds *cmd)
 			close(data->base_fd[0]);
 			close(data->base_fd[1]);
 		}   
-		exec_builtin(cmd->builtin, cmd, &data->var_env);
+		exec_builtin(cmd->builtin, cmd, data);
 		return ;
 	}
 	pid = fork();
@@ -70,7 +70,7 @@ void    ft_fork(t_tool *data, int fd[2], int infile, t_cmds *cmd, int i)
 	{
 		close(data->base_fd[0]);
 		close(data->base_fd[1]);
-		if (cmd->prev && dup2(infile, STDIN_FILENO) == -1)
+		if (cmd->prev && cmd->next && dup2(infile, STDIN_FILENO) == -1)
 		   ft_putstr_fd("ERREUR fonction dup2 stin\n", 2);
 		close(fd[0]);
 		if (cmd->next && dup2(fd[1], STDOUT_FILENO) == -1)
@@ -144,6 +144,7 @@ void    multi_com(t_tool *data)
 		infile = child(data, tmp, i++, infile);
 		tmp= tmp->next;
 	}
+	close(infile);
 	int j;
 	j = 0;
 	while (j < i)
@@ -164,9 +165,18 @@ void    ft_exec(t_tool *data)
 		simp_com(data, cmd);
 	else
 		multi_com(data);
-	if (cmd->file_name)
+	while(cmd)
 	{
-		unlink(cmd->file_name);
+		if (cmd->file_name)
+		{
+			unlink(cmd->file_name);
+			free(cmd->file_name);
+		}
+		cmd= cmd->next;
 	}
+	// if (cmd->file_name)
+	// {
+	// 	unlink(cmd->file_name);
+	// }
 	dprintf(2, "NORMALEMENT jsuis bien\n");
 }

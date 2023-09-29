@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:46:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/26 16:05:13 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/29 13:21:07 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	*memory_add(void *pointeur, t_tool *data)
 {
 	t_list	*node;
 	t_list	*tmp;
+	t_list	*first;
 
 	node = malloc(sizeof(t_list));
 	if (!node)
@@ -26,10 +27,12 @@ void	*memory_add(void *pointeur, t_tool *data)
 		data->garbage_collector = node;
 	else
 	{
+		first = data->garbage_collector;
 		tmp = data->garbage_collector;
 		while (tmp->next)
 			tmp = tmp->next;
 		tmp->next = node;
+		data->garbage_collector = first;
 	}
 	return (pointeur);
 }

@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 18:46:15 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/26 19:48:19 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/09/29 13:02:39 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,18 +44,20 @@ int	extracte_node(t_lexer **lex, t_cmds **cmd)
 {
 	// erreur si il n y a pas de fichier apres un token ou qu il y a un autre token
 	if ((*lex)->next == NULL)
-		return (error("Minishell: parse error near '\\n'", NULL, NULL), 0);
-	if ((*lex)->next->token == 1)
-		return (error("Minishell: parse error near >", NULL, NULL), 0);
-	if ((*lex)->next->token == 2)
-		return (error("Minishell: parse error near <", NULL, NULL), 0);
-	if ((*lex)->next->token == 3)
-		return (error("Minishell: parse error near >>", NULL, NULL), 0);
-	if ((*lex)->next->token == 4)
-		return (error("Minishell: parse error near <<", NULL, NULL), 0);
-	if ((*lex)->next->token == 5)
-		return (error("Minishell: parse error near |", NULL, NULL), 0);
+		error("Minishell: parse error near '\\n'", NULL, NULL);
+	else if ((*lex)->next->token == 1)
+		error("Minishell: parse error near >", NULL, NULL);
+	else if ((*lex)->next->token == 2)
+		error("Minishell: parse error near <", NULL, NULL);
+	else if ((*lex)->next->token == 3)
+		error("Minishell: parse error near >>", NULL, NULL);
+	else if ((*lex)->next->token == 4)
+		error("Minishell: parse error near <<", NULL, NULL);
+	else if ((*lex)->next->token == 5)
+		error("Minishell: parse error near |", NULL, NULL);
 	// on ajoute le token et son fichier dans la structure cmds
+	if ((*lex)->next == NULL || (*lex)->next->token != 0 )
+		return (*cmd = NULL, 0);
 	*lex = cut_lex(lex, cmd);
 	return (1);
 }
@@ -96,8 +98,8 @@ t_cmds	*incertion(t_lexer **lex, t_cmds *cmd, t_tool *data)
 		return (error("Minishell: parse error near '\\n'", NULL, NULL), NULL);
 	*lex = boucle(lex, &cmd, &tmp, &i);
 	if (!(*lex))
-		return (NULL);
-	// calcule la taille de la liste actualiser jusqu au pipe
+		return (cmd);
+	//= calcule la taille de la liste actualiser jusqu au pipe
 	cmd->str = ft_malloc(sizeof(char *) * (i + 1), data);
 	if (cmd->str == NULL)
 		return (error("malloc error", NULL, NULL), NULL);
