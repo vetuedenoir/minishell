@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:08:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/26 19:20:46 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/06 14:37:25 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,5 +142,7 @@ int	env(char **arg, t_list **env, t_tool *data);
 int	ft_exit(char **arg, t_list **env, t_tool *data);
 int	pwd(char **arg, t_list **env, t_tool *data);
 int	cd(char **arg, t_list **env, t_tool *data);
+
+int	valide_identifier(char *str);
 #endif
 

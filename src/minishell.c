@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 15:03:05 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/29 12:52:15 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/06 12:39:14 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,12 +99,11 @@ int	main(int argc, char *argv[], char *envp[])
 		lex = ft_lexer(&data);
 		if (lex == NULL)
 			continue ;
-		printlex(lex);
+	//	printlex(lex);
 		data.cmds = parser(lex, data.cmds, &data);
 		if (data.cmds == NULL)
-		{	printf("merde\n");
-				continue ;
-		}expand(&data);
+			continue ;
+		expand(&data);
 	
 		check_path(&data.cmds, data.var_env, &data);
 		if (data.garbage_collector == NULL)

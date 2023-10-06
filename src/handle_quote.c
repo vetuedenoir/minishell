@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 13:42:25 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/26 14:41:54 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/06 17:00:32 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,10 @@ int	zi(char *str, char **s, int *y, t_tool data)
 	char	*var;
 
 	i = 0;
+	if (ft_isdigit(str[1]) || !expand_token(str[1]))
+		return (2);
+	if (expand_token(str[1] || ft_isdigit(str[1])))
+		return (2);
 	var = return_var(&str[i], &i, data);
 	if (!var)
 		return (i);
@@ -75,14 +79,14 @@ int	handle_doublequote(char *str, char **s, int *y, t_tool data)
 	i = 0;
 	while (str[++i] && str[i] != 34)
 	{		
-		if (str[i] == '$' && str[i + 1] != 0 && expand_token(str[i + 1]))
+		if (str[i] == '$' && str[i + 1] != 0 && str[i + 1] != 34)
 		{
 			i += zi(&str[i], s, y, data);
 			if (str[i] == 34)
 				return (i + 1);
 		}
 		if ((str[i] != 34 && str[i] != '$') || \
-			(str[i] == '$' && (expand_token(str[i + 1]) || str[i] == 0)))
+			(str[i] == '$' && (expand_token(str[i + 1]) || str[i] == 0 || str[i + 1] == 34)))
 		{
 			s[0][*y] = str[i];
 			*y = *y + 1;
@@ -99,11 +103,13 @@ int	ft_copy_var(char *str, char **s, int *y, t_tool *data)
 	char	*content;
 
 	i = 1;
+	if (ft_isdigit(str[i]) || !expand_token(str[i]))
+		return (2);
 	while (str[i] && str[i] != 34 && str[i] != 39 && expand_token(str[i]))
 		i++;
 	var = malloc(sizeof(char) * (i + 1));
 	if (!var)
-		return (i + 1);
+		return (i);
 	ft_strlcpy(var, &str[1], i);
 	content = get_var(var, data->var_env);
 	if (!content)

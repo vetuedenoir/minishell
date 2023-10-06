@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 18:59:11 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/26 14:46:43 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/06 15:19:28 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,3 +71,4 @@ int	expand_token(char c)
 		return (1);
 	return (0);
 }
+

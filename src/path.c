@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:28:45 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/26 19:42:58 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/06 17:39:05 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,15 @@ char	*true_path(char *str)
 	{
 		if (access(str, X_OK))
 		{
-			error("Minishell: la commande '", str, "' est introuvable");
+			error("Minishell: ", str, ": commande not found");
+			//error("Minishell: la commande '", str, "' est introuvable");
 			return (NULL);
 		}
 		else
 			return (str);
 	}
-	error("Minishell: la commande '", str, "' est introuvable");
+	error("Minishell: ", str, ": commande not found");
+	//error("Minishell: la commande '", str, "' est introuvable");
 	return (NULL);
 }
 
@@ -52,6 +54,8 @@ char	*get_path(char *str, char *line, t_tool *data)
 	i = 0;
 	if (line == NULL || ft_strchr(str, '/'))
 		return (true_path(str));
+	if (str[0] == '\0')
+		return (NULL);
 	tb = ft_split(line, ':'); // utiliser un split qui utilise ft_calloc
 	if (!tb)
 		return (free_garbage(data), NULL);
@@ -66,7 +70,8 @@ char	*get_path(char *str, char *line, t_tool *data)
 			return (cleartb(tb), s);
 		i++;
 	}
-	return (error("Minishell: la commande '", str, "' est introuvable"),
+	return (error("Minishell: ", str, ": commande not found"),
+	//return (error("Minishell: la commande '", str, "' est introuvable"),
 		cleartb(tb), NULL);
 }
 
@@ -117,6 +122,7 @@ void	check_path(t_cmds **commande, t_list *env, t_tool *data)
 				(*commande)->str[0] = get_path((*commande)->str[0],\
 				path, data);
 		}
+		
 		if (data->garbage_collector == NULL)
 			break ;
 		(*commande) = (*commande)->next;

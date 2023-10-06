@@ -22,15 +22,15 @@ int	ft_exit(char **arg, t_list **env, t_tool *data)
 	if (arg && arg[0])
 	{
 		if (arg[1])
-			return ((void)printf("too many argument\n"), 1);
+			return ((void)printf("Minishell: exit: too many argument\n"), 1);
 		if (arg[0][0] != '-' && arg[0][0] != '+' && !ft_isdigit(arg[0][0]))
-			return ((void)printf("numeric argument required\n"), 1);
+			return ((void)printf("Minishel: exit: numeric argument required\n"), 1);
 		if (arg[0][0] == '-' || arg[0][0] == '+')
 			i = 1;
 		while (arg[0][i])
 		{
 			if (!ft_isdigit(arg[0][i++]))
-				return ((void)printf("numeric argument required\n"), 1);
+				return ((void)printf("Minishel: exit:numeric argument required\n"), 1);
 		}
 		code = ft_atoi(arg[0]);
 	}

@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 18:46:15 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/29 13:02:39 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/06 12:37:02 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,17 +44,19 @@ int	extracte_node(t_lexer **lex, t_cmds **cmd)
 {
 	// erreur si il n y a pas de fichier apres un token ou qu il y a un autre token
 	if ((*lex)->next == NULL)
-		error("Minishell: parse error near '\\n'", NULL, NULL);
+		error("Minishell: syntaxe error near unexpected token 'newline'", NULL, NULL);
+		//error("Minishell: parse error near '\\n'", NULL, NULL);
 	else if ((*lex)->next->token == 1)
-		error("Minishell: parse error near >", NULL, NULL);
+		error("Minishell: parse error near '>'", NULL, NULL);
 	else if ((*lex)->next->token == 2)
-		error("Minishell: parse error near <", NULL, NULL);
+		error("Minishell: parse error near '<'", NULL, NULL);
 	else if ((*lex)->next->token == 3)
-		error("Minishell: parse error near >>", NULL, NULL);
+		error("Minishell: syntax error near unexpected token '>>'", NULL, NULL);
+		//error("Minishell: parse error near >>", NULL, NULL);
 	else if ((*lex)->next->token == 4)
-		error("Minishell: parse error near <<", NULL, NULL);
+		error("Minishell: parse error near '<<'", NULL, NULL);
 	else if ((*lex)->next->token == 5)
-		error("Minishell: parse error near |", NULL, NULL);
+		error("Minishell: parse error near '|'", NULL, NULL);
 	// on ajoute le token et son fichier dans la structure cmds
 	if ((*lex)->next == NULL || (*lex)->next->token != 0 )
 		return (*cmd = NULL, 0);
@@ -95,7 +97,7 @@ t_cmds	*incertion(t_lexer **lex, t_cmds *cmd, t_tool *data)
 	// Des que l on rencontre un token on extrait le token et le fichier du lexer
 	// pour les mettre dans la redirection de cmd
 	if ((*lex)->token == Pipe)
-		return (error("Minishell: parse error near '\\n'", NULL, NULL), NULL);
+		return (error("Minishell: parse error near '|'", NULL, NULL), NULL);
 	*lex = boucle(lex, &cmd, &tmp, &i);
 	if (!(*lex))
 		return (cmd);

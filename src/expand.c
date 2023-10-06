@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 18:45:38 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/26 15:42:57 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/06 17:03:17 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ char	*resize_arg(char *str, t_tool *data)
 			y += ft_dollarsize(&str[i], &i, *data);//recupere la taille de la chaine variable et on soustrait $var
 	}
 	s = ft_malloc(sizeof(char) * (y + i + 1), data);
-	return (s);
+	return (s[0] = '\0', s);
 }
 
 char	**handle_dollar(char *str, t_tool *data)
