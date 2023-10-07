@@ -95,6 +95,21 @@ int	handle_doublequote(char *str, char **s, int *y, t_tool data)
 	return (i + 1);
 }
 
+int	verif_var(char *str)
+{
+	int	i;
+	if (ft_isdigit(str[1]))
+		return (0);
+	if (str[1] == 34 || str[1] == 39)
+		return (-1);
+	if (!expand_token(str[1]))
+		return (0);
+	i = 0;
+	while (str[i] && expand_token(str[i]))
+		i++;
+	return (i);
+}
+
 int	ft_copy_var(char *str, char **s, int *y, t_tool *data)
 {
 	int		i;
@@ -102,11 +117,9 @@ int	ft_copy_var(char *str, char **s, int *y, t_tool *data)
 	char	*var;
 	char	*content;
 
-	i = 1;
-	if (ft_isdigit(str[i]) || !expand_token(str[i]))
-		return (2);
-	while (str[i] && str[i] != 34 && str[i] != 39 && expand_token(str[i]))
-		i++;
+	i = verif_var(str);
+	if (i == 0 || i == -1)
+		return (i + 2); 
 	var = malloc(sizeof(char) * (i + 1));
 	if (!var)
 		return (i);
