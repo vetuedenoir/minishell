@@ -179,11 +179,13 @@ int    echo(char **arg, t_list **env, t_tool *data)
     {
 		if (arg[i][0])
 			w += printf("%s ", arg[i]);
+			//ft_putstr_fd(arg[i], STDOUT_FILENO);
 		i++;
 	}
 		
     if (arg[i])
         w += printf("%s", arg[i]);
+		//ft_putstr_fd(arg[i], STDOUT_FILENO);
     if (opt == -1)
         w += printf("\n");
     if (w == -1)

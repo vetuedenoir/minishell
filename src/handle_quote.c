@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 13:42:25 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/06 17:00:32 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/12 18:37:22 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	verif_var(char *str)
 		return (-1);
 	if (!expand_token(str[1]))
 		return (0);
-	i = 0;
+	i = 1;
 	while (str[i] && expand_token(str[i]))
 		i++;
 	return (i);

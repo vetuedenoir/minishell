@@ -29,6 +29,7 @@ void	exec_com(t_tool *data, t_cmds *cmd)
 	if (cmd->builtin)
 	{
 		exec_builtin(cmd->builtin, cmd, data);
+		exit(1);
 	}
 	else if (!cmd->str || cmd->str[0] == NULL)
 		exit(1);
@@ -39,7 +40,7 @@ void	exec_com(t_tool *data, t_cmds *cmd)
 			error("Minishell: ", cmd->str[0], ": Is a directory\n");
 	}
 	else
-		error("Minishelle : errore exec\n", NULL, NULL);	
+		error("Minishell : errore exec\n", NULL, NULL);	
 }
 
 
