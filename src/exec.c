@@ -57,7 +57,11 @@ void	simp_com(t_tool *data, t_cmds *cmd)
 			//dprintf(2, "builin est egal a exit\n");
 			close(data->base_fd[0]);
 			close(data->base_fd[1]);
-		}   
+		}
+		if (cmd->num_redirections != 0)
+		{
+			check_redir(cmd);
+		}
 		exec_builtin(cmd->builtin, cmd, data);
 		return ;
 	}

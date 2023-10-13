@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 18:27:43 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/26 15:57:41 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/13 13:48:55 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int	ft_exit(char **arg, t_list **env, t_tool *data)
 		}
 		code = ft_atoi(arg[0]);
 	}
+	printf("exit\n");
 	ft_lstclear(env, free);
 	rl_clear_history();
 	free_garbage(data);
@@ -63,25 +64,27 @@ int	pwd(char **arg, t_list **env, t_tool *data)
 /* modifier la variable PWd et OLDPWD*/
 int	cd(char **arg, t_list **env, t_tool *data)
 {
-	char	*pwd;
+	char	*pwd[2];
 	char	*str;
-	char	*old;
+	char	*old[2];
 	
 	(void)env;
+	old[1] = NULL;
+	pwd[1] = NULL;
 	if (chdir(arg[0]))
 	{
 		perror("cd");
 		return (1);
 	}
-	pwd = get_var("PWD", *env);
-	old = ft_strjoin("OLDPWD=", pwd);
-	free(pwd);
-	export(&old, env, data);
+	pwd[0] = get_var("PWD", *env);
+	old[0] = ft_strjoin("OLDPWD=", pwd[0]);
+	free(pwd[0]);
+	export(old, env, data);
 	str = NULL;
 	str = getcwd(str, 0);
-	pwd = ft_strjoin("PWD=", str);
+	pwd[0] = ft_strjoin("PWD=", str);
 	free(str);
-	export(&pwd, env, data);
-	free(pwd);
+	export(pwd, env, data);
+	free(pwd[0]);
 	return (0);
 }

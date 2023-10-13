@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 16:38:28 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/06 18:06:52 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/13 16:22:15 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,16 +113,12 @@ int	export(char **arg, t_list **env, t_tool *data)
 	return (0);
 }
 
-int	unset(char **arg, t_list **env, t_tool *data)
+void	retrive(char **arg, t_list **env)
 {
 	char	*s;
 	int		t; 
 	t_list *first;
 
-	(void)arg;
-	(void)data;
-	if (!env || !arg || !arg[0])
-		return (1);
 	t = ft_strlen(arg[0]);
 	first = *env;
 	while (*env)
@@ -136,6 +132,21 @@ int	unset(char **arg, t_list **env, t_tool *data)
 		*env = (*env)->next;
 	}
 	*env = first;
+}
+
+int	unset(char **arg, t_list **env, t_tool *data)
+{
+	int	x;
+
+	(void)data;
+	if (!env || !arg || !arg[0])
+		return (1);
+	x = 0;
+	while (arg[x])
+	{
+		retrive(&arg[x], env);
+		x++;
+	}
 	return (0);
 }
 
@@ -177,7 +188,7 @@ int    echo(char **arg, t_list **env, t_tool *data)
     i = opt + 1;
     while (arg[i] && arg[i + 1])
     {
-		if (arg[i][0])
+		if (arg[i][0] || (!arg[i][0] && i == 0))
 			w += printf("%s ", arg[i]);
 			//ft_putstr_fd(arg[i], STDOUT_FILENO);
 		i++;

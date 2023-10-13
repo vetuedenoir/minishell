@@ -27,7 +27,7 @@ void	ajout_infile(t_lexer *redir, int i, char *file)
 void    ajout_outfile(t_lexer *redir, int i)
 {
 	int fd;
-	dprintf(2, "ajout outfile\n");
+	//dprintf(2, "ajout outfile\n");
 	if (i == 1)
 		fd = open(redir->next->str, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (i == 3)
