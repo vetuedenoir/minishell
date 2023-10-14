@@ -6,15 +6,21 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 19:33:53 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/06 12:41:34 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/14 20:20:03 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	exec_builtin(void (*builtin)(char **arg, t_list **env, t_tool *data), t_cmds *cmd, t_tool *data)
-{   
-	builtin(&cmd->str[1], &data->var_env, data);	
+int	exec_builtin(int (*builtin)(char **arg, t_list **env, t_tool *data, int flag), t_cmds *cmd, t_tool *data, int flag)
+{
+	if (!ft_strncmp(cmd->str[0], "exit", 5))
+	{
+			//dprintf(2, "builin est egal a exit\n");
+			close(data->base_fd[0]);
+			close(data->base_fd[1]);
+	}
+	return (builtin(&cmd->str[1], &data->var_env, data, flag));
 }
 
 void	exec_com(t_tool *data, t_cmds *cmd)
@@ -22,20 +28,13 @@ void	exec_com(t_tool *data, t_cmds *cmd)
 	close(data->base_fd[0]);
 	close(data->base_fd[1]);
 	//dprintf(2, "EXEC_COM\n");
-	if (cmd->num_redirections != 0)
-	{
-		check_redir(cmd);
-	}
+	check_redir(cmd);
 	if (cmd->builtin)
-	{
-		exec_builtin(cmd->builtin, cmd, data);
-		exit(1);
-	}
+		exit(exec_builtin(cmd->builtin, cmd, data, 1));
 	else if (!cmd->str || cmd->str[0] == NULL)
 		exit(1);
 	else if (!access(cmd->str[0], X_OK | F_OK))
 	{
-		//dprintf(2, "access ok\n");
 		if (execve(cmd->str[0], cmd->str, lst_to_tab(data->var_env, data)) == -1)
 			error("Minishell: ", cmd->str[0], ": Is a directory\n");
 	}
@@ -44,41 +43,13 @@ void	exec_com(t_tool *data, t_cmds *cmd)
 }
 
 
-void	simp_com(t_tool *data, t_cmds *cmd)
-{
-	pid_t	pid;
-	int		status;
 
-	check_heredoc(cmd, data);
-	if (cmd->builtin)
-	{
-		if (!ft_strncmp(cmd->str[0], "exit", 4))
-		{
-			//dprintf(2, "builin est egal a exit\n");
-			close(data->base_fd[0]);
-			close(data->base_fd[1]);
-		}
-		if (cmd->num_redirections != 0)
-		{
-			check_redir(cmd);
-		}
-		exec_builtin(cmd->builtin, cmd, data);
-		return ;
-	}
-	pid = fork();
-	if (pid == 0)
-	{
-		exec_com(data, cmd);
-	}
-	waitpid(pid, &status, 0);
-}
 void    ft_fork(t_tool *data, int fd[2], int infile, t_cmds *cmd, int i)
 {
   
 	data->pid[i] = fork();
 	if (data->pid[i] == 0)
 	{
-		//dprintf(2, "debut fork fonctionnnnn\n");
 		close(data->base_fd[0]);
 		close(data->base_fd[1]);
 		if (cmd->prev && cmd->file_name && dup2(infile, STDIN_FILENO) == -1)
@@ -90,14 +61,12 @@ void    ft_fork(t_tool *data, int fd[2], int infile, t_cmds *cmd, int i)
 		if (cmd->prev)
 			close(infile);
 		exec_com(data, data->cmds);
-		//dprintf(2, "debut fork fonctionnnnn\n");
 	}
 	else
 	{
 		if (close(fd[1]) == -1 || dup2(fd[0], 0) == -1
 			|| close(fd[0]) == -1)
 			wait(NULL);
-			///exit(1);
 	}
 }
 
@@ -115,13 +84,13 @@ void    size_nb_com(t_tool *data)
 	}
 	data->pid = malloc(j * sizeof(pid_t));
 	data->cmds = start;
-	// printf("size malloc pid = %d\n", j);
 }
+
 int    child(t_tool *data, t_cmds *cmds, int i, int infile)
 {   
 	int     fd[2];
 
-	if (pipe(fd) == -1)
+	if (pipe(fd) == -1)// mettre des perror
 		exit(1);
 	check_heredoc(cmds, data);
 	ft_fork(data, fd, infile, cmds, i);
@@ -135,42 +104,55 @@ int    child(t_tool *data, t_cmds *cmds, int i, int infile)
 	}
 	else
 		infile = fd[0];
-	//dprintf(2, "i = %d et cmd = %s\n", i, cmds->str[0]);
-	//data->cmds = data->cmds->next;
 	return (infile);
 }
 
 void    multi_com(t_tool *data)
 {
-	int     infile;
-	//t_cmds  *start;
-	//t_cmds  *tmp;
+	int	infile;
 	int i;
+	int j;
+	int	status;
 
 	i = 0;
-	//start = data->cmds;
-	//tmp = data->cmds;
-	//infile = STDIN_FILENO;
 	size_nb_com(data);
 	while(data->cmds != NULL)
 	{
 		infile = child(data, data->cmds, i++, infile);
 		data->cmds = data->cmds->next;
-		//tmp= tmp->next;
-		
 	}
 	close(infile);
-	int j;
 	j = 0;
 	while (j < i)
 	{
-		waitpid(data->pid[j], NULL, 0);
+		waitpid(data->pid[j], &status, 0);
+		G_ExitCode = status;
 		j++;
 	}
-	//dprintf(2, "avant de close et wait\n");
-	//data->cmds = start;
 	free(data->pid);
 }
+
+void	simp_com(t_tool *data, t_cmds *cmd)
+{
+	pid_t	pid;
+	int		status;
+
+	check_heredoc(cmd, data);
+	if (cmd->builtin)
+	{
+		check_redir(cmd);
+		G_ExitCode = exec_builtin(cmd->builtin, cmd, data, 0);
+		return ;
+	}
+	pid = fork();
+	if (pid == 0)
+	{
+		exec_com(data, cmd);
+	}
+	waitpid(pid, &status, 0);
+	G_ExitCode = status;
+}
+
 void    ft_exec(t_tool *data)
 {
 	t_cmds *cmd;

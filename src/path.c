@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:28:45 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/06 17:39:05 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/14 13:01:04 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	*get_path(char *str, char *line, t_tool *data)
 		return (true_path(str));
 	if (str[0] == '\0')
 		return (NULL);
-	tb = ft_split(line, ':'); // utiliser un split qui utilise ft_calloc
+	tb = ft_split(line, ':');
 	if (!tb)
 		return (free_garbage(data), NULL);
 	i = 0;

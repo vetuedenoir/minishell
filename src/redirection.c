@@ -15,8 +15,7 @@ void	ajout_infile(t_lexer *redir, int i, char *file)
 	fd = open(redir->next->str, O_RDONLY, 0644);
 	if (fd < 0)
 	{
-		//error("Minishell: ", file, ": No such or directory");
-		ft_putstr_fd("Minishel: infile: No such file or directory\n", 2);
+		error("Minishell: ", redir->next->str, ": No such file or directory");
 		exit(1);
 	}
 	if (fd > 0 && dup2(fd, STDIN_FILENO) > -1)
@@ -34,8 +33,8 @@ void    ajout_outfile(t_lexer *redir, int i)
 		fd = open(redir->next->str, O_CREAT | O_RDWR | O_APPEND, 0644);
 	if (fd < 0)
 	{
-		ft_putstr_fd("Minishel: outfile error\n", 2);
-		exit(1);
+		error("Minishell: ", redir->next->str, ": No such file or directory");
+		//exit(1);
 	}
 	if (fd > 0 && dup2(fd, STDOUT_FILENO) > -1)
 	{

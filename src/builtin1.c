@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 16:38:28 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/13 16:22:15 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/14 13:36:04 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	valide_identifier(char *str)
 	return (i);
 }
 
-int	export(char **arg, t_list **env, t_tool *data)
+int	export(char **arg, t_list **env, t_tool *data, int flag)
 {
 	t_list	*node;
 	char	*s;
@@ -87,6 +87,7 @@ int	export(char **arg, t_list **env, t_tool *data)
 
 	(void) arg;
 	(void)data;
+	(void)flag;
 	x = -1;
 	if (!env || !arg || !arg[0])
 		return (1);
@@ -134,11 +135,12 @@ void	retrive(char **arg, t_list **env)
 	*env = first;
 }
 
-int	unset(char **arg, t_list **env, t_tool *data)
+int	unset(char **arg, t_list **env, t_tool *data, int flag)
 {
 	int	x;
 
 	(void)data;
+	(void)flag;
 	if (!env || !arg || !arg[0])
 		return (1);
 	x = 0;
@@ -172,7 +174,7 @@ int    opt_echo(char **arg)
     return (x - 1);
 }
 
-int    echo(char **arg, t_list **env, t_tool *data)
+int    echo(char **arg, t_list **env, t_tool *data, int flag)
 {
     int    opt;
     int    i;
@@ -181,6 +183,7 @@ int    echo(char **arg, t_list **env, t_tool *data)
     w = 0;
     (void)env;
     (void)data;
+	(void)flag;
     if (!arg || !arg[0])
         return (1);
     opt = opt_echo(arg);
@@ -204,10 +207,11 @@ int    echo(char **arg, t_list **env, t_tool *data)
     return (0);
 }
 
-int	env(char **arg, t_list **env, t_tool *data) // a revoir
+int	env(char **arg, t_list **env, t_tool *data, int flag) // a revoir
 {
 	(void) arg;
 	(void)data;
+	(void)flag;
 	t_list *node;
 	char	*s;
 	

@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:08:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/06 14:37:25 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/14 16:30:55 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,15 @@ typedef struct s_tool
 	//int		infile;
 }	t_tool;
 
+extern unsigned char G_ExitCode;
+
+//initshell
+t_tool	*init_shell(char **envp, t_tool *data);
+
+//signal
+void	sigint_handler(int signo);
+
+//lexer
 t_lexer	*ft_lexer(t_tool *data);
 char	**ft_decoup(char *arg, char **tab, char c, t_tool *data);
 int		ft_verif_quote(char *s);
@@ -135,13 +144,13 @@ void	check_redir(t_cmds *cmd);
 int		expand_token(char c);
 
 //builtin
-int	export(char **arg, t_list **env, t_tool *data);
-int	unset(char **arg, t_list **env, t_tool *data);
-int	echo(char **arg, t_list **env, t_tool *data);
-int	env(char **arg, t_list **env, t_tool *data);
-int	ft_exit(char **arg, t_list **env, t_tool *data);
-int	pwd(char **arg, t_list **env, t_tool *data);
-int	cd(char **arg, t_list **env, t_tool *data);
+int	export(char **arg, t_list **env, t_tool *data, int flag);
+int	unset(char **arg, t_list **env, t_tool *data, int flag);
+int	echo(char **arg, t_list **env, t_tool *data, int flag);
+int	env(char **arg, t_list **env, t_tool *data, int flag);
+int	ft_exit(char **arg, t_list **env, t_tool *data, int flag);
+int	pwd(char **arg, t_list **env, t_tool *data, int flag);
+int	cd(char **arg, t_list **env, t_tool *data, int flag);
 
 int	valide_identifier(char *str);
 #endif
