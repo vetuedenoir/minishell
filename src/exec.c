@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 19:33:53 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/14 20:20:03 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/16 20:48:03 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,12 @@ void	exec_com(t_tool *data, t_cmds *cmd)
 		exit(exec_builtin(cmd->builtin, cmd, data, 1));
 	else if (!cmd->str || cmd->str[0] == NULL)
 		exit(1);
-	else if (!access(cmd->str[0], X_OK | F_OK))
+	if (execve(cmd->str[0], cmd->str, lst_to_tab(data->var_env, data)) == -1)
 	{
-		if (execve(cmd->str[0], cmd->str, lst_to_tab(data->var_env, data)) == -1)
-			error("Minishell: ", cmd->str[0], ": Is a directory\n");
+		perror("Minishell");
+		exit(0);
+		//	error("Minishell: ", cmd->str[0], ": Is a directory\n");
 	}
-	else
-		error("Minishell : errore exec\n", NULL, NULL);	
 }
 
 
@@ -91,7 +90,7 @@ int    child(t_tool *data, t_cmds *cmds, int i, int infile)
 	int     fd[2];
 
 	if (pipe(fd) == -1)// mettre des perror
-		exit(1);
+		return (0);
 	check_heredoc(cmds, data);
 	ft_fork(data, fd, infile, cmds, i);
 	close(fd[1]);
