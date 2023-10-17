@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 13:42:25 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/13 12:52:22 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/17 19:06:07 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@ char	*return_var(char *str, int *index, t_tool data)
 
 	i = 1;
 	while (str[i] && str[i] != 34 && str[i] != 39 && \
-		str[i] != '$' && expand_token(str[i]))
+		str[i] != '$' && expand_token(str[i], 0))
+		i++;
+	if (str[i] == '?')
 		i++;
 	*index = *index + i;
 	var = malloc(sizeof(char) * (i + 1));
@@ -55,9 +57,9 @@ int	zi(char *str, char **s, int *y, t_tool data)
 	char	*var;
 
 	i = 0;
-	if (ft_isdigit(str[1]) || !expand_token(str[1]))
+	if (ft_isdigit(str[1]) || !expand_token(str[1], 1))
 		return (2);
-	if (expand_token(str[1] || ft_isdigit(str[1])))
+	if (expand_token(str[1], 0) || ft_isdigit(str[1]))
 		return (2);
 	var = return_var(&str[i], &i, data);
 	if (!var)
@@ -86,7 +88,7 @@ int	handle_doublequote(char *str, char **s, int *y, t_tool data)
 				return (i + 1);
 		}
 		if ((str[i] != 34 && str[i] != '$') || \
-			(str[i] == '$' && (expand_token(str[i + 1]) || str[i] == 0 || str[i + 1] == 34)))
+			(str[i] == '$' && (expand_token(str[i + 1], 1) || str[i] == 0 || str[i + 1] == 34)))
 		{
 			s[0][*y] = str[i];
 			*y = *y + 1;
@@ -102,10 +104,12 @@ int	verif_var(char *str)
 		return (0);
 	if (str[1] == 34 || str[1] == 39)
 		return (-1);
-	if (!expand_token(str[1]))
+	if (!expand_token(str[1], 1))
 		return (0);
 	i = 1;
-	while (str[i] && expand_token(str[i]))
+	if (str[i] == '?')
+		return (2);
+	while (str[i] && expand_token(str[i], 0))
 		i++;
 	return (i);
 }

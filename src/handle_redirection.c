@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 18:59:11 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/06 15:19:28 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/17 18:44:07 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,10 @@ t_lexer	*handle_redirection(t_lexer *redirection, t_tool *data)
 	return (lst);
 }
 
-int	expand_token(char c)
+int	expand_token(char c, bool flag)
 {
+	if (flag && c == '?')
+		return (1);
 	if (ft_isalnum(c))
 		return (1);
 	if (c == '_')

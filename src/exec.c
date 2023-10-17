@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 19:33:53 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/16 20:48:03 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/17 16:03:31 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ void    ft_fork(t_tool *data, int fd[2], int infile, t_cmds *cmd, int i)
 	if (data->pid[i] == 0)
 	{
 		close(data->base_fd[0]);
-		close(data->base_fd[1]);
-		if (cmd->prev && cmd->file_name && dup2(infile, STDIN_FILENO) == -1)
-		   ft_putstr_fd("ERREUR fonction dup2 stin\n", 2);
+		close(data->base_fd[1]);	//dup2(infile, STDIN_FILENO)
+		if ((cmd->prev && cmd->file_name && dup2(infile, 852) == -1))
+		   ft_putstr_fd("ERREUR fonction dup2 stin\n", 2); // gestion d erreur ??!
 		close(fd[0]);
 		if (cmd->next && dup2(fd[1], STDOUT_FILENO) == -1)
 			ft_putstr_fd("ERREUR fonction dup2 stdout\n", 2);
@@ -81,7 +81,7 @@ void    size_nb_com(t_tool *data)
 		data->cmds = data->cmds->next;
 		j++;
 	}
-	data->pid = malloc(j * sizeof(pid_t));
+	data->pid = ft_calloc_g(sizeof(pid_t), j + 1,  data);
 	data->cmds = start;
 }
 
@@ -96,12 +96,13 @@ int    child(t_tool *data, t_cmds *cmds, int i, int infile)
 	close(fd[1]);
 	if (cmds->prev)
 		close(infile);
-	if (cmds->file_name)
+	/*if (cmds->file_name)
 	{
 		close(fd[0]);
+		ft_putstr_fd("What the fuck \n\n", 2);
 		infile = open(cmds->file_name, O_RDONLY);
-	}
-	else
+	}*/
+	//else
 		infile = fd[0];
 	return (infile);
 }
@@ -128,7 +129,6 @@ void    multi_com(t_tool *data)
 		G_ExitCode = status;
 		j++;
 	}
-	free(data->pid);
 }
 
 void	simp_com(t_tool *data, t_cmds *cmd)

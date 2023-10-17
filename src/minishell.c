@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 15:03:05 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/14 16:59:55 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/17 19:42:22 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,12 @@ void	boucleshell(t_tool *data)
 {
 	t_lexer	*lex;
 
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, &sigint_handler);
 	while (1)
 	{	
 		free_garbage(data);
-		signal(SIGQUIT, SIG_IGN);
-		signal(SIGINT, &sigint_handler);
+		
 		data->line = readline(PROMPT);
 		if (!data->line)
 			break ;
@@ -86,7 +87,7 @@ int	main(int argc, char *argv[], char *envp[])
 	
 	close(data.base_fd[0]);
 	close(data.base_fd[1]);
-	printf("sorti de la boucle main\n");
+	printf("exit\n");
 	ft_lstclear(&data.var_env, free);
 	rl_clear_history();
 	exit(0);

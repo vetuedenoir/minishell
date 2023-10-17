@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:28:45 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/14 13:01:04 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/17 16:31:04 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,3 +129,17 @@ void	check_path(t_cmds **commande, t_list *env, t_tool *data)
 	}
 	*commande = node;
 }
+
+/*
+void	check_path(t_cmds **commande, t_list *env, t_tool *data)
+{
+	char	*path;
+
+	if ((*commande)->str && (*commande)->str[0])
+	{
+		(*commande)->builtin = set_builtin((*commande)->str[0]);
+		if (!(*commande)->builtin)
+			(*commande)->str[0] = get_path((*commande)->str[0],\
+			path, data);
+	}	
+}*/

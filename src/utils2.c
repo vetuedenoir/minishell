@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:15:09 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/26 19:34:32 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/17 15:03:56 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,4 +112,10 @@ void	error(char *str, char *str2, char *str3)
 	ft_putstr_fd("\x1b[0m", 2);
 }
 
-
+void	free_all_and_exit(int code, t_tool *data)
+{
+	ft_lstclear(&data->var_env, free);
+	rl_clear_history();
+	free_garbage(data);
+	exit(code);
+}

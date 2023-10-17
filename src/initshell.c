@@ -20,6 +20,7 @@ void	incrementelvl(t_tool *data)
 {
 	char	*shellvl[2];
 	int		lvl;
+	char	*str;
 	
 	shellvl[1] = NULL;
 	shellvl[0] = get_var("SHLVL", data->var_env);
@@ -28,7 +29,10 @@ void	incrementelvl(t_tool *data)
 	lvl = ft_atoi(shellvl[0]);
 	lvl++;
 	free(shellvl[0]);
-	shellvl[0] = ft_strjoin("SHLVL=", ft_itoa(lvl));
+	str = ft_itoa(lvl);
+	shellvl[0] = ft_strjoin("SHLVL=", str);
+	free(str);
+	memory_add(shellvl[0], data);
 	export(shellvl, &data->var_env, data, 0);
 }
 

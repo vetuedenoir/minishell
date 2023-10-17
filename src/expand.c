@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 18:45:38 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/06 17:03:17 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/17 18:53:14 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*get_var(char *dvar, t_list *var_env)
 	char	*s;
 	int		t;
 
+	if (dvar[0] == '?')
+		return (ft_itoa(G_ExitCode));
 	t = ft_strlen(dvar);
 	while (var_env)
 	{
@@ -43,9 +45,11 @@ int	ft_dollarsize(char *str, int *index, t_tool data)
 	char	*content;
 
 	i = 1;
-	if (!expand_token(str[i]) || str[i] == 0)
-		return (i);
-	while (expand_token(str[i]))
+	if (!expand_token(str[1], 1) || str[1] == 0)
+		return (1);
+	while (expand_token(str[i], 0)) 
+		i++;
+	if (str[i] == '?')
 		i++;
 	*index = *index + i - 1;
 	var = malloc(sizeof(char) * (i + 1));
