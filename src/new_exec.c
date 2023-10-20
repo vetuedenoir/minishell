@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 12:54:08 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/17 19:10:22 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/20 22:24:22 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	child(t_tool *data, t_cmds *cmds, int i, int infile)
 	return (infile);
 }
 
-void    multi_com(t_tool *data)
+void    nmulti_com(t_tool *data)
 {
 	t_cmds *cmd;
 	int		infile;
@@ -110,7 +110,7 @@ void    multi_com(t_tool *data)
 	free(data->pid);
 }
 
-void	simp_com(t_tool *data, t_cmds *cmd)
+void	nsimp_com(t_tool *data, t_cmds *cmd)
 {
 	pid_t	pid;
 	int		status;

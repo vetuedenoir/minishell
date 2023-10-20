@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:08:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/14 16:30:55 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/20 22:24:27 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <sys/types.h>
 # include <limits.h>
 # include <sys/wait.h>
+# include <stdbool.h>
 
 # define PROMPT		"\033[38;2;0;128;255mminishell 🌊 \x1b[0m"
 /*# define PROMPT		"minishell -> "*/
@@ -84,6 +85,7 @@ t_tool	*init_shell(char **envp, t_tool *data);
 
 //signal
 void	sigint_handler(int signo);
+void	sigint_heredoc(int signo);
 
 //lexer
 t_lexer	*ft_lexer(t_tool *data);
@@ -141,7 +143,7 @@ void    check_heredoc(t_cmds *cmd, t_tool *data);
 char	*heredoc_expand(char *str, t_tool *data);
 //redirection
 void	check_redir(t_cmds *cmd);
-int		expand_token(char c);
+int		expand_token(char c, bool flag);
 
 //builtin
 int	export(char **arg, t_list **env, t_tool *data, int flag);
@@ -152,6 +154,16 @@ int	ft_exit(char **arg, t_list **env, t_tool *data, int flag);
 int	pwd(char **arg, t_list **env, t_tool *data, int flag);
 int	cd(char **arg, t_list **env, t_tool *data, int flag);
 
-int	valide_identifier(char *str);
+int		valide_identifier(char *str);
+void	free_all_and_exit(int code, t_tool *data);
+
+//new
+void	nsimp_com(t_tool *data, t_cmds *cmd);
+void	nmulti_com(t_tool *data);
+
+int	check_heredoc(t_cmds *cmd, t_tool *data);
+
+int check_redir(t_cmds *cmd);
+
 #endif
 

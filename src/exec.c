@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 19:33:53 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/17 16:03:31 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/20 22:24:43 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void	exec_com(t_tool *data, t_cmds *cmd)
 
 void    ft_fork(t_tool *data, int fd[2], int infile, t_cmds *cmd, int i)
 {
-  
 	data->pid[i] = fork();
 	if (data->pid[i] == 0)
 	{
@@ -159,9 +158,9 @@ void    ft_exec(t_tool *data)
 	cmd = data->cmds;
 //	printf("debut de ft_exec\n");
 	if (cmd->next == NULL)
-		simp_com(data, cmd);
+		nsimp_com(data, cmd);
 	else
-		multi_com(data);
+		nmulti_com(data);
 //	dprintf(2, "avant de free les file_name\n");
 	while(cmd)
 	{
@@ -170,7 +169,7 @@ void    ft_exec(t_tool *data)
 			unlink(cmd->file_name);
 			free(cmd->file_name);
 		}
-		cmd= cmd->next;
+		cmd = cmd->next;
 	}
 	// if (cmd->file_name)
 	// {
