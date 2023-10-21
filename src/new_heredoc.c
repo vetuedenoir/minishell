@@ -12,55 +12,83 @@
 
 #include "../minishell.h"
 
-void	read_heredoc(int fd, t_tool *data)
+char	*heredoc_filename(t_tool *data)
+{
+	static int	i = 0;
+	char		*num;
+	char		*file_name;
+
+	num = ft_itoa(i++);
+	file_name = ft_strjoin(".tmp_heredoc_file_", num);
+	memory_add(file_name, data);
+	free(num);
+	return (file_name);
+}
+
+void	read_heredoc(t_lexer *heredoc, int fd, t_tool *data)
 {
 	char	*ret;
+	char	*join;
 
 	while (1)
 	{
-		ret = get_next_line(data->base_fd[0]);
-		if ((ft_strncmp(ret, heredoc->str, ft_strlen(heredoc->str)) == 0
-			&& ft_strlen(heredoc->str) == ft_strlen(ret) - 1) || G_ExitCode == 130)
+		rl_getc_function = getc;
+		ret = readline(">");
+		if (!ret)
 		{
-			get_next_line(-99);
+			close(fd);
+			return ;
+			//free_all_and_exit(G_ExitCode, data);
+		}
+		if ((ft_strncmp(ret, heredoc->str, ft_strlen(heredoc->str)) == 0
+			&& ft_strlen(heredoc->str) == ft_strlen(ret)))
+		{
 			free(ret);
 			close(fd);
-			free_all_and_exit(G_ExitCode, data);
+			return ;
 		}
-		ft_putstr_fd(heredoc_expand(ret, data), fd);
+		join = ft_strjoin(ret, "\n");
+		ft_putstr_fd(heredoc_expand(join, data), fd);
 		free(ret);
+		free(join);
 	}
 }
 
-int ft_heredoc(t_lexer *heredoc, char *file_name, t_tool *data)
+int ft_heredoc(t_lexer *heredoc, char *file_name, t_tool *data, int *pipefd)
 {
 	pid_t	pid;
 	int		fd;
-	char	*ret;
 
-	pid = fork()
-	if (pid = -1)
+	pid = fork();
+	if (pid == -1)
 		return (perror("minishell: heredoc"), -1);
 	if (pid == 0)
 	{
+		G_ExitCode = 0;
+		if (pipefd)
+		{	close(pipefd[0]);
+			close(pipefd[1]);
+		}
 		signal(SIGQUIT, SIG_IGN);
-		signal(SIGINT, &sigint_handler);
-		close(data->base_fd[0]);
+		signal(SIGINT, &sigint_heredoc);
+		//close(data->base_fd[0]);
 		close(data->base_fd[1]);
 		fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0644);
-		free(file_name);
 		if (fd < 0)
 		{
-			perror("minishell: heredoc"), -1;
+			close(data->base_fd[0]);
+			perror("minishell: heredoc");
 			free_all_and_exit(1, data);
 		}
-		read_heredoc(fd, data);
+		read_heredoc(heredoc, fd, data);
+		close(data->base_fd[0]);
+		printf("ce putin ExitCODE = %d\n", (unsigned int)G_ExitCode);
 		free_all_and_exit(G_ExitCode, data);
-    }
+	}
 	return (pid);
 }
 
-int	check_heredoc(t_cmds *cmd, t_tool *data)
+int	check_heredoc(t_cmds *cmd, t_tool *data, int *pipefd)
 {
 	t_lexer	*start;
 	pid_t	pid;
@@ -71,16 +99,24 @@ int	check_heredoc(t_cmds *cmd, t_tool *data)
 	{
 		if (cmd->redirection->token == 4)
 		{
-			if (cmd->file_name)
-				free(cmd->file_name);
-			cmd->file_name = heredoc_filename();
-			pid = ft_heredoc(cmd->redirection->next, cmd->file_name, data);
-			if (pid = -1)
+			cmd->file_name = heredoc_filename(data);
+			pid = ft_heredoc(cmd->redirection->next, cmd->file_name, data, pipefd);
+			if (pid == -1)
 				break ;
-			waitpid(pid, status, 0);
-			G_ExitCode = status;
+			waitpid(pid, &status, 0);
+			G_ExitCode = status % 255;
+			if (G_ExitCode == 130)
+			{
+				if (pipefd)
+				{
+					close(pipefd[0]);
+					close(pipefd[1]);
+				}	
+				return (-2);
+			}
 		}
 		cmd->redirection = cmd->redirection->next;
 	}
 	cmd->redirection = start;
+	return (0);
 }

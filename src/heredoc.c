@@ -2,8 +2,9 @@
 
 void	ft_heredoc(t_lexer *heredoc, char *file_name, t_tool *data)
 {
-	int			fd;
+	int		fd;
 	char		*ret;
+	char		*join;
 
 	dprintf(2, "file = %s\n", file_name);
 	fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0644);
@@ -20,8 +21,10 @@ void	ft_heredoc(t_lexer *heredoc, char *file_name, t_tool *data)
 			close(fd);
 			return ;
 		}
-		ft_putstr_fd(heredoc_expand(ret, data), fd);
+		join = ft_strjoin(ret, "\n");
+		ft_putstr_fd(heredoc_expand(join, data), fd);
 		free(ret);
+		free(join);
 	}
 }
 

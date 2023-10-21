@@ -54,10 +54,11 @@ void	boucleshell(t_tool *data)
 		if (!data->line)
 			break ;
 		memory_add(data->line, data);
-		add_history(data->line);
+		
 		lex = ft_lexer(data);
 		if (lex == NULL)
 			continue ;
+		add_history(data->line);
 	//	printlex(lex);
 		data->cmds = parser(lex, data->cmds, data);
 		if (data->cmds == NULL)

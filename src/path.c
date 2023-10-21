@@ -105,7 +105,7 @@ void	*set_builtin(char *s)
 	return (NULL);
 	
 }
-
+/*
 void	check_path(t_cmds **commande, t_list *env, t_tool *data)
 {
 	char	*path;
@@ -129,17 +129,24 @@ void	check_path(t_cmds **commande, t_list *env, t_tool *data)
 	}
 	*commande = node;
 }
+*/
 
-/*
-void	check_path(t_cmds **commande, t_list *env, t_tool *data)
+int	check_path(t_cmds **commande, t_list *env, t_tool *data)
 {
 	char	*path;
 
+	path = get_line(env);
 	if ((*commande)->str && (*commande)->str[0])
 	{
 		(*commande)->builtin = set_builtin((*commande)->str[0]);
 		if (!(*commande)->builtin)
 			(*commande)->str[0] = get_path((*commande)->str[0],\
 			path, data);
-	}	
-}*/
+		if ((*commande)->str[0] == NULL)
+		return (1);
+	}
+	else
+		return (1);
+	return (0);
+}
+

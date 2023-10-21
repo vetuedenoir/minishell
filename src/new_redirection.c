@@ -12,20 +12,33 @@
 
 #include "../minishell.h"
 
-int ajout_file(t_lexer *redir, int i)
+int ajout_file(t_lexer *redir, int i, char *file)
 {
 	int fd;
 
-	if (i == 1 || i == 3)
+	if (i == 1)
 		fd = open(redir->next->str, O_CREAT | O_RDWR | O_TRUNC, 0644);
-    else if (i == 2 || i == 4)
-        fd = open(redir->next->str, O_RDONLY, 0644);
+	else if (i ==3)
+		fd = open(redir->next->str, O_CREAT | O_RDWR | O_APPEND, 0644);
+	else if (i == 2)
+		fd = open(redir->next->str, O_RDONLY, 0644);
+	else if (i == 4)
+		fd = open(file, O_RDONLY, 0644);
+	printf("file > %s \n", file);
 	if (fd == -1)
 		return (perror("minishell"), 1);
-    if (dup2(fd, STDOUT_FILENO) == -1)
-        return (close(fd), perror("minishell"), 1)
+	if (i == 1 || i == 3)
+	{
+		if (dup2(fd, STDOUT_FILENO) == -1)
+			return (close(fd), perror("minishell"), 1);
+	}
+	else if (i == 2 || i == 4)
+	{
+		if (dup2(fd, STDIN_FILENO) == -1)
+			return (close(fd), perror("minishell"), 1);
+	}
 	close(fd);
-    return (0);
+	return (0);
 }
 
 int check_redir(t_cmds *cmd)
@@ -38,9 +51,9 @@ int check_redir(t_cmds *cmd)
 	while (cmd->redirection != NULL)
 	{
 		if (cmd->redirection->token == 1)
-			ret = ajout_file(cmd->redirection,1);
+			ret = ajout_file(cmd->redirection, 1, NULL);
 		else if (cmd->redirection->token == 3)
-			ret = ajout_file(cmd->redirection, 3);
+			ret = ajout_file(cmd->redirection, 3, NULL);
 		else if (cmd->redirection->token == 2)
 			ret = ajout_file(cmd->redirection, 2, cmd->file_name);
 		else if (cmd->redirection->token == 4)

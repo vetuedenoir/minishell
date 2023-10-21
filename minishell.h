@@ -112,7 +112,7 @@ void	error(char *str, char *str2, char *str3);
 t_cmds *parser(t_lexer *lex, t_cmds *commande, t_tool *data);
 
 //path
-void	check_path(t_cmds **commande, t_list *env, t_tool *data);
+int	check_path(t_cmds **commande, t_list *env, t_tool *data);
 
 // expand
 void	expand(t_tool *data);
@@ -139,10 +139,10 @@ void	*ft_calloc_g(size_t nmemb, size_t size, t_tool *data);
 //exec
 void	ft_exec(t_tool *data);
 //heredoc
-void    check_heredoc(t_cmds *cmd, t_tool *data);
+//void    check_heredoc(t_cmds *cmd, t_tool *data);
 char	*heredoc_expand(char *str, t_tool *data);
 //redirection
-void	check_redir(t_cmds *cmd);
+//void	check_redir(t_cmds *cmd);
 int		expand_token(char c, bool flag);
 
 //builtin
@@ -161,9 +161,11 @@ void	free_all_and_exit(int code, t_tool *data);
 void	nsimp_com(t_tool *data, t_cmds *cmd);
 void	nmulti_com(t_tool *data);
 
-int	check_heredoc(t_cmds *cmd, t_tool *data);
+int	check_heredoc(t_cmds *cmd, t_tool *data, int *pipefd);
 
 int check_redir(t_cmds *cmd);
+
+int	exec_builtin(int (*builtin)(char **arg, t_list **env, t_tool *data, int flag), t_cmds *cmd, t_tool *data, int flag);
 
 #endif
 

@@ -14,14 +14,21 @@
 
 void	sigint_handler(int signo)
 {
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-    G_ExitCode = 2 + signo;   
+	//static unsigned char mem;
+	
+	if (G_ExitCode == 0 || G_ExitCode == 130)
+	{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+	//printf(" G = %d ", (unsigned int)G_ExitCode);
+	if (G_ExitCode != 200)
+		G_ExitCode = 128 + signo;   
 }
 
 void	sigint_heredoc(int signo)
 {
-	G_ExitCode = 2 + signo;
+	G_ExitCode = 128 + signo;
 }

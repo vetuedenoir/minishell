@@ -12,16 +12,6 @@
 
 #include "../minishell.h"
 
-int	exec_builtin(int (*builtin)(char **arg, t_list **env, t_tool *data, int flag), t_cmds *cmd, t_tool *data, int flag)
-{
-	if (!ft_strncmp(cmd->str[0], "exit", 5))
-	{
-			//dprintf(2, "builin est egal a exit\n");
-			close(data->base_fd[0]);
-			close(data->base_fd[1]);
-	}
-	return (builtin(&cmd->str[1], &data->var_env, data, flag));
-}
 
 void	exec_com(t_tool *data, t_cmds *cmd)
 {
