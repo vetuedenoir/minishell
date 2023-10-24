@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:08:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/20 22:24:27 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/24 20:52:06 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,32 +34,30 @@
 # define COULEUR	"\033[38;2;0;128;255m"
 # define RESET		"\x1b[0m"
 
-
-typedef enum	s_token
+typedef enum s_token
 {
-	fleched = 1,	// >
-	flecheg,		// <
-	fleched2,		// >>
-	flecheg2,		// <<
-	Pipe,			// |
+	fleched = 1,
+	flecheg,
+	fleched2,
+	flecheg2,
+	Pipe,
 }		t_token;
 
-typedef struct	s_lexer
+typedef struct s_lexer
 {
 	char			*str;
 	t_token			token;
 	int				i;
 	struct s_lexer	*next;
-	struct s_lexer	*prev; 
+	struct s_lexer	*prev;
 }		t_lexer;
 
-typedef struct	s_cmds
+typedef struct s_cmds
 {
 	char			**str;
-	void			*f;		// un pointeur sur fonction builtin
+	void			*builtin;
 	int				num_redirections;
 	char			*file_name;
-	void			*builtin;	// si y a un bultin = b sinon = 0
 	t_lexer			*redirection;
 	struct s_cmds	*next;
 	struct s_cmds	*prev;
@@ -73,12 +71,10 @@ typedef struct s_tool
 	t_list	*garbage_collector;
 	int		flag;
 	int		base_fd[2];
-	pid_t		*pid;
-	//int		outfile;
-	//int		infile;
+	pid_t	*pid;
 }	t_tool;
 
-extern unsigned char G_ExitCode;
+extern unsigned int G_ExitCode;
 
 //initshell
 t_tool	*init_shell(char **envp, t_tool *data);
@@ -94,7 +90,7 @@ int		ft_verif_quote(char *s);
 
 //utils
 t_lexer	*ft_lstnewl(char *str, t_tool *data);
-void    ft_add_back_lexer(t_lexer **lst, t_lexer *new);
+void	ft_add_back_lexer(t_lexer **lst, t_lexer *new);
 void	cleartb(char **tb);
 char	**dup_tab(char **tb);
 void	ft_lstclearl(t_lexer **lst);
@@ -107,12 +103,13 @@ void	print_cmd(t_cmds *cmd);
 void	clear_cmd(t_cmds **cmd);
 char	**lst_to_tab(t_list *lst, t_tool *data);
 void	error(char *str, char *str2, char *str3);
+void	ft_perror(char *str, char *str2);
 
 //parsing
-t_cmds *parser(t_lexer *lex, t_cmds *commande, t_tool *data);
+t_cmds	*parser(t_lexer *lex, t_cmds *commande, t_tool *data);
 
 //path
-int	check_path(t_cmds **commande, t_list *env, t_tool *data);
+int		check_path(t_cmds **commande, t_list *env, t_tool *data);
 
 // expand
 void	expand(t_tool *data);
@@ -127,7 +124,7 @@ int		handle_singlequote(char *str, char **s, int *y);
 char	**divide(char **s, int flag, t_tool *data);
 
 //handle_redirection
-t_lexer *handle_redirection(t_lexer *redirection, t_tool *data);
+t_lexer	*handle_redirection(t_lexer *redirection, t_tool *data);
 char	*handle_dl(char *str, t_tool *data);
 
 //garbage_collector
@@ -146,13 +143,13 @@ char	*heredoc_expand(char *str, t_tool *data);
 int		expand_token(char c, bool flag);
 
 //builtin
-int	export(char **arg, t_list **env, t_tool *data, int flag);
-int	unset(char **arg, t_list **env, t_tool *data, int flag);
-int	echo(char **arg, t_list **env, t_tool *data, int flag);
-int	env(char **arg, t_list **env, t_tool *data, int flag);
-int	ft_exit(char **arg, t_list **env, t_tool *data, int flag);
-int	pwd(char **arg, t_list **env, t_tool *data, int flag);
-int	cd(char **arg, t_list **env, t_tool *data, int flag);
+int		export(char **arg, t_list **env, t_tool *data, int flag);
+int		unset(char **arg, t_list **env, t_tool *data, int flag);
+int		echo(char **arg, t_list **env, t_tool *data, int flag);
+int		env(char **arg, t_list **env, t_tool *data, int flag);
+int		ft_exit(char **arg, t_list **env, t_tool *data, int flag);
+int		pwd(char **arg, t_list **env, t_tool *data, int flag);
+int		cd(char **arg, t_list **env, t_tool *data, int flag);
 
 int		valide_identifier(char *str);
 void	free_all_and_exit(int code, t_tool *data);
@@ -161,11 +158,10 @@ void	free_all_and_exit(int code, t_tool *data);
 void	nsimp_com(t_tool *data, t_cmds *cmd);
 void	nmulti_com(t_tool *data);
 
-int	check_heredoc(t_cmds *cmd, t_tool *data, int *pipefd);
+int		check_heredoc(t_cmds *cmd, t_tool *data, int *pipefd);
 
-int check_redir(t_cmds *cmd);
+int		check_redir(t_cmds *cmd);
 
-int	exec_builtin(int (*builtin)(char **arg, t_list **env, t_tool *data, int flag), t_cmds *cmd, t_tool *data, int flag);
+int		exec_builtin(int (*builtin)(char **arg, t_list **env, t_tool *data, int flag), t_cmds *cmd, t_tool *data, int flag);
 
 #endif
-

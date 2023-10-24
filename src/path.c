@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:28:45 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/17 16:31:04 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/24 18:59:27 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*verif_path(char **path, char *str, t_tool *data)
 	if (access(s, X_OK))
 		return (free(s), NULL);
 	memory_add(s, data);
-		return (s);
+	return (s);
 }
 
 char	*true_path(char *str)
@@ -32,15 +32,13 @@ char	*true_path(char *str)
 	{
 		if (access(str, X_OK))
 		{
-			error("Minishell: ", str, ": commande not found");
-			//error("Minishell: la commande '", str, "' est introuvable");
+			ft_perror("minishell", str);
 			return (NULL);
 		}
 		else
 			return (str);
 	}
-	error("Minishell: ", str, ": commande not found");
-	//error("Minishell: la commande '", str, "' est introuvable");
+	ft_perror("minishell: ", str);
 	return (NULL);
 }
 
@@ -50,7 +48,7 @@ char	*get_path(char *str, char *line, t_tool *data)
 	char	**tb;
 	char	*path;
 	char	*s;
-	
+
 	i = 0;
 	if (line == NULL || ft_strchr(str, '/'))
 		return (true_path(str));
@@ -70,9 +68,7 @@ char	*get_path(char *str, char *line, t_tool *data)
 			return (cleartb(tb), s);
 		i++;
 	}
-	return (error("Minishell: ", str, ": commande not found"),
-	//return (error("Minishell: la commande '", str, "' est introuvable"),
-		cleartb(tb), NULL);
+	return (ft_perror("minishell: ", str), cleartb(tb), NULL);
 }
 
 char	*get_line(t_list *env)
@@ -103,33 +99,7 @@ void	*set_builtin(char *s)
 	if (!ft_strncmp(s, "exit", 5))
 		return (&ft_exit);
 	return (NULL);
-	
 }
-/*
-void	check_path(t_cmds **commande, t_list *env, t_tool *data)
-{
-	char	*path;
-	t_cmds	*node;
-
-	node = *commande;
-	path = get_line(env);
-	while (*commande != NULL)
-	{
-		if ((*commande)->str && (*commande)->str[0])
-		{
-			(*commande)->builtin = set_builtin((*commande)->str[0]);
-			if (!(*commande)->builtin)
-				(*commande)->str[0] = get_path((*commande)->str[0],\
-				path, data);
-		}
-		
-		if (data->garbage_collector == NULL)
-			break ;
-		(*commande) = (*commande)->next;
-	}
-	*commande = node;
-}
-*/
 
 int	check_path(t_cmds **commande, t_list *env, t_tool *data)
 {
@@ -140,13 +110,12 @@ int	check_path(t_cmds **commande, t_list *env, t_tool *data)
 	{
 		(*commande)->builtin = set_builtin((*commande)->str[0]);
 		if (!(*commande)->builtin)
-			(*commande)->str[0] = get_path((*commande)->str[0],\
+			(*commande)->str[0] = get_path((*commande)->str[0], \
 			path, data);
 		if ((*commande)->str[0] == NULL)
-		return (1);
+			return (1);
 	}
 	else
 		return (1);
 	return (0);
 }
-

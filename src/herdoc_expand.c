@@ -15,10 +15,10 @@
 char	*heredoc_expand(char *str, t_tool *data)
 {
 	int		i;
-	int     y;
-	char    *s;
+	int		y;
+	char	*s;
 
-    i = -1;
+	i = -1;
 	y = 0;
 	while (str[++i])
 	{

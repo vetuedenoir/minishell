@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 18:27:43 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/14 13:43:08 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/24 21:31:25 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,16 @@ int	pwd(char **arg, t_list **env, t_tool *data, int flag)
 	(void)arg;
 	(void)env;
 	(void)data;
-	(void)flag;
 	pwd = NULL;
 	pwd = getcwd(pwd, 0);
 	if (pwd == NULL)
 	{
-		perror("pwd");
+		ft_perror("pwd", NULL);
 		return (1);
 	}
-	printf("%s\n", pwd);
+	flag = printf("%s\n", pwd);
+	if (flag == -1)
+		return (ft_perror("minishell: pwd", NULL), 1);
 	return (0);
 }
 
@@ -72,19 +73,26 @@ int	cd(char **arg, t_list **env, t_tool *data, int flag)
 	(void)flag;
 	old[1] = NULL;
 	pwd[1] = NULL;
+	if (!arg[0])
+		return (0);
 	if (chdir(arg[0]))
-	{
-		perror("cd");
-		return (1);
-	}
+		return (ft_perror("cd", NULL), 1);
 	pwd[0] = get_var("PWD", *env);
+	if (!pwd[0])
+		return (ft_perror("minishell: cd", NULL), 1);
 	old[0] = ft_strjoin("OLDPWD=", pwd[0]);
 	free(pwd[0]);
+	if (!old[0])
+		return (ft_perror("minishell: cd", NULL), 1);
 	export(old, env, data, 0);
 	str = NULL;
 	str = getcwd(str, 0);
+	if (!str)
+		return (ft_perror("minishell: cd", NULL), 1);
 	pwd[0] = ft_strjoin("PWD=", str);
 	free(str);
+	if (!pwd[0])
+		return (ft_perror("minishell: cd", NULL), 1);
 	export(pwd, env, data, 0);
 	free(pwd[0]);
 	return (0);

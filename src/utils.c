@@ -25,25 +25,25 @@ t_lexer	*ft_lstnewl(char *str, t_tool *data)
 	return (new);
 }
 
-void    ft_add_back_lexer(t_lexer **lst, t_lexer *new)
+void	ft_add_back_lexer(t_lexer **lst, t_lexer *new)
 {
-    t_lexer    *temp;
+	t_lexer		*temp;
 
-    if (!new)
-        return ;
-    temp = *lst;
-    if (lst && (*lst))
-    {
-        while (temp->next != NULL)
-            temp = temp->next;
-        temp->next = new;
+	if (!new)
+		return ;
+	temp = *lst;
+	if (lst && (*lst))
+	{
+		while (temp->next != NULL)
+			temp = temp->next;
+		temp->next = new;
 		new->prev = temp;
-    }
-    else
-    	*lst = new;
+	}
+	else
+		*lst = new;
 }
 
-void	cleartb(char **tb) //inutile
+void	cleartb(char **tb)
 {
 	int	i;
 
@@ -60,10 +60,10 @@ void	cleartb(char **tb) //inutile
 
 char	**dup_tab(char **tb)
 {
-	int	i;
-	int	t;
+	int		i;
+	int		t;
 	char	**dup;
-	
+
 	if (!tb)
 		return (NULL);
 	i = 0;
@@ -87,7 +87,8 @@ char	**dup_tab(char **tb)
 
 void	clear_lex(t_lexer **lst, int nb)
 {
-	t_lexer *tmp;
+	t_lexer	*tmp;
+
 	if (!lst)
 		return ;
 	while (*lst && nb--)
@@ -98,5 +99,3 @@ void	clear_lex(t_lexer **lst, int nb)
 	if (*lst)
 		(*lst)->prev = NULL;
 }
-
-

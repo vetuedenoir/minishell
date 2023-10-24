@@ -100,6 +100,7 @@ int	handle_doublequote(char *str, char **s, int *y, t_tool data)
 int	verif_var(char *str)
 {
 	int	i;
+
 	if (ft_isdigit(str[1]))
 		return (0);
 	if (str[1] == 34 || str[1] == 39)
@@ -123,7 +124,7 @@ int	ft_copy_var(char *str, char **s, int *y, t_tool *data)
 
 	i = verif_var(str);
 	if (i == 0 || i == -1)
-		return (i + 2); 
+		return (i + 2);
 	var = malloc(sizeof(char) * (i + 1));
 	if (!var)
 		return (i);

@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 18:46:15 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/06 12:37:02 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/24 16:32:26 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,25 +40,23 @@ t_lexer	*cut_lex(t_lexer **lex, t_cmds **cmd)
 	return (last);
 }
 
+/*erreur si il n y a pas de fichier apres un token ou qu il y a un autre token*/
 int	extracte_node(t_lexer **lex, t_cmds **cmd)
 {
-	// erreur si il n y a pas de fichier apres un token ou qu il y a un autre token
 	if ((*lex)->next == NULL)
-		error("Minishell: syntaxe error near unexpected token 'newline'", NULL, NULL);
-		//error("Minishell: parse error near '\\n'", NULL, NULL);
+		error("Minishell: syntaxe error near unexpected token 'newline'",
+			NULL, NULL);
 	else if ((*lex)->next->token == 1)
 		error("Minishell: parse error near '>'", NULL, NULL);
 	else if ((*lex)->next->token == 2)
 		error("Minishell: parse error near '<'", NULL, NULL);
 	else if ((*lex)->next->token == 3)
 		error("Minishell: syntax error near unexpected token '>>'", NULL, NULL);
-		//error("Minishell: parse error near >>", NULL, NULL);
 	else if ((*lex)->next->token == 4)
 		error("Minishell: parse error near '<<'", NULL, NULL);
 	else if ((*lex)->next->token == 5)
 		error("Minishell: parse error near '|'", NULL, NULL);
-	// on ajoute le token et son fichier dans la structure cmds
-	if ((*lex)->next == NULL || (*lex)->next->token != 0 )
+	if ((*lex)->next == NULL || (*lex)->next->token != 0)
 		return (*cmd = NULL, 0);
 	*lex = cut_lex(lex, cmd);
 	return (1);
@@ -89,25 +87,23 @@ t_lexer	*boucle(t_lexer **lex, t_cmds **cmd, t_lexer **tmp, int *i)
 	return (*tmp);
 }
 
+	// Des que l on rencontre un token on extrait
+	// le token et le fichier du lexer
+	// pour les mettre dans la redirection de cmd
 t_cmds	*incertion(t_lexer **lex, t_cmds *cmd, t_tool *data)
 {
 	int		i;
 	t_lexer	*tmp;
 
-	// Des que l on rencontre un token on extrait le token et le fichier du lexer
-	// pour les mettre dans la redirection de cmd
 	if ((*lex)->token == Pipe)
 		return (error("Minishell: parse error near '|'", NULL, NULL), NULL);
 	*lex = boucle(lex, &cmd, &tmp, &i);
 	if (!(*lex))
 		return (cmd);
-	//= calcule la taille de la liste actualiser jusqu au pipe
 	cmd->str = ft_malloc(sizeof(char *) * (i + 1), data);
 	if (cmd->str == NULL)
-		return (error("malloc error", NULL, NULL), NULL);
+		return (perror("minishell: malloc"), NULL);
 	(*lex) = tmp;
-	// on copy les maillons restant qui sont la commande et ses argument
-	// pour les mettre dans **str de cmd
 	i = 0;
 	while (*lex != NULL && (*lex)->token != Pipe)
 	{
@@ -117,7 +113,7 @@ t_cmds	*incertion(t_lexer **lex, t_cmds *cmd, t_tool *data)
 	}
 	cmd->str[i] = NULL;
 	(*lex) = tmp;
-	clear_lex(lex, (i)); //la fonction ne free pas
+	clear_lex(lex, (i));
 	return (cmd);
 }
 
@@ -130,7 +126,7 @@ t_cmds	*parser(t_lexer *lex, t_cmds *commande, t_tool *data)
 	{
 		commande_node = ft_calloc_g(1, sizeof(t_cmds), data);
 		if (commande_node == NULL)
-			return (NULL);
+			return (perror("minishell: malloc"), NULL);
 		commande_node = incertion(&lex, commande_node, data);
 		if (commande_node == NULL)
 			return (NULL);
@@ -139,9 +135,11 @@ t_cmds	*parser(t_lexer *lex, t_cmds *commande, t_tool *data)
 			break ;
 		lex = lex->next;
 		if (lex == NULL)
-			return (error("Minishell: parse error near '\\n'", NULL, NULL), NULL);
+			return (error("Minishell: parse error near '\\n'",
+					NULL, NULL), NULL);
 		if (lex->token == Pipe)
-			return (error("Minishell: parse error near '|'\n", NULL, NULL), NULL);
+			return (error("Minishell: parse error near '|'\n",
+					NULL, NULL), NULL);
 	}
 	return (commande);
 }

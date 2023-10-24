@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 18:45:38 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/17 18:53:14 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/24 16:43:12 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	ft_dollarsize(char *str, int *index, t_tool data)
 	i = 1;
 	if (!expand_token(str[1], 1) || str[1] == 0)
 		return (1);
-	while (expand_token(str[i], 0)) 
+	while (expand_token(str[i], 0))
 		i++;
 	if (str[i] == '?')
 		i++;
@@ -76,14 +76,14 @@ char	*resize_arg(char *str, t_tool *data)
 	y = 0;
 	while (str[++i])
 	{
-		if (str[i] == 39) // single quote
+		if (str[i] == 39)
 		{
 			while (str[++i] != 39)
 				;
 			y -= 2;
 		}
 		else if (str[i] == '$')
-			y += ft_dollarsize(&str[i], &i, *data);//recupere la taille de la chaine variable et on soustrait $var
+			y += ft_dollarsize(&str[i], &i, *data);
 	}
 	s = ft_malloc(sizeof(char) * (y + i + 1), data);
 	return (s[0] = '\0', s);
@@ -97,7 +97,7 @@ char	**handle_dollar(char *str, t_tool *data)
 
 	s = resize_arg(str, data);
 	if (!s)
-		return (NULL);
+		return (perror("minishell: malloc"), NULL);
 	i = 0;
 	y = 0;
 	data->flag = 0;
@@ -135,7 +135,8 @@ char	**handle_arg(char **arg, t_tool *data)
 		{
 			new = ft_lstnew(new_arg[y++]);
 			if (!new)
-				return (ft_lstclear(&tmp, NULL), NULL);
+				return (perror("minishell: malloc"),
+					ft_lstclear(&tmp, free), NULL);
 			ft_lstadd_back(&tmp, new);
 		}
 		i++;

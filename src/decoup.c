@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 18:45:46 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/26 19:23:49 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/24 21:02:02 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	ft_verif_quote(char *s)
 				i++;
 			if (s[i] == 0)
 				return (error("Minishell: double quote doesn't guard",
-				NULL, NULL), 1);
+						NULL, NULL), 1);
 		}
 		else if (s[i] == 39)
 		{
@@ -60,7 +60,7 @@ int	ft_verif_quote(char *s)
 				i++;
 			if (s[i] == 0)
 				return (error("Minishell: single quote doesn't guard",
-				NULL, NULL), 1);
+						NULL, NULL), 1);
 		}
 	}
 	return (0);
@@ -100,7 +100,7 @@ static char	*cpy_tsx(const char *s, int index, char c, t_tool *data)
 
 	str = ft_malloc(sizeof(char) * (line_lents(s, index, c) + 1), data);
 	if (str == NULL)
-		return (NULL);
+		return (ft_perror("minishell: malloc", NULL), NULL);
 	i = 0;
 	while (s[index] != c && s[index])
 	{
@@ -132,7 +132,7 @@ char	**ft_decoup(char *arg, char **tab, char c, t_tool *data)
 	x = 0;
 	tab = ft_malloc(sizeof(char *) * (lents(arg, c) + 1), data);
 	if (!tab)
-		return (NULL);
+		return (ft_perror("minishell: malloc", NULL), NULL);
 	t = (int)ft_strlen(arg);
 	while (i++ < t)
 	{

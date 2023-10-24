@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 13:39:08 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/26 19:23:55 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/24 21:01:28 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ char	*copy_with_space(char *str, char *s)
 	return (s);
 }
 
-char	*add_space(char *str,t_tool *data)
+char	*add_space(char *str, t_tool *data)
 {
 	char	*s;
 	int		t;
@@ -105,7 +105,7 @@ char	*add_space(char *str,t_tool *data)
 		return (str);
 	s = ft_malloc(sizeof(char) * (ft_strlen(str) + t + 1), data);
 	if (!s)
-		return (NULL);
+		return (ft_perror("minishell: malloc", NULL), NULL);
 	s = copy_with_space(str, s);
 	return (s);
 }
@@ -116,7 +116,7 @@ t_lexer	*check_word(char *str, t_tool *data)
 
 	new = ft_lstnewl(str, data);
 	if (new == NULL)
-		return (NULL);
+		return (ft_perror("minishell: malloc", NULL), NULL);
 	new->token = 0;
 	if (str[0] == '|' && !str[1])
 		new->token = Pipe;

@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 16:38:28 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/17 17:43:33 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/24 21:21:52 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*search_replace(char *var, t_list **env)
 	t_list	*node;
 	char	*s;
 	int		t;
-	
+
 	node = NULL;
 	first = *env;
 	t = ft_strchr_int(var, '=');
@@ -55,7 +55,6 @@ char	*search_replace(char *var, t_list **env)
 	{
 		free(node->content);
 		node->content = ft_strdup(var);
-
 		return ((*env)->content);
 	}
 	return (NULL);
@@ -103,6 +102,8 @@ int	export(char **arg, t_list **env, t_tool *data, int flag)
 			if (!search_replace(arg[x], env))
 			{
 				s = ft_strdup(arg[x]);
+				if (!s)
+					return (1);
 				node = ft_lstnew(s);
 				if (node)
 					ft_lstadd_back(env, node);
@@ -117,8 +118,8 @@ int	export(char **arg, t_list **env, t_tool *data, int flag)
 void	retrive(char **arg, t_list **env)
 {
 	char	*s;
-	int		t; 
-	t_list *first;
+	int		t;
+	t_list	*first;
 
 	t = ft_strlen(arg[0]);
 	first = *env;
@@ -152,76 +153,68 @@ int	unset(char **arg, t_list **env, t_tool *data, int flag)
 	return (0);
 }
 
-int    opt_echo(char **arg)
+int	opt_echo(char **arg)
 {
-    int x;
-    int    i;
-    
-    x = 0;
-    i = 0;
-    while (arg[x] && !ft_strncmp(arg[x], "-n", 2))
-    {
-        i = 1;
-        while (arg[x][i] != '\0')
-        {
-            if (arg[x][i++] != 'n')
-            {
-                return (x - 1);
-            }
-        }
-        x++;
-    }
-    return (x - 1);
+	int	x;
+	int	i;
+
+	x = 0;
+	i = 0;
+	while (arg[x] && !ft_strncmp(arg[x], "-n", 2))
+	{
+		i = 1;
+		while (arg[x][i] != '\0')
+		{
+			if (arg[x][i++] != 'n')
+				return (x - 1);
+		}
+		x++;
+	}
+	return (x - 1);
 }
 
-int    echo(char **arg, t_list **env, t_tool *data, int flag)
+int	echo(char **arg, t_list **env, t_tool *data, int flag)
 {
-    int    opt;
-    int    i;
-    int    w;
+	int	opt;
+	int	i;
 
-    w = 0;
-    (void)env;
-    (void)data;
-	(void)flag;
-    if (!arg || !arg[0])
-        return (1);
-    opt = opt_echo(arg);
-
-    i = opt + 1;
-    while (arg[i] && arg[i + 1])
-    {
+	(void)env;
+	(void)data;
+	if (!arg || !arg[0])
+		return (1);
+	opt = opt_echo(arg);
+	i = opt + 1;
+	while (arg[i] && arg[i + 1])
+	{
 		if (arg[i][0] || (!arg[i][0] && i == 0))
-			w += printf("%s ", arg[i]);
-			//ft_putstr_fd(arg[i], STDOUT_FILENO);
+			flag = printf("%s ", arg[i]);
 		i++;
 	}
-		
-    if (arg[i])
-        w += printf("%s", arg[i]);
-		//ft_putstr_fd(arg[i], STDOUT_FILENO);
-    if (opt == -1)
-        w += printf("\n");
-    if (w == -1)
-        return (perror("echo: "), 1);
-    return (0);
+	if (arg[i])
+		flag = printf("%s", arg[i]);
+	if (opt == -1)
+		flag = printf("\n");
+	if (flag == -1)
+		return (ft_perror("minishell: echo", NULL), 1);
+	return (0);
 }
 
-int	env(char **arg, t_list **env, t_tool *data, int flag) // a revoir
+int	env(char **arg, t_list **env, t_tool *data, int flag)
 {
-	(void) arg;
-	(void)data;
-	(void)flag;
-	t_list *node;
+	t_list	*node;
 	char	*s;
-	
+
+	(void)arg;
+	(void)data;
 	node = *env;
 	while (node)
 	{
 		s = (char *)node->content;
 		if (s[0] != 0)
-			printf("%s\n", (char *)node->content);
+			flag = printf("%s\n", (char *)node->content);
 		node = node->next;
 	}
-	return (1);
+	if (flag == -1)
+		return (ft_perror("minishell: env", NULL), 1);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 19:15:12 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/17 20:27:55 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/24 20:00:01 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,9 @@ void	read_heredoc(t_lexer *heredoc, int fd, t_tool *data)
 		{
 			close(fd);
 			return ;
-			//free_all_and_exit(G_ExitCode, data);
 		}
 		if ((ft_strncmp(ret, heredoc->str, ft_strlen(heredoc->str)) == 0
-			&& ft_strlen(heredoc->str) == ft_strlen(ret)))
+				&& ft_strlen(heredoc->str) == ft_strlen(ret)))
 		{
 			free(ret);
 			close(fd);
@@ -54,35 +53,35 @@ void	read_heredoc(t_lexer *heredoc, int fd, t_tool *data)
 	}
 }
 
-int ft_heredoc(t_lexer *heredoc, char *file_name, t_tool *data, int *pipefd)
+int	ft_heredoc(t_lexer *heredoc, char *file_name, t_tool *data, int *pipefd)
 {
 	pid_t	pid;
 	int		fd;
 
 	pid = fork();
 	if (pid == -1)
-		return (perror("minishell: heredoc"), -1);
+		return (ft_perror("minishell: heredoc", NULL), -1);
 	if (pid == 0)
 	{
 		G_ExitCode = 0;
 		if (pipefd)
-		{	close(pipefd[0]);
+		{	
+			close(pipefd[0]);
 			close(pipefd[1]);
+			dup2(data->base_fd[0], 0);
 		}
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, &sigint_heredoc);
-		//close(data->base_fd[0]);
 		close(data->base_fd[1]);
 		fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0644);
 		if (fd < 0)
 		{
 			close(data->base_fd[0]);
-			perror("minishell: heredoc");
+			ft_perror("minishell: heredoc", NULL);
 			free_all_and_exit(1, data);
 		}
 		read_heredoc(heredoc, fd, data);
 		close(data->base_fd[0]);
-		printf("ce putin ExitCODE = %d\n", (unsigned int)G_ExitCode);
 		free_all_and_exit(G_ExitCode, data);
 	}
 	return (pid);
@@ -100,12 +99,13 @@ int	check_heredoc(t_cmds *cmd, t_tool *data, int *pipefd)
 		if (cmd->redirection->token == 4)
 		{
 			cmd->file_name = heredoc_filename(data);
-			pid = ft_heredoc(cmd->redirection->next, cmd->file_name, data, pipefd);
+			pid = ft_heredoc(cmd->redirection->next, cmd->file_name,
+					data, pipefd);
 			if (pid == -1)
 				break ;
 			waitpid(pid, &status, 0);
 			G_ExitCode = status % 255;
-			if (G_ExitCode == 130)
+			if (G_ExitCode > 0)
 			{
 				if (pipefd)
 				{

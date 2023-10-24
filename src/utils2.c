@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 17:15:09 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/17 15:03:56 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/24 18:58:07 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ void	printlex(t_lexer *lex)
 
 void	print_cmd(t_cmds *cmd)
 {
-	int	i;
+	int		i;
 	t_lexer	*tmp;
-	
+
 	while (cmd)
 	{
 		i = -1;
@@ -55,7 +55,8 @@ void	print_cmd(t_cmds *cmd)
 		while (cmd->redirection)
 		{
 			tmp = cmd->redirection->next;
-			printf("redirection : %s token = %d \n", cmd->redirection->str, cmd->redirection->token);
+			printf("redirection : %s token = %d \n",
+				cmd->redirection->str, cmd->redirection->token);
 			cmd->redirection = tmp;
 		}
 		printf(" \n\n");
@@ -67,10 +68,10 @@ void	print_cmd(t_cmds *cmd)
 
 char	**lst_to_tab(t_list *lst, t_tool *data)
 {
-	int	t;
-	int	i;
+	int		t;
+	int		i;
 	char	**tab;
-	
+
 	t = ft_lstsize(lst);
 	tab = ft_malloc(sizeof(char *) * (t + 1), data);
 	if (!tab)
@@ -118,4 +119,17 @@ void	free_all_and_exit(int code, t_tool *data)
 	rl_clear_history();
 	free_garbage(data);
 	exit(code);
+}
+
+void	ft_perror(char *str, char *str2)
+{
+	ft_putstr_fd("\x1b[31m", 2);
+	if (!str2)
+		perror(str);
+	else
+	{
+		ft_putstr_fd(str, 2);
+		perror(str2);
+	}
+	ft_putstr_fd("\x1b[0m", 2);
 }
