@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:28:45 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/24 18:59:27 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/25 20:06:36 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@ char	*true_path(char *str)
 		else
 			return (str);
 	}
+	else
+		return (error("minishell: PATH not set in environnement", \
+		NULL, NULL), NULL);
 	ft_perror("minishell: ", str);
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 21:06:31 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/24 19:13:35 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/25 16:13:38 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ajout_file(t_lexer *redir, int i, char *file)
 	else if (i == 4)
 		fd = open(file, O_RDONLY, 0644);
 	if (fd == -1)
-		return (ft_perror("minishell", NULL), 1);
+		return (ft_perror("minishell: ", redir->next->str), 1);
 	if (i == 1 || i == 3)
 	{
 		if (dup2(fd, STDOUT_FILENO) == -1)

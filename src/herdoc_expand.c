@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 12:09:40 by kscordel          #+#    #+#             */
-/*   Updated: 2023/09/26 16:00:13 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/25 20:04:24 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*heredoc_expand(char *str, t_tool *data)
 	}
 	s = ft_malloc(sizeof(char) * (y + i + 1), data);
 	if (!s)
-		return (NULL);
+		return (perror("minishell: malloc"), NULL);
 	i = 0;
 	y = 0;
 	while (str[i])

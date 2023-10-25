@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 19:15:12 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/25 14:14:44 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/25 18:12:32 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,15 +64,9 @@ int	ft_heredoc(t_lexer *heredoc, char *file_name, t_tool *data, int *pipefd)
 	if (pid == 0)
 	{
 		g_exitcode = 0;
-		if (pipefd)
-		{	
-			close(pipefd[0]);
-			close(pipefd[1]);
-			dup2(data->base_fd[0], 0);
-		}
+		ft_close(data, pipefd);
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, &sigint_heredoc);
-		close(data->base_fd[1]);
 		fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0644);
 		if (fd < 0)
 		{
@@ -106,14 +100,7 @@ int	check_heredoc(t_cmds *cmd, t_tool *data, int *pipefd)
 			waitpid(pid, &status, 0);
 			g_exitcode = status % 255;
 			if (g_exitcode > 0)
-			{
-				if (pipefd)
-				{
-					close(pipefd[0]);
-					close(pipefd[1]);
-				}	
-				return (-2);
-			}
+				return (erreur_here(pipefd));
 		}
 		cmd->redirection = cmd->redirection->next;
 	}

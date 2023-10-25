@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:08:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/25 14:19:17 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/25 19:14:29 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@
 # include <stdbool.h>
 
 # define PROMPT		"\033[38;2;0;128;255mminishell 🌊 \x1b[0m"
-/*# define PROMPT		"minishell -> "*/
 # define COULEUR	"\033[38;2;0;128;255m"
 # define RESET		"\x1b[0m"
 
@@ -101,17 +100,14 @@ t_lexer	*ft_lstnewl(char *str, t_tool *data);
 void	ft_add_back_lexer(t_lexer **lst, t_lexer *new);
 void	cleartb(char **tb);
 char	**dup_tab(char **tb);
-void	ft_lstclearl(t_lexer **lst);
 void	clear_lex(t_lexer **lst, int nb);
 
 //utils2
 void	add_back_cmds(t_cmds **lst, t_cmds *new);
-void	printlex(t_lexer *lex);
-void	print_cmd(t_cmds *cmd);
-void	clear_cmd(t_cmds **cmd);
 char	**lst_to_tab(t_list *lst, t_tool *data);
 void	error(char *str, char *str2, char *str3);
 void	ft_perror(char *str, char *str2);
+void	free_all_and_exit(int code, t_tool *data);
 
 //parsing
 t_cmds	*parser(t_lexer *lex, t_cmds *commande, t_tool *data);
@@ -135,6 +131,7 @@ int		zi(char *str, char **s, int *y, t_tool data);
 //handle_redirection
 t_lexer	*handle_redirection(t_lexer *redirection, t_tool *data);
 char	*handle_dl(char *str, t_tool *data);
+int		expand_token(char c, bool flag);
 
 //garbage_collector
 void	*ft_malloc(size_t size, t_tool *data);
@@ -144,14 +141,25 @@ void	*ft_calloc_g(size_t nmemb, size_t size, t_tool *data);
 
 //exec
 void	ft_exec(t_tool *data);
+
+//exec2
+int		size_nb_com(t_tool *data);
+void	exec_com(t_tool *data, t_cmds *cmd);
+void	wait_processes(t_tool *data, int sig, int status);
+int		exec_builtin(int (*builtin)(char **arg, t_list **env, \
+t_tool *data, int flag), t_cmds *cmd, t_tool *data, int flag);
+
 //heredoc
-//void    check_heredoc(t_cmds *cmd, t_tool *data);
 char	*heredoc_expand(char *str, t_tool *data);
+void	ft_close(t_tool *data, int *pipefd);
+int		erreur_here(int	*pipefd);
+int		check_heredoc(t_cmds *cmd, t_tool *data, int *pipefd);
+
 //redirection
-//void	check_redir(t_cmds *cmd);
-int		expand_token(char c, bool flag);
+int		check_redir(t_cmds *cmd);
 
 //builtin
+int		ft_strchr_int(char *str, char c);
 int		export(char **arg, t_list **env, t_tool *data, int flag);
 int		unset(char **arg, t_list **env, t_tool *data, int flag);
 int		echo(char **arg, t_list **env, t_tool *data, int flag);
@@ -163,17 +171,5 @@ void	*set_builtin(char *s);
 void	retrive(char **arg, t_list **env);
 
 int		valide_identifier(char *str);
-void	free_all_and_exit(int code, t_tool *data);
-
-//new
-void	nsimp_com(t_tool *data, t_cmds *cmd);
-void	nmulti_com(t_tool *data);
-
-int		check_heredoc(t_cmds *cmd, t_tool *data, int *pipefd);
-
-int		check_redir(t_cmds *cmd);
-
-int		exec_builtin(int (*builtin)(char **arg, t_list **env, \
-		t_tool *data, int flag), t_cmds *cmd, t_tool *data, int flag);
 
 #endif

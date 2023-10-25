@@ -12,6 +12,14 @@
 
 #include "../minishell.h"
 
+int	ft_clear_exit(t_list **env, t_tool *data, int code)
+{
+	ft_lstclear(env, free);
+	rl_clear_history();
+	free_garbage(data);
+	exit(code);
+}
+
 int	ft_exit(char **arg, t_list **env, t_tool *data, int flag)
 {
 	int	i;
@@ -38,10 +46,7 @@ int	ft_exit(char **arg, t_list **env, t_tool *data, int flag)
 	}
 	if (!flag)
 		printf("exit\n");
-	ft_lstclear(env, free);
-	rl_clear_history();
-	free_garbage(data);
-	exit(code);
+	return (ft_clear_exit(env, data, code));
 }
 
 int	pwd(char **arg, t_list **env, t_tool *data, int flag)
@@ -61,6 +66,20 @@ int	pwd(char **arg, t_list **env, t_tool *data, int flag)
 	flag = printf("%s\n", pwd);
 	if (flag == -1)
 		return (ft_perror("minishell: pwd", NULL), 1);
+	return (0);
+}
+
+int	ft_cd_bis(char *str, char *pwd[2], t_list **env, t_tool *data)
+{
+	str = getcwd(str, 0);
+	if (!str)
+		return (ft_perror("minishell: cd", NULL), 1);
+	pwd[0] = ft_strjoin("PWD=", str);
+	free(str);
+	if (!pwd[0])
+		return (ft_perror("minishell: cd", NULL), 1);
+	export(pwd, env, data, 0);
+	free(pwd[0]);
 	return (0);
 }
 
@@ -88,14 +107,5 @@ int	cd(char **arg, t_list **env, t_tool *data, int flag)
 		return (ft_perror("minishell: cd", NULL), 1);
 	export(old, env, data, 0);
 	str = NULL;
-	str = getcwd(str, 0);
-	if (!str)
-		return (ft_perror("minishell: cd", NULL), 1);
-	pwd[0] = ft_strjoin("PWD=", str);
-	free(str);
-	if (!pwd[0])
-		return (ft_perror("minishell: cd", NULL), 1);
-	export(pwd, env, data, 0);
-	free(pwd[0]);
-	return (0);
+	return (ft_cd_bis(str, pwd, env, data));
 }

@@ -12,18 +12,15 @@
 
 #include "../minishell.h"
 
-int	ft_strchr_int(char *str, char c)
+char	*search_replace_end(t_list *node, char *var, t_list **env)
 {
-	int	i;
-
-	i = 0;
-	while (str[i])
+	if (node)
 	{
-		if (str[i] == c)
-			return (i + 1);
-		i++;
+		free(node->content);
+		node->content = ft_strdup(var);
+		return ((*env)->content);
 	}
-	return (0);
+	return (NULL);
 }
 
 char	*search_replace(char *var, t_list **env)
@@ -51,13 +48,7 @@ char	*search_replace(char *var, t_list **env)
 		*env = (*env)->next;
 	}
 	*env = first;
-	if (node)
-	{
-		free(node->content);
-		node->content = ft_strdup(var);
-		return ((*env)->content);
-	}
-	return (NULL);
+	return (search_replace_end(node, var, env));
 }
 
 int	valide_identifier(char *str)
@@ -78,6 +69,25 @@ int	valide_identifier(char *str)
 	return (i);
 }
 
+int	export_egal(char *arg, t_list **env, t_list *node, char *s)
+{
+	if (ft_strchr(arg, '='))
+	{
+		if (!search_replace(arg, env))
+		{
+			s = ft_strdup(arg);
+			if (!s)
+				return (1);
+			node = ft_lstnew(s);
+			if (node)
+				ft_lstadd_back(env, node);
+			else
+				return (1);
+		}
+	}
+	return (0);
+}
+
 int	export(char **arg, t_list **env, t_tool *data, int flag)
 {
 	t_list	*node;
@@ -90,6 +100,8 @@ int	export(char **arg, t_list **env, t_tool *data, int flag)
 	x = -1;
 	if (!env || !arg || !arg[0])
 		return (1);
+	s = NULL;
+	node = NULL;
 	while (arg[++x])
 	{
 		if (!valide_identifier(arg[x]))
@@ -97,41 +109,8 @@ int	export(char **arg, t_list **env, t_tool *data, int flag)
 			error("minishell: export: '", arg[x], "': invalide identifier");
 			return (1);
 		}
-		if (ft_strchr(arg[x], '='))
-		{
-			if (!search_replace(arg[x], env))
-			{
-				s = ft_strdup(arg[x]);
-				if (!s)
-					return (1);
-				node = ft_lstnew(s);
-				if (node)
-					ft_lstadd_back(env, node);
-				else
-					return (1);
-			}
-		}
+		if (export_egal(arg[x], env, node, s) == 1)
+			return (1);
 	}	
 	return (0);
-}
-
-void	retrive(char **arg, t_list **env)
-{
-	char	*s;
-	int		t;
-	t_list	*first;
-
-	t = ft_strlen(arg[0]);
-	first = *env;
-	while (*env)
-	{
-		s = (char *)(*env)->content;
-		if (!ft_strncmp(arg[0], s, t) && s[t] == '=')
-		{
-			ft_bzero((*env)->content, ft_strlen((*env)->content));
-			break ;
-		}
-		*env = (*env)->next;
-	}
-	*env = first;
 }

@@ -78,23 +78,6 @@ int	echo(char **arg, t_list **env, t_tool *data, int flag)
 	return (0);
 }
 
-int	unset(char **arg, t_list **env, t_tool *data, int flag)
-{
-	int	x;
-
-	(void)data;
-	(void)flag;
-	if (!env || !arg || !arg[0])
-		return (1);
-	x = 0;
-	while (arg[x])
-	{
-		retrive(&arg[x], env);
-		x++;
-	}
-	return (0);
-}
-
 void	*set_builtin(char *s)
 {
 	if (!ft_strncmp(s, "echo", 5))

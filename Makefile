@@ -6,7 +6,7 @@
 #    By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/30 14:07:50 by kscordel          #+#    #+#              #
-#    Updated: 2023/10/25 13:41:38 by kscordel         ###   ########.fr        #
+#    Updated: 2023/10/25 19:17:02 by kscordel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,8 +23,9 @@ SRC = $(SRC_DIR)minishell.c $(SRC_DIR)lexer.c  $(SRC_DIR)utils.c $(SRC_DIR)utils
 		$(SRC_DIR)handle_quote.c $(SRC_DIR)handle_redirection.c \
 		$(SRC_DIR)builtin1.c $(SRC_DIR)builtin2.c $(SRC_DIR)herdoc_expand.c \
 		$(SRC_DIR)initshell.c $(SRC_DIR)signal.c $(SRC_DIR)expand_lex.c \
-		$(SRC_DIR)new_exec.c $(SRC_DIR)new_heredoc.c $(SRC_DIR)new_redirection.c \
-		$(SRC_DIR)builtin3.c $(SRC_DIR)handle_quote2.c
+		$(SRC_DIR)exec.c $(SRC_DIR)heredoc.c $(SRC_DIR)redirection.c \
+		$(SRC_DIR)builtin3.c $(SRC_DIR)handle_quote2.c $(SRC_DIR)builtin4.c \
+		$(SRC_DIR)heredoc2.c $(SRC_DIR)exec2.c
 
 OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 
