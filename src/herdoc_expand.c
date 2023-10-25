@@ -38,6 +38,5 @@ char	*heredoc_expand(char *str, t_tool *data)
 			(str[i] == '$' && (str[i + 1] == ' ' || str[i + 1] == 0)))
 			s[y++] = str[i++];
 	}
-	s[y] = 0;
-	return (s);
+	return (s[y] = 0, s);
 }

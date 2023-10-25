@@ -146,20 +146,3 @@ char	**handle_arg(char **arg, t_tool *data)
 	ft_lstclear(&tmp, NULL);
 	return (new_arg);
 }
-
-void	expand(t_tool *data)
-{
-	t_cmds	*tmp;
-
-	tmp = data->cmds;
-	while (data->cmds)
-	{
-		if (data->cmds->str)
-			data->cmds->str = handle_arg(data->cmds->str, data);
-		if (data->cmds->redirection)
-			data->cmds->redirection = \
-			handle_redirection(data->cmds->redirection, data);
-		data->cmds = data->cmds->next;
-	}
-	data->cmds = tmp;
-}

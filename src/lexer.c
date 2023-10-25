@@ -130,32 +130,3 @@ t_lexer	*check_word(char *str, t_tool *data)
 		new->token = flecheg2;
 	return (new);
 }
-
-t_lexer	*ft_lexer(t_tool *data)
-{
-	char	**tab;
-	char	*arg;
-	int		i;
-	t_lexer	*lex;
-	t_lexer	*new;
-
-	lex = NULL;
-	tab = NULL;
-	if (ft_verif_quote(data->line))
-		return (NULL);
-	arg = add_space(data->line, data);
-	if (!arg)
-		return (NULL);
-	tab = ft_decoup(arg, tab, ' ', data);
-	if (tab == NULL)
-		return (NULL);
-	i = 0;
-	while (tab[i])
-	{
-		new = check_word(tab[i++], data);
-		if (!new)
-			return (free_garbage(data), NULL);
-		ft_add_back_lexer(&lex, new);
-	}
-	return (lex);
-}

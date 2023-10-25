@@ -82,25 +82,6 @@ char	*get_line(t_list *env)
 	return (NULL);
 }
 
-void	*set_builtin(char *s)
-{
-	if (!ft_strncmp(s, "echo", 5))
-		return (&echo);
-	if (!ft_strncmp(s, "cd", 3))
-		return (&cd);
-	if (!ft_strncmp(s, "pwd", 4))
-		return (&pwd);
-	if (!ft_strncmp(s, "export", 7))
-		return (&export);
-	if (!ft_strncmp(s, "unset", 6))
-		return (&unset);
-	if (!ft_strncmp(s, "env", 4))
-		return (&env);
-	if (!ft_strncmp(s, "exit", 5))
-		return (&ft_exit);
-	return (NULL);
-}
-
 int	check_path(t_cmds **commande, t_list *env, t_tool *data)
 {
 	char	*path;

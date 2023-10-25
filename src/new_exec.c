@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 12:54:08 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/25 14:33:07 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/25 15:53:46 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ int	ft_fork(t_tool *data, int fd[2], int infile, t_cmds *cmd, int i)
 	}
 	if (data->pid[i] == 0)
 	{
+		signal(SIGQUIT, SIG_DFL);
 		close(data->base_fd[0]);
 		close(data->base_fd[1]);
 		//if (cmd->prev && cmd->file_name && dup2(infile, STDIN_FILENO) == -1)
@@ -110,12 +111,42 @@ int	child(t_tool *data, t_cmds *cmds, int i, int infile)
 	return (infile);
 }
 
+void	wait_processes(t_tool *data, int sig, int status)
+{
+	int	i;
+	t_cmds *node;
+	
+	i = 0;
+	node = data->cmds;
+	while (data->cmds && data->pid[i])
+	{
+		waitpid(data->pid[i], &status, 0);
+		if (WIFEXITED(status))
+			g_exitcode = status % 255;
+		else if (WIFSIGNALED(status))
+		{
+			sig = WTERMSIG(status);
+			if (sig == 2)
+				g_exitcode = 130;
+			if (sig == 3)
+				g_exitcode = 131;
+		}
+		i++;
+		data->cmds = data->cmds->next;
+	}
+	if (sig == 2)
+		printf("\n");
+	if (sig == 3)
+		printf("Quit (core dumped)\n");
+	data->cmds = node;
+	free(data->pid);
+}
+
 void	nmulti_com(t_tool *data)
 {
 	t_cmds	*cmd;
 	int		infile;
 	int		i;
-	int		status;
 
 	cmd = data->cmds;
 	if (size_nb_com(data))
@@ -133,29 +164,14 @@ void	nmulti_com(t_tool *data)
 			break ;
 		data->cmds = data->cmds->next;
 	}
+	data->cmds = cmd;
 	if (infile != -1 && infile != -2)
 		close(infile);
-	i = 0;
-	while (cmd && data->pid[i])
-	{
-		waitpid(data->pid[i], &status, 0);
-		g_exitcode = status % 255;
-		i++;
-		cmd = cmd->next;
-	}
-	if (status % 255 == 2)
-	{
-		printf("\n");
-		g_exitcode = 130;
-	}
-	free(data->pid);
+	wait_processes(data, 0, 0);
 }
 
 void	nsimp_com(t_tool *data, t_cmds *cmd)
 {
-	pid_t	pid;
-	int		status;
-
 	if (check_heredoc(cmd, data, NULL) < 0)
 		return ;
 	if (!cmd->str)
@@ -168,27 +184,21 @@ void	nsimp_com(t_tool *data, t_cmds *cmd)
 			return (g_exitcode = 1, (void)0);
 		return (g_exitcode = exec_builtin(cmd->builtin, cmd, data, 0), (void)0);
 	}
-	pid = fork();
-	if (pid == -1)
+	if (size_nb_com(data))
+		return ;
+	data->pid[0] = fork();
+	if (data->pid[0] == -1)
 	{
 		g_exitcode = 1;
 		return ;
 	}
-	if (pid == 0)
+	if (data->pid[0] == 0)
 	{
 		signal(SIGQUIT, SIG_DFL);
 		exec_com(data, cmd);
 	}
 	g_exitcode = 2000;
-	waitpid(pid, &status, 0);
-	//printf("g_exitcode = %d et status = %d", g_exitcode, status % 255);
-	if (status % 255 == 2 && g_exitcode == 2130)
-	{
-		printf("\n");
-		g_exitcode = 130;
-	}
-	else
-		g_exitcode = status % 255;
+	wait_processes(data, 0, 0);
 }
 
 void	ft_exec(t_tool *data)

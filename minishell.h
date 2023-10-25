@@ -84,9 +84,17 @@ void	sigint_handler(int signo);
 void	sigint_heredoc(int signo);
 
 //lexer
-t_lexer	*ft_lexer(t_tool *data);
 char	**ft_decoup(char *arg, char **tab, char c, t_tool *data);
 int		ft_verif_quote(char *s);
+t_lexer	*check_word(char *str, t_tool *data);
+char	*add_space(char *str, t_tool *data);
+char	*copy_with_space(char *str, char *s);
+int		quote_space(char *str, char **s, int *y);
+int		new_size(char *str);
+
+//expand_lex
+t_lexer	*ft_lexer(t_tool *data);
+void	expand(t_tool *data);
 
 //utils
 t_lexer	*ft_lstnewl(char *str, t_tool *data);
@@ -112,7 +120,7 @@ t_cmds	*parser(t_lexer *lex, t_cmds *commande, t_tool *data);
 int		check_path(t_cmds **commande, t_list *env, t_tool *data);
 
 // expand
-void	expand(t_tool *data);
+char	**handle_arg(char **arg, t_tool *data);
 char	*get_var(char *dvar, t_list *var_env);
 int		ft_dollarsize(char *str, int *index, t_tool data);
 char	*resize_arg(char *str, t_tool *data);
@@ -122,6 +130,7 @@ int		ft_copy_var(char *str, char **s, int *y, t_tool *data);
 int		handle_doublequote(char *str, char **s, int *y, t_tool data);
 int		handle_singlequote(char *str, char **s, int *y);
 char	**divide(char **s, int flag, t_tool *data);
+int		zi(char *str, char **s, int *y, t_tool data);
 
 //handle_redirection
 t_lexer	*handle_redirection(t_lexer *redirection, t_tool *data);
@@ -150,6 +159,8 @@ int		env(char **arg, t_list **env, t_tool *data, int flag);
 int		ft_exit(char **arg, t_list **env, t_tool *data, int flag);
 int		pwd(char **arg, t_list **env, t_tool *data, int flag);
 int		cd(char **arg, t_list **env, t_tool *data, int flag);
+void	*set_builtin(char *s);
+void	retrive(char **arg, t_list **env);
 
 int		valide_identifier(char *str);
 void	free_all_and_exit(int code, t_tool *data);
