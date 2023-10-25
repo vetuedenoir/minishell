@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 19:15:12 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/24 20:00:01 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/25 14:14:44 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	ft_heredoc(t_lexer *heredoc, char *file_name, t_tool *data, int *pipefd)
 		return (ft_perror("minishell: heredoc", NULL), -1);
 	if (pid == 0)
 	{
-		G_ExitCode = 0;
+		g_exitcode = 0;
 		if (pipefd)
 		{	
 			close(pipefd[0]);
@@ -82,7 +82,7 @@ int	ft_heredoc(t_lexer *heredoc, char *file_name, t_tool *data, int *pipefd)
 		}
 		read_heredoc(heredoc, fd, data);
 		close(data->base_fd[0]);
-		free_all_and_exit(G_ExitCode, data);
+		free_all_and_exit(g_exitcode, data);
 	}
 	return (pid);
 }
@@ -104,8 +104,8 @@ int	check_heredoc(t_cmds *cmd, t_tool *data, int *pipefd)
 			if (pid == -1)
 				break ;
 			waitpid(pid, &status, 0);
-			G_ExitCode = status % 255;
-			if (G_ExitCode > 0)
+			g_exitcode = status % 255;
+			if (g_exitcode > 0)
 			{
 				if (pipefd)
 				{

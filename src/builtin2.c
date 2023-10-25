@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 18:27:43 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/24 21:31:25 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/25 14:28:02 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,15 @@ int	ft_exit(char **arg, t_list **env, t_tool *data, int flag)
 		if (arg[1])
 			return (error("Minishell: exit: too many argument", NULL, NULL), 1);
 		if (arg[0][0] != '-' && arg[0][0] != '+' && !ft_isdigit(arg[0][0]))
-			return (error("Minishell: exit: numeric argument required", NULL, NULL), 1);
+			return (error("Minishell: exit: numeric argument required", \
+			NULL, NULL), 1);
 		if (arg[0][0] == '-' || arg[0][0] == '+')
 			i = 1;
 		while (arg[0][i])
 		{
 			if (!ft_isdigit(arg[0][i++]))
-				return (error("Minishell: exit: numeric argument required", NULL, NULL), 1);
+				return (error("Minishell: exit: numeric argument required", \
+				NULL, NULL), 1);
 		}
 		code = ft_atoi(arg[0]);
 	}
@@ -68,7 +70,7 @@ int	cd(char **arg, t_list **env, t_tool *data, int flag)
 	char	*pwd[2];
 	char	*str;
 	char	*old[2];
-	
+
 	(void)env;
 	(void)flag;
 	old[1] = NULL;

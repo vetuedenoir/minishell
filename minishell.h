@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:08:10 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/24 20:52:06 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/25 14:19:17 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ typedef struct s_tool
 	pid_t	*pid;
 }	t_tool;
 
-extern unsigned int G_ExitCode;
+extern unsigned int	g_exitcode;
 
 //initshell
 t_tool	*init_shell(char **envp, t_tool *data);
@@ -162,6 +162,7 @@ int		check_heredoc(t_cmds *cmd, t_tool *data, int *pipefd);
 
 int		check_redir(t_cmds *cmd);
 
-int		exec_builtin(int (*builtin)(char **arg, t_list **env, t_tool *data, int flag), t_cmds *cmd, t_tool *data, int flag);
+int		exec_builtin(int (*builtin)(char **arg, t_list **env, \
+		t_tool *data, int flag), t_cmds *cmd, t_tool *data, int flag);
 
 #endif

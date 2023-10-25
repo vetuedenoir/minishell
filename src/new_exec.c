@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 12:54:08 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/24 21:04:11 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/25 14:33:07 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,8 @@ int	ft_fork(t_tool *data, int fd[2], int infile, t_cmds *cmd, int i)
 	{
 		close(data->base_fd[0]);
 		close(data->base_fd[1]);
-		if (cmd->prev && cmd->file_name && dup2(infile, STDIN_FILENO) == -1)
-			ft_perror("minishell", NULL);
+		//if (cmd->prev && cmd->file_name && dup2(infile, STDIN_FILENO) == -1)
+		//	ft_perror("minishell", NULL);
 		close(fd[0]);
 		if (cmd->next && dup2(fd[1], STDOUT_FILENO) == -1)
 			ft_perror("minishell", NULL);
@@ -82,7 +82,7 @@ int	ft_fork(t_tool *data, int fd[2], int infile, t_cmds *cmd, int i)
 	}
 	else
 	{
-		G_ExitCode = 2000;
+		g_exitcode = 2000;
 		if (close(fd[1]) == -1 || dup2(fd[0], 0) == -1
 			|| close(fd[0]) == -1)
 			wait(NULL);
@@ -126,7 +126,7 @@ void	nmulti_com(t_tool *data)
 		infile = child(data, data->cmds, i++, infile);
 		if (infile == -1)
 		{
-			G_ExitCode = 1;
+			g_exitcode = 1;
 			break ;
 		}
 		else if (infile == -2)
@@ -139,14 +139,14 @@ void	nmulti_com(t_tool *data)
 	while (cmd && data->pid[i])
 	{
 		waitpid(data->pid[i], &status, 0);
-		G_ExitCode = status % 255;
+		g_exitcode = status % 255;
 		i++;
 		cmd = cmd->next;
 	}
 	if (status % 255 == 2)
 	{
 		printf("\n");
-		G_ExitCode = 130;
+		g_exitcode = 130;
 	}
 	free(data->pid);
 }
@@ -161,17 +161,17 @@ void	nsimp_com(t_tool *data, t_cmds *cmd)
 	if (!cmd->str)
 		return ;
 	if (check_path(&cmd, data->var_env, data))
-		return (G_ExitCode = 127, (void)0);
+		return (g_exitcode = 127, (void)0);
 	if (cmd->builtin)
 	{
 		if (check_redir(cmd))
-			return (G_ExitCode = 1, (void)0);
-		return (G_ExitCode = exec_builtin(cmd->builtin, cmd, data, 0), (void)0);
+			return (g_exitcode = 1, (void)0);
+		return (g_exitcode = exec_builtin(cmd->builtin, cmd, data, 0), (void)0);
 	}
 	pid = fork();
 	if (pid == -1)
 	{
-		G_ExitCode = 1;
+		g_exitcode = 1;
 		return ;
 	}
 	if (pid == 0)
@@ -179,16 +179,16 @@ void	nsimp_com(t_tool *data, t_cmds *cmd)
 		signal(SIGQUIT, SIG_DFL);
 		exec_com(data, cmd);
 	}
-	G_ExitCode = 2000;
+	g_exitcode = 2000;
 	waitpid(pid, &status, 0);
-	//printf("G_ExitCode = %d et status = %d", G_ExitCode, status % 255);
-	if (status % 255 == 2 && G_ExitCode == 2130)
+	//printf("g_exitcode = %d et status = %d", g_exitcode, status % 255);
+	if (status % 255 == 2 && g_exitcode == 2130)
 	{
 		printf("\n");
-		G_ExitCode = 130;
+		g_exitcode = 130;
 	}
 	else
-		G_ExitCode = status % 255;
+		g_exitcode = status % 255;
 }
 
 void	ft_exec(t_tool *data)

@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 18:59:11 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/17 18:44:07 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/25 13:59:54 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ t_lexer	*handle_redirection(t_lexer *redirection, t_tool *data)
 				return (NULL);
 			redirection->str = new;
 		}
-		printf("redirection : %s\n", redirection->str);
 		redirection = redirection->next;
 		i++;
 	}

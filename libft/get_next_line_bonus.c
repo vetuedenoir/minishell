@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kscordel <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 17:33:55 by kscordel          #+#    #+#             */
-/*   Updated: 2023/01/16 16:30:50 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/25 14:20:42 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,16 +64,6 @@ char	*get_next_line(int fd)
 	size_t		index;
 	size_t		t;
 
-	int i;
-	i = 0;
-	if (fd == -99)
-	{
-		while(stash[i])
-		{
-			free(stash[i]);
-			i++;
-		}
-	}
 	if (fd < 0 || fd >= 1024)
 		return (NULL);
 	index = 0;

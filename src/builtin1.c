@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 16:38:28 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/24 21:21:52 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/25 14:01:04 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	export(char **arg, t_list **env, t_tool *data, int flag)
 	{
 		if (!valide_identifier(arg[x]))
 		{
-			error("minishell: export: '", arg[x], "': invalide identifier\n");
+			error("minishell: export: '", arg[x], "': invalide identifier");
 			return (1);
 		}
 		if (ft_strchr(arg[x], '='))

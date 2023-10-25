@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 13:39:08 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/24 21:01:28 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/25 14:24:06 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ t_lexer	*ft_lexer(t_tool *data)
 	lex = NULL;
 	tab = NULL;
 	if (ft_verif_quote(data->line))
-		return (NULL);				// ajouter message d erreur
+		return (NULL);
 	arg = add_space(data->line, data);
 	if (!arg)
 		return (NULL);

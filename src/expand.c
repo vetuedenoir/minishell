@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 18:45:38 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/24 16:43:12 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/25 14:13:47 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*get_var(char *dvar, t_list *var_env)
 	int		t;
 
 	if (dvar[0] == '?')
-		return (ft_itoa(G_ExitCode));
+		return (ft_itoa(g_exitcode));
 	t = ft_strlen(dvar);
 	while (var_env)
 	{
@@ -110,7 +110,8 @@ char	**handle_dollar(char *str, t_tool *data)
 		if (str[i] == '$' && str[i + 1] != ' ' && str[i + 1] != 0)
 			i += ft_copy_var(&str[i], &s, &y, data);
 		if ((str[i] && str[i] != 39 && str[i] != 34 && str[i] != '$') || \
-			(str[i] == '$' && (str[i + 1] == ' ' || str[i + 1] == 0)))
+			(str[i] == '$' && (str[i + 1] == ' ' || str[i + 1] == 0 || \
+			str[i + 1] == '=' || str[i + 1] == '+')))
 			s[y++] = str[i++];
 	}
 	s[y] = 0;

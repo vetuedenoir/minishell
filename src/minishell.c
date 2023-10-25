@@ -6,13 +6,13 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 15:03:05 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/24 21:00:41 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/25 14:25:28 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-unsigned int G_ExitCode = 0;
+unsigned int	g_exitcode = 0;
 
 void	verif_set(int ac, char **av)
 {
