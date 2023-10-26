@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:48:57 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/25 19:50:39 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/26 12:22:44 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ int	erreur_here(int	*pipefd)
 
 void	ft_close(t_tool *data, int *pipefd)
 {
+	g_exitcode = 0;
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, &sigint_heredoc);
 	close(data->base_fd[1]);
 	if (pipefd)
 	{	

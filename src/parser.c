@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 18:46:15 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/24 16:32:26 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/26 13:00:48 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,18 +44,18 @@ t_lexer	*cut_lex(t_lexer **lex, t_cmds **cmd)
 int	extracte_node(t_lexer **lex, t_cmds **cmd)
 {
 	if ((*lex)->next == NULL)
-		error("Minishell: syntaxe error near unexpected token 'newline'",
+		error("minishell: syntaxe error near unexpected token 'newline'",
 			NULL, NULL);
 	else if ((*lex)->next->token == 1)
-		error("Minishell: parse error near '>'", NULL, NULL);
+		error("minishell: parse error near '>'", NULL, NULL);
 	else if ((*lex)->next->token == 2)
-		error("Minishell: parse error near '<'", NULL, NULL);
+		error("minishell: parse error near '<'", NULL, NULL);
 	else if ((*lex)->next->token == 3)
-		error("Minishell: syntax error near unexpected token '>>'", NULL, NULL);
+		error("minishell: syntax error near unexpected token '>>'", NULL, NULL);
 	else if ((*lex)->next->token == 4)
-		error("Minishell: parse error near '<<'", NULL, NULL);
+		error("minishell: parse error near '<<'", NULL, NULL);
 	else if ((*lex)->next->token == 5)
-		error("Minishell: parse error near '|'", NULL, NULL);
+		error("minishell: parse error near '|'", NULL, NULL);
 	if ((*lex)->next == NULL || (*lex)->next->token != 0)
 		return (*cmd = NULL, 0);
 	*lex = cut_lex(lex, cmd);
@@ -96,7 +96,7 @@ t_cmds	*incertion(t_lexer **lex, t_cmds *cmd, t_tool *data)
 	t_lexer	*tmp;
 
 	if ((*lex)->token == Pipe)
-		return (error("Minishell: parse error near '|'", NULL, NULL), NULL);
+		return (error("minishell: parse error near '|'", NULL, NULL), NULL);
 	*lex = boucle(lex, &cmd, &tmp, &i);
 	if (!(*lex))
 		return (cmd);
@@ -135,10 +135,10 @@ t_cmds	*parser(t_lexer *lex, t_cmds *commande, t_tool *data)
 			break ;
 		lex = lex->next;
 		if (lex == NULL)
-			return (error("Minishell: parse error near '\\n'",
+			return (error("minishell: parse error near '\\n'",
 					NULL, NULL), NULL);
 		if (lex->token == Pipe)
-			return (error("Minishell: parse error near '|'\n",
+			return (error("minishell: parse error near '|'\n",
 					NULL, NULL), NULL);
 	}
 	return (commande);

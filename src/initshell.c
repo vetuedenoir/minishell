@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 14:11:05 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/25 14:11:06 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/26 15:41:06 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	incrementelvl(t_tool *data)
 	shellvl[1] = NULL;
 	shellvl[0] = get_var("SHLVL", data->var_env);
 	if (!shellvl[0])
-		return (1);
+		return (0);
 	lvl = ft_atoi(shellvl[0]);
 	lvl++;
 	free(shellvl[0]);

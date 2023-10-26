@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 18:42:32 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/25 19:49:31 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/26 12:39:36 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ void	exec_com(t_tool *data, t_cmds *cmd)
 		free_all_and_exit(exec_builtin(cmd->builtin, cmd, data, 1), data);
 	if (execve(cmd->str[0], cmd->str, lst_to_tab(data->var_env, data)) == -1)
 	{
-		ft_perror("minishell", NULL);
-		free_all_and_exit(127, data);
+		ft_perror("minishell: ", cmd->str[0]);
+		free_all_and_exit(126, data);
 	}
 }
 

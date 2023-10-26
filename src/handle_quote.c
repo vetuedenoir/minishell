@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 13:42:25 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/25 14:11:54 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/26 15:24:43 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	zi(char *str, char **s, int *y, t_tool data)
 	i = 0;
 	if (ft_isdigit(str[1]) || !expand_token(str[1], 1))
 		return (2);
-	if (expand_token(str[1], 0) || ft_isdigit(str[1]))
+	if (!expand_token(str[1], 0) || ft_isdigit(str[1]))
 		return (2);
 	var = return_var(&str[i], &i, data);
 	if (!var)

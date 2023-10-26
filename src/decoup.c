@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 18:45:46 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/24 21:02:02 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/26 12:58:52 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	ft_verif_quote(char *s)
 			while (s[i] != 34 && s[i] != 0)
 				i++;
 			if (s[i] == 0)
-				return (error("Minishell: double quote doesn't guard",
+				return (error("minishell: double quote doesn't guard",
 						NULL, NULL), 1);
 		}
 		else if (s[i] == 39)
@@ -59,7 +59,7 @@ int	ft_verif_quote(char *s)
 			while (s[i] != 39 && s[i] != 0)
 				i++;
 			if (s[i] == 0)
-				return (error("Minishell: single quote doesn't guard",
+				return (error("minishell: single quote doesn't guard",
 						NULL, NULL), 1);
 		}
 	}

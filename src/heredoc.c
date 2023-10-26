@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   new_heredoc.c                                      :+:      :+:    :+:   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 19:15:12 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/25 18:12:32 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/26 12:36:48 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,21 +35,19 @@ void	read_heredoc(t_lexer *heredoc, int fd, t_tool *data)
 		rl_getc_function = getc;
 		ret = readline(">");
 		if (!ret)
-		{
-			close(fd);
 			return ;
-		}
 		if ((ft_strncmp(ret, heredoc->str, ft_strlen(heredoc->str)) == 0
 				&& ft_strlen(heredoc->str) == ft_strlen(ret)))
-		{
-			free(ret);
-			close(fd);
-			return ;
-		}
+			return (free(ret), (void)0);
 		join = ft_strjoin(ret, "\n");
-		ft_putstr_fd(heredoc_expand(join, data), fd);
 		free(ret);
+		if (!join)
+			return (g_exitcode = 1, (void)1);
+		ret = heredoc_expand(join, data);
 		free(join);
+		if (!ret)
+			return (g_exitcode = 1, (void)1);
+		ft_putstr_fd(ret, fd);
 	}
 }
 
@@ -63,10 +61,7 @@ int	ft_heredoc(t_lexer *heredoc, char *file_name, t_tool *data, int *pipefd)
 		return (ft_perror("minishell: heredoc", NULL), -1);
 	if (pid == 0)
 	{
-		g_exitcode = 0;
 		ft_close(data, pipefd);
-		signal(SIGQUIT, SIG_IGN);
-		signal(SIGINT, &sigint_heredoc);
 		fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0644);
 		if (fd < 0)
 		{
@@ -76,6 +71,7 @@ int	ft_heredoc(t_lexer *heredoc, char *file_name, t_tool *data, int *pipefd)
 		}
 		read_heredoc(heredoc, fd, data);
 		close(data->base_fd[0]);
+		close(fd);
 		free_all_and_exit(g_exitcode, data);
 	}
 	return (pid);
