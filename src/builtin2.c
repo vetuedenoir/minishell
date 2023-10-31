@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 18:27:43 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/26 15:33:47 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/10/31 12:47:32 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	cd(char **arg, t_list **env, t_tool *data, int flag)
 		return (ft_perror("cd", NULL), 1);
 	pwd[0] = get_var("PWD", *env);
 	if (!pwd[0])
-		return (ft_cd_bis(NULL, pwd, env, data));;
+		return (ft_cd_bis(NULL, pwd, env, data));
 	old[0] = ft_strjoin("OLDPWD=", pwd[0]);
 	free(pwd[0]);
 	if (!old[0])
