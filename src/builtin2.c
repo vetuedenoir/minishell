@@ -64,6 +64,7 @@ int	pwd(char **arg, t_list **env, t_tool *data, int flag)
 		return (1);
 	}
 	flag = printf("%s\n", pwd);
+	free(pwd);
 	if (flag == -1)
 		return (ft_perror("minishell: pwd", NULL), 1);
 	return (0);
