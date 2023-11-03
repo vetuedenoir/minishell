@@ -6,7 +6,7 @@
 /*   By: kscordel <kscordel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 18:42:32 by kscordel          #+#    #+#             */
-/*   Updated: 2023/10/26 12:39:36 by kscordel         ###   ########.fr       */
+/*   Updated: 2023/11/03 15:49:21 by kscordel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,7 @@ void	wait_processes(t_tool *data, int sig, int status)
 		else if (WIFSIGNALED(status))
 		{
 			sig = WTERMSIG(status);
-			if (sig == 2)
-				g_exitcode = 130;
-			if (sig == 3)
-				g_exitcode = 131;
+			g_exitcode = sig + 128;
 		}
 		data->cmds = data->cmds->next;
 	}
