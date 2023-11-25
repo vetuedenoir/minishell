@@ -108,6 +108,7 @@ char	**lst_to_tab(t_list *lst, t_tool *data);
 void	error(char *str, char *str2, char *str3);
 void	ft_perror(char *str, char *str2);
 void	free_all_and_exit(int code, t_tool *data);
+char	*ft_strdup_g(const char *s, t_tool *data);
 
 //parsing
 t_cmds	*parser(t_lexer *lex, t_cmds *commande, t_tool *data);
@@ -171,5 +172,8 @@ void	*set_builtin(char *s);
 void	retrive(char **arg, t_list **env);
 
 int		valide_identifier(char *str);
+
+//beautiful
+char**	beautiful(char **str, t_tool *data);
 
 #endif

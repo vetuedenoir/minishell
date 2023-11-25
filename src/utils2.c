@@ -37,7 +37,7 @@ char	**lst_to_tab(t_list *lst, t_tool *data)
 	char	**tab;
 
 	t = ft_lstsize(lst);
-	tab = ft_malloc(sizeof(char *) * (t + 1), data);
+	tab = ft_calloc_g(sizeof(char *) , (t + 1), data);
 	if (!tab)
 		return (NULL);
 	i = 0;

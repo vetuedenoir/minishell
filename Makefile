@@ -25,7 +25,7 @@ SRC = $(SRC_DIR)minishell.c $(SRC_DIR)lexer.c  $(SRC_DIR)utils.c $(SRC_DIR)utils
 		$(SRC_DIR)initshell.c $(SRC_DIR)signal.c $(SRC_DIR)expand_lex.c \
 		$(SRC_DIR)exec.c $(SRC_DIR)heredoc.c $(SRC_DIR)redirection.c \
 		$(SRC_DIR)builtin3.c $(SRC_DIR)handle_quote2.c $(SRC_DIR)builtin4.c \
-		$(SRC_DIR)heredoc2.c $(SRC_DIR)exec2.c
+		$(SRC_DIR)heredoc2.c $(SRC_DIR)exec2.c $(SRC_DIR)beautiful.c
 
 OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 
