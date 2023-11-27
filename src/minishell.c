@@ -78,5 +78,5 @@ int	main(int argc, char *argv[], char *envp[])
 	ft_lstclear(&data.var_env, free);
 	rl_clear_history();
 	printf("exit\n");
-	exit(0);
+	exit(g_exitcode);
 }
